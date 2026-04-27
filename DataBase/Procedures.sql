@@ -192,7 +192,7 @@ BEGIN
     END IF;
 
     -- Crear grupo
-    INSERT INTO `Group` (code_course, group_number, owner_id_student)
+    INSERT INTO `Group` (code_course, group_number, id_student)
     VALUES (p_code_course, p_group_number, p_id_student);
 
     SET v_id_group = LAST_INSERT_ID();

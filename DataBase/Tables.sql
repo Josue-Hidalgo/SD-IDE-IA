@@ -5,8 +5,8 @@ CREATE TABLE User (
     id_user INT AUTO_INCREMENT PRIMARY KEY,
     email_user VARCHAR(100) NOT NULL UNIQUE,
     password_user VARCHAR(100) NOT NULL,
-    name_user VARCHAR(50),
-    lastname_user VARCHAR(50)
+    name_user VARCHAR(50) NOT NULL,
+    lastname_user VARCHAR(50) NOT NULL
 ) ENGINE=InnoDB;
 
 -- ************************************
@@ -39,7 +39,7 @@ CREATE TABLE Professor (
 CREATE TABLE Course (
     code_course VARCHAR(50) PRIMARY KEY,
     id_professor INT NOT NULL,
-    name_course VARCHAR(100),
+    name_course VARCHAR(100) NOT NULL,
     description_course TEXT,
 
     FOREIGN KEY (id_professor)
@@ -53,10 +53,10 @@ CREATE TABLE Course (
 CREATE TABLE Assignment (
     id_assignment INT AUTO_INCREMENT PRIMARY KEY,
     code_course VARCHAR(50) NOT NULL,
-    name_assignment VARCHAR(100),
+    name_assignment VARCHAR(100) NOT NULL,
     description_assignment TEXT,
-    deadline DATETIME,
-    is_allowed_after_deadline BOOLEAN,
+    deadline DATETIME NOT NULL,
+    is_allowed_after_deadline BOOLEAN NOT NULL,
 
     FOREIGN KEY (code_course)
         REFERENCES Course(code_course)
@@ -70,7 +70,7 @@ CREATE TABLE `Group` (
     id_group INT AUTO_INCREMENT PRIMARY KEY,
     code_course VARCHAR(50) NOT NULL,
     group_number INT NOT NULL,
-    owner_id_student INT NOT NULL,
+    id_student INT NOT NULL,
 
     -- Evita grupos duplicados dentro de un curso
     UNIQUE (code_course, group_number),
@@ -79,7 +79,7 @@ CREATE TABLE `Group` (
         REFERENCES Course(code_course)
         ON DELETE CASCADE,
 
-    FOREIGN KEY (owner_id_student)
+    FOREIGN KEY (id_student)
         REFERENCES Student(id_student)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
@@ -113,10 +113,10 @@ CREATE TABLE Enrollment (
 CREATE TABLE Submission (
     id_group INT NOT NULL,
     id_assignment INT NOT NULL,
-    submitted_at DATETIME,
+    submitted_at DATETIME NOT NULL,
     grade DECIMAL(5,2),
     feedback TEXT,
-    project_blob LONGBLOB,
+    project_blob LONGBLOB, NOT NULL,
 
     PRIMARY KEY (id_group, id_assignment),
 
