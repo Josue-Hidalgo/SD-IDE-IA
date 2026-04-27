@@ -34,14 +34,14 @@
 DELIMITER $$
 
 CREATE PROCEDURE create_user (
-    IN p_email VARCHAR(100),
-    IN p_password VARCHAR(100),
+    IN p_email_user VARCHAR(100),
+    IN p_password_user VARCHAR(100),
     IN p_name VARCHAR(50),
     IN p_lastname VARCHAR(50)
 )
 BEGIN
-    INSERT INTO User (email, password, name_user, lastname_user)
-    VALUES (p_email, p_password, p_name, p_lastname);
+    INSERT INTO User (email_user, password_user, name_user, lastname_user)
+    VALUES (p_email_user, p_password_user, p_name, p_lastname);
 END$$
 
 DELIMITER ;
@@ -266,13 +266,13 @@ DELIMITER ;
 --
 DELIMITER $$
 
-CREATE PROCEDURE get_user_by_email (
-    IN p_email VARCHAR(100)
+CREATE PROCEDURE get_user_by_email_user (
+    IN p_email_user VARCHAR(100)
 )
 BEGIN
     SELECT *
     FROM User
-    WHERE email = p_email;
+    WHERE email_user = p_email_user;
 END$$
 
 DELIMITER ;
@@ -319,7 +319,7 @@ CREATE PROCEDURE get_group_members (
     IN p_id_group INT
 )
 BEGIN
-    SELECT s.*, u.name_user, u.lastname_user, u.email
+    SELECT s.*, u.name_user, u.lastname_user, u.email_user
     FROM Enrollment e
     JOIN Student s ON e.id_student = s.id_student
     JOIN User u ON s.id_user = u.id_user
@@ -534,14 +534,14 @@ DELIMITER ;
 DELIMITER $$
 
 CREATE PROCEDURE login_user (
-    IN p_email VARCHAR(100),
-    IN p_password VARCHAR(100)
+    IN p_email_user VARCHAR(100),
+    IN p_password_user VARCHAR(100)
 )
 BEGIN
     SELECT *
     FROM User
-    WHERE email = p_email
-      AND password = p_password;
+    WHERE email_user = p_email_user
+      AND password_user = p_password_user;
 END$$
 
 DELIMITER ;

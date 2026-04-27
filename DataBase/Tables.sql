@@ -3,8 +3,8 @@
 -- ************************************
 CREATE TABLE User (
     id_user INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(100) NOT NULL,
+    email_user VARCHAR(100) NOT NULL UNIQUE,
+    password_user VARCHAR(100) NOT NULL,
     name_user VARCHAR(50),
     lastname_user VARCHAR(50)
 ) ENGINE=InnoDB;
