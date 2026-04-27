@@ -1,3 +1,26 @@
+-- --------------------------
+-- Procedimientos
+-- --------------------------
+-- create_user
+-- create_student
+-- create_professor
+-- create_course
+-- create_assignment
+-- enroll_student
+-- create_group
+-- create_submission
+-- get_user_by_email
+-- get_student_courses
+-- get_course_groups
+-- get_group_members
+-- get_assignments_by_course
+-- get_submissions_by_assignment
+-- get_assignment_with_submissions
+-- join_group
+-- leave_group
+-- grade_submission
+-- login_user
+
 
 -- ------------------------
 -- INSERTS
