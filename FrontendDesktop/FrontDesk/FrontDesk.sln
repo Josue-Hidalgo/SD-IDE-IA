@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37203.1 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontDesk", "FrontDesk\FrontDesk.csproj", "{22EC8D71-AFBC-4D0D-BB6D-10498B1DFB37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontDesk.WinUI", "FrontDesk.WinUI\FrontDesk.WinUI.csproj", "{0ABEFC22-70FF-4D1F-A051-C6F025C1FE60}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22EC8D71-AFBC-4D0D-BB6D-10498B1DFB37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22EC8D71-AFBC-4D0D-BB6D-10498B1DFB37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22EC8D71-AFBC-4D0D-BB6D-10498B1DFB37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22EC8D71-AFBC-4D0D-BB6D-10498B1DFB37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ABEFC22-70FF-4D1F-A051-C6F025C1FE60}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{0ABEFC22-70FF-4D1F-A051-C6F025C1FE60}.Debug|Any CPU.Build.0 = Debug|x64
+		{0ABEFC22-70FF-4D1F-A051-C6F025C1FE60}.Release|Any CPU.ActiveCfg = Release|x64
+		{0ABEFC22-70FF-4D1F-A051-C6F025C1FE60}.Release|Any CPU.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {09297810-BE09-4CAF-BEEF-47AD8F07AD4F}
+	EndGlobalSection
+EndGlobal
