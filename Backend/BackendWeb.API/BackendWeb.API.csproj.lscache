@@ -53,6 +53,13 @@ TemporaryDependencyNodeTargetIdentifier=net9.0
 /warnaserror+:NU1605,SYSLIB0011
 
 [sourceFiles]
+Application/DTOs/Auth/
+ LoginDTO.cs
+ Register.cs
+Application/
+ Interfaces/IAuthService.cs
+ Services/AuthService.cs
+Controller/AuthController.cs
 Domain/Entities/
  Professor.cs
  Student.cs

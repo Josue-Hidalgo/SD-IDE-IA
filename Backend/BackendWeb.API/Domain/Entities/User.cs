@@ -6,7 +6,7 @@ public class User
     public string EmailUser { get; set; } = string.Empty;
     public string PasswordUser { get; set; } = string.Empty;
     public string NameUser { get; set; } = string.Empty;
-    public string LastNameUser { get; set; } = string.Empty;
+    public string LastnameUser { get; set; } = string.Empty;
 
     public Student? Student { get; set; }
     public Professor? Professor { get; set; }
