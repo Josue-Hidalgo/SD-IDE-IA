@@ -24,6 +24,7 @@
                     </MenuItem.Resources>
                     <MenuItem Header="Open File" Background="#202020" Foreground="White" Click="OpenFile"/>
                     <MenuItem Header="Close File" Background="#202020" Foreground="White" Click="CloseFile"/>
+                    <MenuItem Header="Save File As..." Background="#202020" Foreground="White" Click="SaveFileAs"/>
                 </MenuItem>
                 <MenuItem Header="Run" Background="#202020" Foreground="White">
                     <MenuItem.Resources>

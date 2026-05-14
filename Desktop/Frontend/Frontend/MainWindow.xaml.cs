@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+//using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -95,18 +96,18 @@ namespace Frontend
 
         public void OpenFile(object sender, EventArgs e)
         {
-            string ruta;
+            string route;
             OpenFileDialog OFD = new OpenFileDialog();
             OFD.Filter = "Python (*.py)|*.py|All Files (*.*)|*.*";
             OFD.FilterIndex = 0;
             if (OFD.ShowDialog() == true)
             {
-                ruta = OFD.FileName;
-                FileSelected = ruta;
-                TextReader reader = new StreamReader(ruta);
+                route = OFD.FileName;
+                FileSelected = route;
+                TextReader reader = new StreamReader(route);
                 CodeEditor.CoreWebView2.ExecuteScriptAsync($"setValue(\"{(reader.ReadToEnd()).Replace("\r","").Replace("\\","\\\\").Replace("\"","\\\"").Replace("\n","\\n")}\");");
                 reader.Close();
-                FileName.Text = System.IO.Path.GetFileName(ruta);
+                FileName.Text = System.IO.Path.GetFileName(route);
                 selectedFile = true;
             }
             if (!selectedFile)
@@ -121,6 +122,23 @@ namespace Frontend
             FileName.Text = "";
             FileSelected = "";
             selectedFile = false;
+        }
+        public async void SaveFileAs(object sender, EventArgs e)
+        {
+            SaveFileDialog SFD = new SaveFileDialog();
+            SFD.Filter = "Python (*.py)|*.py|All Files (*.*)|*.*";
+            if (SFD.ShowDialog() == true)
+            {
+                string content = await CodeEditor.CoreWebView2.ExecuteScriptAsync("getValue();");
+                // ExecuteScriptAsync devuelve el valor JSON-encoded, así que hay que limpiar las comillas
+                content = content.Trim('"');
+                File.WriteAllText(SFD.FileName, content);
+            }
+
+            if (!selectedFile)
+            {
+                FileName.Text = "";
+            }
         }
 
         public void RunCode(object sender, EventArgs e)
