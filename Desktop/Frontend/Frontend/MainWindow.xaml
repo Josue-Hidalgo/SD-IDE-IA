@@ -22,7 +22,8 @@
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </MenuItem.Resources>
-                    <MenuItem Header="Open" Background="#202020" Foreground="White"/>
+                    <MenuItem Header="Open File" Background="#202020" Foreground="White" Click="OpenFile"/>
+                    <MenuItem Header="Close File" Background="#202020" Foreground="White" Click="CloseFile"/>
                 </MenuItem>
                 <MenuItem Header="Run" Background="#202020" Foreground="White">
                     <MenuItem.Resources>
@@ -30,7 +31,7 @@
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </MenuItem.Resources>
-                    <MenuItem Header="Run" Background="#202020" Foreground="White"/>
+                    <MenuItem Header="Run" Background="#202020" Foreground="White" Click="RunCode"/>
                 </MenuItem>
                 <MenuItem Header="Terminal" Background="#202020" Foreground="White">
                     <MenuItem.Resources>
@@ -63,6 +64,7 @@
             Grid.Column="0"
             Grid.Row="1"
             Margin="0">
+            <TextBlock x:Name="FileName"  Text="" Margin="0,7" Foreground="White"/>
         </Border>
         <wv2:WebView2 x:Name="CodeEditor" Grid.Row="2" Margin="0,5,0,0"/>
         <Grid x:Name="TerminalGrid" Height="200"  Grid.Row="3">

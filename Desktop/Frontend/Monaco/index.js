@@ -14,5 +14,5 @@ function getValue(){
 }
 
 function setValue(value){
-    return editor.setValue(value);
+    editor.setValue(value);
 }

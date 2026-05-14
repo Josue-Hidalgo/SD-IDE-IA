@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -15,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace Frontend
 {
     /// <summary>
@@ -23,6 +25,9 @@ namespace Frontend
     public partial class MainWindow : Window
     {
         Process terminal;
+        string FileSelected = "";
+        bool selectedFile = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -88,15 +93,65 @@ namespace Frontend
             }
         }
 
-        public void ShutDown(object sender, EventArgs e)
+        public void OpenFile(object sender, EventArgs e)
         {
-
-            if(terminal != null && !terminal.HasExited)
+            string ruta;
+            OpenFileDialog OFD = new OpenFileDialog();
+            OFD.Filter = "Python (*.py)|*.py|All Files (*.*)|*.*";
+            OFD.FilterIndex = 0;
+            if (OFD.ShowDialog() == true)
             {
+                ruta = OFD.FileName;
+                FileSelected = ruta;
+                TextReader reader = new StreamReader(ruta);
+                CodeEditor.CoreWebView2.ExecuteScriptAsync($"setValue(\"{(reader.ReadToEnd()).Replace("\r","").Replace("\\","\\\\").Replace("\"","\\\"").Replace("\n","\\n")}\");");
+                reader.Close();
+                FileName.Text = System.IO.Path.GetFileName(ruta);
+                selectedFile = true;
+            }
+            if (!selectedFile)
+            {
+                FileName.Text = "";
+            }
+        }
+
+        public void CloseFile(object sender, EventArgs e)
+        {
+            CodeEditor.CoreWebView2.ExecuteScriptAsync($"setValue(\"\");");
+            FileName.Text = "";
+            FileSelected = "";
+            selectedFile = false;
+        }
+
+        public void RunCode(object sender, EventArgs e)
+        {
+            if (selectedFile)
+            {
+                closeTerminal();
+                terminal.OutputDataReceived += p_OutputDataReceived;
+                terminal.ErrorDataReceived += p_ErrorDataReceived;
+                terminal.Start();
+                terminal.BeginOutputReadLine();
+                terminal.BeginErrorReadLine();
+                terminal.StandardInput.WriteLine($"python -u \"{FileSelected}\"");
+                Console.WriteLine($"python \"{FileSelected}\"");
+            }
+        }
+
+        public void closeTerminal()
+        {
+            if (terminal != null && !terminal.HasExited)
+            {
+                terminal.CancelErrorRead();
+                terminal.CancelOutputRead();
                 terminal.OutputDataReceived -= p_OutputDataReceived;
                 terminal.ErrorDataReceived -= p_ErrorDataReceived;
                 terminal.Kill();
             }
+        }
+        public void ShutDown(object sender, EventArgs e)
+        {
+            closeTerminal();
             Application.Current.Shutdown();
         }
     }
