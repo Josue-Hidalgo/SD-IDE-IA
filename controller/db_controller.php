@@ -67,6 +67,8 @@ function login_user_web(string $email, string $password){
  		$prof_data = [];
  		$prof_data["name"] = $row["name_user"];
  		$prof_data["lastname"] = $row["lastname_user"];
+ 		$prof_data["email"] = $row["email_user"];
+ 		$prof_data["password"] = $row["password"];
  		$id_user = $row["id_user"];
  		while($conn->more_results()){
  			$conn->next_result();
@@ -79,7 +81,7 @@ function login_user_web(string $email, string $password){
  	}else{
  		$conn->close();
  		return FALSE;
- 		}
+ 	}
  	$conn->close();
  	return $prof_data;
 }

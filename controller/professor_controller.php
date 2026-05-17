@@ -1,31 +1,30 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>professor controller</title>
-</head>
-<body>
-	<?php
-	include 'professor_model.php';
+<?php
+session_start();
+?>
+<?php
+include 'professor_model.php';
 
-	function createProf(int $prof_id,string $email, string $password, string $username, string $userLast){
-		return new Professor($prof_id,$email,$password, $username, $userLast);
-	}
+function createProf(int $prof_id,string $email, string $password, string $username, string $userLast){
+	$_SESSION['prof_id'] = $prof_id;
+	$_SESSION['email'] = $email;
+	$_SESSION['password'] = $password;
+	$_SESSION['username'] = $username;
+	$_SESSION['userLast'] = $userLast;
+}
 
-	function getProfName(Professor $prof){
-		return $prof->name_user;
-	}
+function getProfName(Professor $prof){
+	return $_SESSION['username'];
+}
 
-	function getProfEmail(Professor $prof){
-		return $prof->email;
-	}
+function getProfEmail(Professor $prof){
+	return $_SESSION['email'];
+}
 
-	function getProfLName(Professor $prof){
-		return $prof->lastname_user;
-	}
-	function getProfId(Professor $prof){
-		return $prof->id_professor;
-	}
+function getProfLName(Professor $prof){
+	return $_SESSION['userLast'];
+}
+function getProfId(Professor $prof){
+	return $_SESSION['prof_id'];
+}
 
-	?>
-</body>
-</html>
+?>
