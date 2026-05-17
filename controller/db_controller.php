@@ -42,7 +42,7 @@
  			echo "Error: ".$conn->error;
  		}
  	$conn->close();
- 	}
+ }
 
 function create_assignment(string $code_course, string $assi_name, string $desc, bool $is_allowed){//agregar la fecha despues
 	$conn = create_db_conn();
@@ -57,7 +57,7 @@ function create_assignment(string $code_course, string $assi_name, string $desc,
  	$conn->close();
 }
 
-function login_user(string $email, string $password){
+function login_user_web(string $email, string $password){
 	$conn = create_db_conn();
 
  	$sql = "CALL login_user(\"$email\", \"$password\")";
@@ -77,10 +77,26 @@ function login_user(string $email, string $password){
  		$row2 = $result2->fetch_assoc();
  		$prof_data["prof_id"] = $row2["id_professor"];
  	}else{
- 			echo "no result";
+ 		$conn->close();
+ 		return FALSE;
  		}
  	$conn->close();
  	return $prof_data;
 }
+function check_email(string $email){
+	$conn = create_db_conn();
+
+ 	$sql = "SELECT name_user from User where email_user = \"$email\"";
+ 	$result = $conn->query($sql);
+ 	if ($result->num_rows >0) {
+ 		$conn->close();
+ 		return TRUE;
+ 	}else{
+ 		$conn->close();
+ 		return False;
+ 	}
+ 	
+}
+
 
 ?>

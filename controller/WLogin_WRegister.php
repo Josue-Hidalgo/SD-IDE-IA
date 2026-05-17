@@ -1,75 +1,76 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>assignment controller</title>
+    <title>Login/register controller</title>
 </head>
 <body>
 	<?php
-	//use
+	//use // instalar composer y luego usar -> sudo composer require phpmailer/phpmailer
 	use PHPMailer\PHPMailer\PHPMailer;
 	use PHPMailer\PHPMailer\Exception;
 	//includes
 	//agregar la funcion para conectarse a la base
 	require 'vendor/autoload.php';
 	include 'professor_controller.php';
+	include 'db_controller.php';
 
 	//functions
 	function Login(string $email, string $password){
 		//revisar en la base
-		if ($email == "algode@prueba.com") {//puesto en crudo para probar, conectar a la base despues
-			return $password == "contraprueba";
+		$value = login_user_web($email, $password);
+		if ($value) {
+			print_r($value);
 		}else {
 			return "fallo";
 		}
 	}
 
 	function Register(string $email, string $password, string $username, string $userLast){
-		$nProf = createProf($email,$password, $username, $userLast);
-		print_r($nProf);
-		//agregar deteccion de errores al conectarlo a la base
+		create_prof($email, $password, $username, $userLast);
 	}
 
 	function RememberPassword(string $email){
 		//revisar el correo con la base
-		$mail = new PHPMailer(true);
-		try{
-			//configuraciones cambiar las configuraciones despues :b
-			$mail->isSMTP();
-			$mail->Host = 'smtp.gmail.com';
-			$mail->SMTPAuth = true;
-			$mail->Username = 'arayacastilloj@gmail.com';
-			$mail->Password = 'ejoe yccy pndu fjzo';
-			$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-			$mail->Port = 587;
+		if(check_email($email)){
+			$mail = new PHPMailer(true);
+			try{
+				//configuraciones cambiar las configuraciones despues :b
+				$conn = create_db_conn();
+				$result = $conn->query("SELECT password_user from User where email_user = \"$email\"");
+				$row = $result->fetch_assoc();
+				$user_pass = $row["password_user"]; 
+				$conn->close();
+				$mail->isSMTP();
+				$mail->Host = 'smtp.gmail.com';
+				$mail->SMTPAuth = true;
+				$mail->Username = 'arayacastilloj@gmail.com';//cambiar por correo de la app
+				$mail->Password = 'ejoe yccy pndu fjzo';// contraseña app password de gmail
+				$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+				$mail->Port = 587;
 
-			//recipients?
-			$mail->setFrom('arayacastilloj@gmail.com','prueba de correo');
-			$mail->addAddress($email);
+				//recipients
+				$mail->setFrom('arayacastilloj@gmail.com','prueba de correo');
+				$mail->addAddress($email);
 
-			//contenido del correo
-			$mail->isHTML(true);
-			$mail->Subject = 'Prueba de enviar correo con PHP/'.phpversion();
-			$mail->Body = 'Esto es una prueba del cuerpo del correo <b>bold text(nose xd)</b>';
-			$mail->AltBody = 'algo para correos sin html';
+				//contenido del correo
+				$mail->isHTML(true);
+				$mail->Subject = 'Remember Password';
+				$mail->Body = "Your account password is: <b>$user_pass</b>";
+				$mail->AltBody = 'Your account password is: '.$user_pass;
 
-			$mail->send();
-			echo "se envio correo";
-		} catch (Exception $e){
-			echo "no se envio correo :(. error: {$mail->ErrorInfo}";
+				$mail->send();
+			} catch (Exception $e){
+				echo "no se envio correo :(. error: {$mail->ErrorInfo}";
+			}
+		}else{
+			echo "email not found";//cambiar por un error correcto
 		}
+		
 	}
-
-	//pruebas
-
-	print_r(Login("algode@prueba.com", "contraprueba"));//true
-	echo "\n";
-	print_r(Login("algode@prueba.com", "fallo"));		//false
-	echo "<br>";
-	print_r(Login("algode@fallo.com", "contraprueba"));//false
-	echo "<br>";
-
-	Register("correoprueba@algo.com", "contrasenaPrueba", "pruebanombre", "otraPruebaApellido");
-	RememberPassword("arayacastilloj@gmail.com");//true
+	//Register("arayacastilloj@gmail.com", "correoprueba", "jose", "araya");
+	//Login("arayacastilloj@gmail.com", "correoprueba");
+	//RememberPassword("arayacastilloj@gmail.com");//true
+	//RememberPassword("fallo@fallo.com");//false
 
 	?>
 </body>
