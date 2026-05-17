@@ -1,33 +1,29 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>course controller</title>
-</head>
-<body>
-	<?php
-		include 'course_model.php';
-		$DataArray = ['id_course' => 03,'name_course' => "Diseno"// array para pruebas
-	];
+<?php session_start(); ?>
 
-	$courseTest = new Course(...$DataArray);
+<?php
 
-	function getCourseName(int $course_id){
-		//cambiar luego con la logica de mysql
-		echo "id del curso: $course_id".'<br>';
-		global $courseTest;
-		return $courseTest->name_course;
+include 'course_model.php';
+include 'db_controller.php';
+
+function create_course_c(string $code_course, string $name_course, string $desc){
+	if(!check_course($code_course)){
+		$prof_id = $_SESSION['prof_id'];
+		create_course($code_course,$prof_id,$name_course,$desc);
+	}else{
+		echo "Course already exist.";
 	}
-	function setCourseName(int $course_id, string $nCourseName){
-		//cambiar luego con la logica de mysql
-		echo "id del curso: $course_id y nombre: $nCourseName".'<br>';
-		global $courseTest;
-		$courseTest->name_course = $nCourseName;
-		echo "nuevo nombre del curso: $courseTest->name_course".'<br>';
-	}
+}
 
-	echo getCourseName(03);
-	echo "<br>";
-	setCourseName(03, "algoritmos");
-	?>
-</body>
-</html>
+function get_all_courses(int $prof_id){
+	$courses = get_all_prof_courses($prof_id);
+	//cambiar esto despues
+	$size = count($courses);
+	for($i = 0;$i < $size; $i++){
+		print_r($courses[$i])."<br>";
+	}
+	//return $courses;
+}
+
+get_all_courses(7);
+
+?>

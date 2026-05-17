@@ -100,5 +100,38 @@ function check_email(string $email){
  	
 }
 
+function check_course(string $course_code){
+	$conn = create_db_conn();
+
+ 	$sql = "SELECT name_course from Course where code_course = \"$course_code\"";
+ 	$result = $conn->query($sql);
+ 	if ($result->num_rows >0) {
+ 		$conn->close();
+ 		return TRUE;
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+}
+
+function get_all_prof_courses(int $prof_id){
+	$conn = create_db_conn();
+
+ 	$sql = "SELECT * from Course where id_professor = $prof_id";
+ 	$result = $conn->query($sql);
+ 	if ($result->num_rows >0) {
+ 		$courses = [];
+ 		$count = 0;
+ 		while($row = $result->fetch_assoc()){
+ 			$courses[$count] = $row;
+ 			$count = $count+1;
+ 		}
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+ 	$conn->close();
+ 	return $courses;
+}
 
 ?>
