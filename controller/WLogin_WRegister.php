@@ -17,7 +17,7 @@ function Login(string $email, string $password){
 	//revisar en la base
 	$value = login_user_web($email, $password);
 	if ($value) {
-		create_prof($value["prof_id"],$value["email"],$value["password"],$value["name"],$value["lastname"]);
+		createProf($value["prof_id"],$value["email"],$value["password"],$value["name"],$value["lastname"]);
 	}else {
 		return "The given email or password is incorrect.";//cambiar despues
 	}
