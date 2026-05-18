@@ -3,6 +3,7 @@
 class Assignment{
 	public function __construct(
 		public int $id_assignment,
+		public string $code_course,
 		public string $name_assignment,
 		public string $description_assignment,
 		public string $deadline,

@@ -134,4 +134,24 @@ function get_all_prof_courses(int $prof_id){
  	return $courses;
 }
 
+function get_assignments_by_course(string $code_course){
+	$conn = create_db_conn();
+
+ 	$sql = "CALL get_assignments_by_course(\"$code_course\")";
+ 	$result = $conn->query($sql);
+ 	if ($result->num_rows >0) {
+ 		$assigments = [];
+ 		$count = 0;
+ 		while($row = $result->fetch_assoc()){
+ 			$assigments[$count] = $row;
+ 			$count = $count+1;
+ 		}
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+ 	$conn->close();
+ 	return $assigments;
+}
+
 ?>
