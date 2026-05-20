@@ -46,13 +46,13 @@ function RememberPassword(string $email){
 			$mail->isSMTP();
 			$mail->Host = 'smtp.gmail.com';
 			$mail->SMTPAuth = true;
-			$mail->Username = 'arayacastilloj@gmail.com';//cambiar por correo de la app
-			$mail->Password = 'ejoe yccy pndu fjzo';// contraseña app password de gmail
+			$mail->Username = 'ideia12026@gmail.com';//cambiar por correo de la app
+			$mail->Password = 'nxkl gbcbmgci awbe';// contraseña app password de gmail
 			$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 			$mail->Port = 587;
 
 			//recipients
-			$mail->setFrom('arayacastilloj@gmail.com','prueba de correo');
+			$mail->setFrom('ideia12026@gmail.com','IDEIA-ACADEMIC');
 			$mail->addAddress($email);
 
 			//contenido del correo
@@ -72,7 +72,7 @@ function RememberPassword(string $email){
 }
 //Register("arayacastilloj@gmail.com", "correoprueba", "jose", "araya");
 //Login("arayacastilloj@gmail.com", "correoprueba");
-//RememberPassword("arayacastilloj@gmail.com");//true
+RememberPassword("arayacastilloj@gmail.com");//true
 //RememberPassword("fallo@fallo.com");//false
 
 ?>

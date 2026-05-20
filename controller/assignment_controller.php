@@ -15,7 +15,7 @@ function get_all_assignment_by_course(string $code_course){
 	for($i = 0;$i < $size; $i++){
 		print_r($assignments[$i])."<br>";
 	}
-	//return $courses;
+	//return $assinments;
 }
 
 ?>

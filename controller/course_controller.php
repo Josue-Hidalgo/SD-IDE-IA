@@ -24,6 +24,6 @@ function get_all_courses(int $prof_id){
 	//return $courses;
 }
 
-get_all_courses(7);
+//get_all_courses(7);
 
 ?>
