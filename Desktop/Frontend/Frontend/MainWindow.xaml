@@ -40,7 +40,7 @@
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </MenuItem.Resources>
-                    <MenuItem Header="Open/kill" Background="#202020" Foreground="White"/>
+                    <MenuItem Header="Close/kill" Background="#202020" Foreground="White" Click="KCTerminal"/>
                 </MenuItem>
             </Menu>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

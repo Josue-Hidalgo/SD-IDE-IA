@@ -28,6 +28,7 @@ namespace Frontend
         Process terminal;
         string FileSelected = "";
         bool selectedFile = false;
+        bool terminalOpen = false;
 
         public MainWindow()
         {
@@ -43,23 +44,79 @@ namespace Frontend
             );
 
             CodeEditor.Source = new Uri(path);
+        }
 
+        public void StartTerminal(string path)
+        {
             terminal = new Process();
-            terminal.StartInfo = new ProcessStartInfo("cmd.exe")
+            terminal.StartInfo = new ProcessStartInfo("py")
             {
                 RedirectStandardInput = true,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                Arguments = @"/K echo 'Hello world!'"
+                Arguments = $@" -u {path}"
             };
-            terminal.OutputDataReceived += p_OutputDataReceived;
-            terminal.ErrorDataReceived += p_ErrorDataReceived;
             terminal.Start();
-            terminal.BeginOutputReadLine();
-            terminal.BeginErrorReadLine();
+            Task.Run(async () =>
+            {
+                char[] buffer = new char[1];
+
+                while (!terminal.StandardOutput.EndOfStream)
+                {
+                    int read = await terminal.StandardOutput.ReadAsync(buffer, 0, 1);
+
+                    if (read > 0)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            TerminalO.AppendText(buffer[0].ToString());
+                            TerminalO.ScrollToEnd();
+                        });
+                    }
+                }
+            });
+            Task.Run(async () =>
+            {
+                char[] buffer = new char[1];
+
+                while (!terminal.StandardError.EndOfStream)
+                {
+                    int read = await terminal.StandardError.ReadAsync(buffer, 0, 1);
+
+                    if (read > 0)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            TerminalO.AppendText(buffer[0].ToString());
+                            TerminalO.ScrollToEnd();
+                        });
+                    }
+                }
+            });
+            TerminalGrid.Height = 200;
+            terminalOpen = true;
         }
+
+        public void closeTerminal()
+        {
+            if (terminal != null && !terminal.HasExited)
+            {
+                terminal.Kill();
+                terminal.Dispose();
+            }
+            TerminalGrid.Height = 0;
+            TerminalO.Text = "";
+            TerminalI.Text = "";
+            terminalOpen = false;
+        }
+
+        private void KCTerminal(object sender, EventArgs e)
+        {
+            closeTerminal();
+        }
+
 
         private void p_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
@@ -90,6 +147,8 @@ namespace Frontend
             if(e.Key == Key.Enter)
             {
                 terminal.StandardInput.WriteLine(TerminalI.Text);
+                TerminalO.AppendText(TerminalI.Text);
+                TerminalO.AppendText("\n");
                 TerminalI.Clear();
             }
         }
@@ -122,6 +181,7 @@ namespace Frontend
             FileName.Text = "";
             FileSelected = "";
             selectedFile = false;
+            closeTerminal();
         }
         public async void SaveFileAs(object sender, EventArgs e)
         {
@@ -130,14 +190,19 @@ namespace Frontend
             if (SFD.ShowDialog() == true)
             {
                 string content = await CodeEditor.CoreWebView2.ExecuteScriptAsync("getValue();");
+                Console.WriteLine(content);
                 // ExecuteScriptAsync devuelve el valor JSON-encoded, así que hay que limpiar las comillas
                 content = content.Trim('"');
-                File.WriteAllText(SFD.FileName, content);
+                File.WriteAllText(SFD.FileName, content.Replace("\\\\n","\\hi").Replace("\\n", "\n").Replace("\\hi", "\\n")
+                    .Replace("\\\\r", "\\hi").Replace("\\r", "\r").Replace("\\hi", "\\r")
+                    .Replace("\\\\t", "\\hi").Replace("\\t", "\t").Replace("\\hi", "\\t")
+                    .Replace("\\\"", "\"").Replace("\\\'","\'").Replace("\\\\","\\"));
             }
 
             if (!selectedFile)
             {
-                FileName.Text = "";
+                FileName.Text = System.IO.Path.GetFileName(SFD.FileName);
+                FileSelected = SFD.FileName;
             }
         }
 
@@ -146,25 +211,7 @@ namespace Frontend
             if (selectedFile)
             {
                 closeTerminal();
-                terminal.OutputDataReceived += p_OutputDataReceived;
-                terminal.ErrorDataReceived += p_ErrorDataReceived;
-                terminal.Start();
-                terminal.BeginOutputReadLine();
-                terminal.BeginErrorReadLine();
-                terminal.StandardInput.WriteLine($"python -u \"{FileSelected}\"");
-                Console.WriteLine($"python \"{FileSelected}\"");
-            }
-        }
-
-        public void closeTerminal()
-        {
-            if (terminal != null && !terminal.HasExited)
-            {
-                terminal.CancelErrorRead();
-                terminal.CancelOutputRead();
-                terminal.OutputDataReceived -= p_OutputDataReceived;
-                terminal.ErrorDataReceived -= p_ErrorDataReceived;
-                terminal.Kill();
+                StartTerminal(FileSelected);
             }
         }
         public void ShutDown(object sender, EventArgs e)
