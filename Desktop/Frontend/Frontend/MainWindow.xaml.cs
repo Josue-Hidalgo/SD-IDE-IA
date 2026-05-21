@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Frontend.Pages;
 
 
 namespace Frontend
@@ -29,6 +30,7 @@ namespace Frontend
         string FileSelected = "";
         bool selectedFile = false;
         bool terminalOpen = false;
+        bool loged = false;
 
         public MainWindow()
         {
@@ -44,6 +46,16 @@ namespace Frontend
             );
 
             CodeEditor.Source = new Uri(path);
+            TerminalGrid.Height = 0;
+            AcademicFrame.Navigate(new LRPage());
+        }
+
+        public void windowMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
         }
 
         public void StartTerminal(string path)
@@ -197,12 +209,9 @@ namespace Frontend
                     .Replace("\\\\r", "\\hi").Replace("\\r", "\r").Replace("\\hi", "\\r")
                     .Replace("\\\\t", "\\hi").Replace("\\t", "\t").Replace("\\hi", "\\t")
                     .Replace("\\\"", "\"").Replace("\\\'","\'").Replace("\\\\","\\"));
-            }
-
-            if (!selectedFile)
-            {
                 FileName.Text = System.IO.Path.GetFileName(SFD.FileName);
                 FileSelected = SFD.FileName;
+                selectedFile = true;
             }
         }
 
@@ -212,6 +221,18 @@ namespace Frontend
             {
                 closeTerminal();
                 StartTerminal(FileSelected);
+            }
+        }
+
+        public void ResizeW(object sender, EventArgs e)
+        {
+            if(WindowState == WindowState.Maximized)
+            {
+                WindowState = WindowState.Normal;
+            }
+            else
+            {
+                WindowState = WindowState.Maximized;
             }
         }
         public void ShutDown(object sender, EventArgs e)

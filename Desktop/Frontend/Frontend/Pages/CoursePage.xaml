@@ -1,0 +1,30 @@
+﻿<Page x:Class="Frontend.Pages.CoursePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Frontend.Pages"
+      mc:Ignorable="d" 
+      Title="CoursePage"
+      HorizontalAlignment="Stretch"
+      VerticalAlignment="Stretch">
+
+    <Grid Background="#2424">
+        <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Margin="10,0,10,0">
+            <TextBlock Text="Courses" FontSize="30" HorizontalAlignment="Center" Foreground="White"/>
+            <ListBox>
+                <ListBoxItem>
+                    <TextBlock Text="hola"/>
+                </ListBoxItem>
+            </ListBox>
+            <TextBox Text="" FontSize="15" HorizontalAlignment="Stretch"/>
+            <Button Content="Enroll Course" Background="#DE52FF" FontSize="15" Margin="0,5,0,0" Foreground="Black" BorderThickness="0">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Page>

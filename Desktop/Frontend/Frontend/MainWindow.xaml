@@ -6,15 +6,14 @@
         xmlns:local="clr-namespace:Frontend"
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
-        Title="IDEIA" Height="450" Width="800" Background="#242424" WindowStyle="None" WindowStartupLocation="CenterScreen" BorderBrush="#242424">
+        Title="IDEIA" Height="450" Width="800" Background="#242424" WindowStyle="None" WindowStartupLocation="CenterScreen" BorderBrush="#242424"
+        MouseDown="windowMouseDown" ResizeMode="NoResize">
     <Grid Margin="10,0,10,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-            <Grid Grid.Column="0">
+        <Grid Grid.Column="0">
             <Menu Background="#242424">
                 <MenuItem Header="File" Background="#202020" Foreground="White">
                     <MenuItem.Resources>
@@ -44,7 +43,7 @@
                 </MenuItem>
             </Menu>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="Resize" Content=" \-/ " Background="#201919" BorderThickness="0" VerticalContentAlignment="Center" Padding="0,0,0,2" Margin="2">
+                <Button x:Name="Resize" Content=" ▢ " Click="ResizeW" Background="#201919" BorderThickness="0" VerticalContentAlignment="Center" Padding="0,0,0,2" Margin="2">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="5"/>
@@ -60,39 +59,59 @@
                 </Button>
             </StackPanel>
         </Grid>
-        <Border Background="#261C38"
-            CornerRadius="5"
-            Grid.Column="0"
-            Grid.Row="1"
-            Margin="0">
-            <TextBlock x:Name="FileName"  Text="" Margin="0,7" Foreground="White"/>
-        </Border>
-        <wv2:WebView2 x:Name="CodeEditor" Grid.Row="2" Margin="0,5,0,0"/>
-        <Grid x:Name="TerminalGrid" Height="200"  Grid.Row="3">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="30"/>
-            </Grid.RowDefinitions>
-            <TextBox x:Name="TerminalO" Grid.Row="0" Text="" Background="#191919" IsReadOnly="True" BorderBrush="#210036" Foreground="White" FontFamily="Consolas" Margin="0,5">
-                <TextBox.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="10"/>
-                    </Style>
-                </TextBox.Resources>
-            </TextBox>
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Input: " Margin="0,5" HorizontalAlignment="Center" Foreground="White"/>
-                <TextBox x:Name="TerminalI" Grid.Column="1" Text="" Margin="0,3" Background="#191919" BorderBrush="#210036" Foreground="White" Padding="0,3,0,0" KeyDown="TerminalInputKD">
-                    <TextBox.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="5"/>
-                        </Style>
-                    </TextBox.Resources>
-                </TextBox>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Border Background="#261C38"
+                CornerRadius="5"
+                Grid.Column="0"
+                Grid.Row="0"
+                Margin="0">
+                    <TextBlock x:Name="FileName"  Text="" Margin="0,7" Foreground="White"/>
+                </Border>
+                <wv2:WebView2 x:Name="CodeEditor" Grid.Row="1" Grid.Column="0" Margin="0,5,0,0"/>
+                <Grid x:Name="TerminalGrid" Height="200"  Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="TerminalO" Grid.Row="0" Text="" Background="#191919" IsReadOnly="True" BorderBrush="#210036" Foreground="White" FontFamily="Consolas" Margin="0,5">
+                        <TextBox.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="10"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Input: " Margin="0,5" HorizontalAlignment="Center" Foreground="White"/>
+                        <TextBox x:Name="TerminalI" Grid.Column="1" Text="" Margin="0,3" Background="#191919" BorderBrush="#210036" Foreground="White" Padding="0,3,0,0" KeyDown="TerminalInputKD">
+                            <TextBox.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </TextBox.Resources>
+                        </TextBox>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid x:Name="AcademicGrid" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Frame Grid.Row="0" x:Name="AcademicFrame" JournalOwnership="OwnsJournal" NavigationUIVisibility="Hidden" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </Grid>
         </Grid>
     </Grid>
