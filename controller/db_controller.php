@@ -1,9 +1,9 @@
 <?php 
  function create_db_conn(){// sudo apt-get install php8.4-mysql
  	$servername = "localhost";//cambiar valores por los de la base real
-	$username = "root";
-	$password = "Qwertys123.";
-	$dbname = "prueba";
+	$username = "AcademycIDEIA";
+	$password = "#IDEIA";
+	$dbname = "IDEIA";
 
 	$conn =  new mysqli($servername, $username, $password, $dbname);
 
@@ -20,41 +20,64 @@
 
  	$sql = "CALL create_user(\"$email\", \"$password\", \"$name_user\", \"$lastname_user\")";
  	if ($conn->query($sql) === TRUE) {
- 		echo "se creo el usuario".'<br>';//borrar despues
  		if ($conn->query("CALL create_professor(LAST_INSERT_ID())") === TRUE) {
- 			echo "se creo el profesor".'<br>';//borrar despues
+ 			$conn->close();
+ 			return TRUE;
  		}else{
- 			echo "Error: ".$conn->error;
+ 			$conn->close();
+ 			return FALSE;
  		}
  	}else{
- 			echo "Error: ".$conn->error;
+ 		$conn->close();
+ 		return FALSE;
  		}
- 	$conn->close();
  }
+
+ function create_stud(string $email, string $password, string $name_user, string $lastname_user){
+ 	$conn = create_db_conn();
+
+ 	$sql = "CALL create_user(\"$email\", \"$password\", \"$name_user\", \"$lastname_user\")";
+ 	if ($conn->query($sql) === TRUE) {
+ 		if ($conn->query("CALL create_student(LAST_INSERT_ID())") === TRUE) {
+ 			$conn->close();
+ 			return TRUE;
+ 		}else{
+ 			$conn->close();
+ 			return FALSE;
+ 		}
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 		}
+ 	
+ }
+
 
  function create_course(string $code_course, int $prof_id, string $name_course, string $desc){
  	$conn = create_db_conn();
 
  	$sql = "CALL create_course(\"$code_course\", $prof_id, \"$name_course\", \"$desc\")";
  	if ($conn->query($sql) === TRUE) {
- 		echo "se creo el curso".'<br>';//borrar despues
+ 		$conn->close();
+ 		return TRUE;
  	}else{
- 			echo "Error: ".$conn->error;
+ 		$conn->close();
+ 		return FALSE;
  		}
- 	$conn->close();
  }
 
-function create_assignment(string $code_course, string $assi_name, string $desc, bool $is_allowed){//agregar la fecha despues
+function create_assignment(string $code_course, string $assi_name, string $desc,string $deadline, bool $is_allowed){
 	$conn = create_db_conn();
 
-	$testdate = date("Y-m-d H:i:s");//borrar esto porque genera la fecha en el momento
- 	$sql = "CALL create_assignment(\"$code_course\", \"$assi_name\", \"$desc\", \"$testdate\", $is_allowed)";
+ 	$sql = "CALL create_assignment(\"$code_course\", \"$assi_name\", \"$desc\", \"$deadline\", $is_allowed)";
  	if ($conn->query($sql) === TRUE) {
- 		echo "se creo la asignacion".'<br>';//borrar despues
+ 		$conn->close();
+ 		return TRUE;
  	}else{
- 			echo "Error: ".$conn->error;
+ 		$conn->close();
+ 		return FALSE;
  		}
- 	$conn->close();
+ 
 }
 
 function login_user_web(string $email, string $password){
@@ -85,6 +108,36 @@ function login_user_web(string $email, string $password){
  	$conn->close();
  	return $prof_data;
 }
+
+function login_user_desk(string $email, string $password){
+	$conn = create_db_conn();
+
+ 	$sql = "CALL login_user(\"$email\", \"$password\")";
+ 	$result = $conn->query($sql);
+ 	if ($result->num_rows >0) {
+ 		$row = $result->fetch_assoc();
+ 		$stud_data = [];
+ 		$stud_data["name"] = $row["name_user"];
+ 		$stud_data["lastname"] = $row["lastname_user"];
+ 		$stud_data["email"] = $row["email_user"];
+ 		$stud_data["password"] = $row["password"];
+ 		$id_user = $row["id_user"];
+ 		while($conn->more_results()){
+ 			$conn->next_result();
+ 			$conn->use_result();
+ 		}
+ 		$result2 = $conn->query("SELECT id_student from Student where id_user = $id_user");
+
+ 		$row2 = $result2->fetch_assoc();
+ 		$stud_data["stud_id"] = $row2["id_student"];
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+ 	$conn->close();
+ 	return $stud_data;
+}
+
 function check_email(string $email){
 	$conn = create_db_conn();
 
@@ -154,4 +207,24 @@ function get_assignments_by_course(string $code_course){
  	return $assigments;
 }
 
+
+function enroll_stud(int $id_stud, string $course_code){
+	$conn = create_db_conn();
+
+ 	$sql = "CALL get_assignments_by_course(\"$code_course\")";
+ 	$result = $conn->query($sql);
+ 	if ($result->num_rows >0) {
+ 		$assigments = [];
+ 		$count = 0;
+ 		while($row = $result->fetch_assoc()){
+ 			$assigments[$count] = $row;
+ 			$count = $count+1;
+ 		}
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+ 	$conn->close();
+ 	return $assigments;
+}
 ?>

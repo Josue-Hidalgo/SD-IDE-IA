@@ -13,21 +13,41 @@ include 'professor_controller.php';
 include 'db_controller.php';
 
 //functions
-function Login(string $email, string $password){
+function Login_web(string $email, string $password){
 	//revisar en la base
 	$value = login_user_web($email, $password);
 	if ($value) {
 		createProf($value["prof_id"],$value["email"],$value["password"],$value["name"],$value["lastname"]);
 	}else {
-		return "The given email or password is incorrect.";//cambiar despues
+		return FALSE;//cambiar despues
 	}
 }
 
-function Register(string $email, string $password, string $username, string $userLast){
+function Login_desk(string $email, string $password){
+	//revisar en la base
+	$value = login_user_desk($email, $password);
+	if ($value) {
+		return $value;
+	}else {
+		return FALSE;
+	}
+}
+
+function Register_prof(string $email, string $password, string $username, string $userLast){
 	if(!check_email($email)){
 		create_prof($email, $password, $username, $userLast);
+		Return TRUE;
 	}else{
-		echo "The email is already in use.";//cambiar despues
+		Return FALSE;
+	}
+	
+}
+function Register_stud(string $email, string $password, string $username, string $userLast){
+	if(!check_email($email)){
+		create_stud($email, $password, $username, $userLast);
+		Return TRUE;
+	}else{
+		Return FALSE;
 	}
 	
 }
@@ -66,13 +86,9 @@ function RememberPassword(string $email){
 			echo "no se envio correo :(. error: {$mail->ErrorInfo}";
 		}
 	}else{
-		echo "email not found";//cambiar por un error correcto
+		Return FALSE;
 	}
 	
 }
-//Register("arayacastilloj@gmail.com", "correoprueba", "jose", "araya");
-//Login("arayacastilloj@gmail.com", "correoprueba");
-RememberPassword("arayacastilloj@gmail.com");//true
-//RememberPassword("fallo@fallo.com");//false
 
 ?>
