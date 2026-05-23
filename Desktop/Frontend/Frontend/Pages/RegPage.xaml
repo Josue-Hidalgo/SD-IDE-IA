@@ -16,7 +16,7 @@
             <TextBlock Text="Register" FontSize="30" HorizontalAlignment="Center" Foreground="White"/>
             <TextBlock Text="Name" FontSize="20" HorizontalAlignment="Left" Foreground="White"/>
             <TextBox x:Name="NameTB" FontSize="20" HorizontalAlignment="Stretch"/>
-            <TextBlock Text="姓" FontSize="20" HorizontalAlignment="Left" Foreground="White"/>
+            <TextBlock FontSize="20" HorizontalAlignment="Left" Foreground="White"><Run Language="es-419" Text="Lastname"/></TextBlock>
             <TextBox x:Name="LNameTB" FontSize="20" HorizontalAlignment="Stretch"/>
             <TextBlock Text="Email" FontSize="20" HorizontalAlignment="Left" Foreground="White"/>
             <TextBox x:Name="EmailTB" FontSize="20" HorizontalAlignment="Stretch"/>
