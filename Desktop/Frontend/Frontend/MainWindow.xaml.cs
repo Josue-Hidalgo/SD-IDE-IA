@@ -17,6 +17,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Frontend.Pages;
+using LibGit2Sharp; // Pa'l Git (Github)
+using WinForms = System.Windows.Forms; // Alias pa' evitar ambigüedad
 
 
 namespace Frontend
@@ -30,7 +32,10 @@ namespace Frontend
         string FileSelected = "";
         bool selectedFile = false;
         bool terminalOpen = false;
-        bool loged = false;
+        bool loggedIn = false; // <------ CAMBIO loged por loggedIn 
+
+        // Variables pa'l Git
+        GitPage gitPage = null;
 
         public MainWindow()
         {
@@ -50,7 +55,7 @@ namespace Frontend
             AcademicFrame.Navigate(new LRPage());
         }
 
-        public void windowMouseDown(object sender, MouseButtonEventArgs e)
+        public void WindowMouseDown(object sender, MouseButtonEventArgs e)
         {
             if(e.ChangedButton == MouseButton.Left)
             {
@@ -111,7 +116,7 @@ namespace Frontend
             terminalOpen = true;
         }
 
-        public void closeTerminal()
+        public void CloseTerminal()
         {
             if (terminal != null && !terminal.HasExited)
             {
@@ -126,9 +131,8 @@ namespace Frontend
 
         private void KCTerminal(object sender, EventArgs e)
         {
-            closeTerminal();
+            CloseTerminal();
         }
-
 
         private void p_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
@@ -156,7 +160,7 @@ namespace Frontend
 
         public void TerminalInputKD(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if(e.Key == Key.Enter)
+            if(e.Key == Key.Enter && terminalOpen)
             {
                 terminal.StandardInput.WriteLine(TerminalI.Text);
                 TerminalO.AppendText(TerminalI.Text);
@@ -193,8 +197,9 @@ namespace Frontend
             FileName.Text = "";
             FileSelected = "";
             selectedFile = false;
-            closeTerminal();
+            CloseTerminal();
         }
+       
         public async void SaveFileAs(object sender, EventArgs e)
         {
             SaveFileDialog SFD = new SaveFileDialog();
@@ -217,9 +222,10 @@ namespace Frontend
 
         public void RunCode(object sender, EventArgs e)
         {
-            if (selectedFile)
+            if (selectedFile && loggedIn)
+            //if (selectedFile)
             {
-                closeTerminal();
+                CloseTerminal();
                 StartTerminal(FileSelected);
             }
         }
@@ -235,11 +241,39 @@ namespace Frontend
                 WindowState = WindowState.Maximized;
             }
         }
+       
         public void ShutDown(object sender, EventArgs e)
         {
-            closeTerminal();
+            CloseTerminal();
             Application.Current.Shutdown();
         }
+
+        // GIT STUFF
+        public void OpenRepo(object sender, EventArgs e)
+        {
+            var dialog = new WinForms.FolderBrowserDialog
+            {
+                Description = "Selecciona la carpeta del repositorio Git"
+            };
+
+            if (dialog.ShowDialog() == WinForms.DialogResult.OK)
+            {
+                string repoPath = dialog.SelectedPath;
+
+                if (!Repository.IsValid(repoPath))
+                {
+                    MessageBox.Show(
+                        "La carpeta seleccionada no es un repositorio Git válido.",
+                        "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                gitPage = new GitPage();
+                gitPage.LoadRepo(repoPath);
+                AcademicFrame.Navigate(gitPage);
+            }
+        }
+
     }
 
 }

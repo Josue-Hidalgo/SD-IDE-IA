@@ -7,7 +7,8 @@
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
         Title="IDEIA" Height="450" Width="800" Background="#242424" WindowStyle="None" WindowStartupLocation="CenterScreen" BorderBrush="#242424"
-        MouseDown="windowMouseDown" ResizeMode="NoResize">
+        MouseDown="WindowMouseDown" ResizeMode="NoResize">
+
     <Grid Margin="10,0,10,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -24,6 +25,14 @@
                     <MenuItem Header="Open File" Background="#202020" Foreground="White" Click="OpenFile"/>
                     <MenuItem Header="Close File" Background="#202020" Foreground="White" Click="CloseFile"/>
                     <MenuItem Header="Save File As..." Background="#202020" Foreground="White" Click="SaveFileAs"/>
+                </MenuItem>
+                <MenuItem Header="Git" Background="#202020" Foreground="White">
+                    <MenuItem.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </MenuItem.Resources>
+                    <MenuItem Header="Open Repo..." Background="#202020" Foreground="White" Click="OpenRepo"/>
                 </MenuItem>
                 <MenuItem Header="Run" Background="#202020" Foreground="White">
                     <MenuItem.Resources>
