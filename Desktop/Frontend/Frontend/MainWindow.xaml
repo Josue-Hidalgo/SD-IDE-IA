@@ -48,7 +48,8 @@
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </MenuItem.Resources>
-                    <MenuItem Header="Close/kill" Background="#202020" Foreground="White" Click="KCTerminal"/>
+                    <MenuItem Header="Open Integrated Terminal" Background="#202020" Foreground="White" Click="OITerminal"/>
+                    <MenuItem Header="Close/kill" Background="#202020" Foreground="White" Click="CloseTerminal"/>
                 </MenuItem>
             </Menu>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -106,7 +107,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Input: " Margin="0,5" HorizontalAlignment="Center" Foreground="White"/>
-                        <TextBox x:Name="TerminalI" Grid.Column="1" Text="" Margin="0,3" Background="#191919" BorderBrush="#210036" Foreground="White" Padding="0,3,0,0" KeyDown="TerminalInputKD">
+                        <TextBox x:Name="TerminalI" Grid.Column="1" Text="" Margin="0,3" Background="#191919" BorderBrush="#210036" Foreground="White" Padding="0,3,0,0" AcceptsTab="True" KeyDown="TerminalInputKD">
                             <TextBox.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="5"/>

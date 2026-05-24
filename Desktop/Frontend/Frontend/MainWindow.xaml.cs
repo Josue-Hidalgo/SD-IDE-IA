@@ -1,21 +1,11 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 //using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Frontend.Pages;
 using LibGit2Sharp; // Pa'l Git (Github)
 using WinForms = System.Windows.Forms; // Alias pa' evitar ambigüedad
@@ -63,26 +53,42 @@ namespace Frontend
             }
         }
 
-        public void StartTerminal(string path)
+        public void StartTerminal(string path, bool integrated = false)
         {
             terminal = new Process();
-            terminal.StartInfo = new ProcessStartInfo("py")
+            if (integrated)
             {
-                RedirectStandardInput = true,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                Arguments = $@" -u {path}"
-            };
+                terminal.StartInfo = new ProcessStartInfo("cmd.exe")
+                {
+                    RedirectStandardInput = true,
+                    RedirectStandardError = false,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    Arguments = @"/K py -i 2>&1"
+                };
+            }
+            else
+            {
+                terminal.StartInfo = new ProcessStartInfo("py")
+                {
+                    RedirectStandardInput = true,
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    Arguments = $@" -u {path}"
+                };
+            }
             terminal.Start();
+            var stdo = terminal.StandardOutput;
             Task.Run(async () =>
             {
                 char[] buffer = new char[1];
 
-                while (!terminal.StandardOutput.EndOfStream)
+                while (!stdo.EndOfStream)
                 {
-                    int read = await terminal.StandardOutput.ReadAsync(buffer, 0, 1);
+                    int read = await stdo.ReadAsync(buffer, 0, 1);
 
                     if (read > 0)
                     {
@@ -93,25 +99,9 @@ namespace Frontend
                         });
                     }
                 }
+                Console.WriteLine("tuki?");
             });
-            Task.Run(async () =>
-            {
-                char[] buffer = new char[1];
-
-                while (!terminal.StandardError.EndOfStream)
-                {
-                    int read = await terminal.StandardError.ReadAsync(buffer, 0, 1);
-
-                    if (read > 0)
-                    {
-                        Dispatcher.Invoke(() =>
-                        {
-                            TerminalO.AppendText(buffer[0].ToString());
-                            TerminalO.ScrollToEnd();
-                        });
-                    }
-                }
-            });
+            
             TerminalGrid.Height = 200;
             terminalOpen = true;
         }
@@ -122,40 +112,12 @@ namespace Frontend
             {
                 terminal.Kill();
                 terminal.Dispose();
+                terminal = null;
             }
             TerminalGrid.Height = 0;
             TerminalO.Text = "";
             TerminalI.Text = "";
             terminalOpen = false;
-        }
-
-        private void KCTerminal(object sender, EventArgs e)
-        {
-            CloseTerminal();
-        }
-
-        private void p_ErrorDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            if (e.Data != null)
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    TerminalO.AppendText(e.Data + Environment.NewLine);
-                    TerminalO.ScrollToEnd();
-                });
-            }
-        }
-
-        private void p_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            if (e.Data != null)
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    TerminalO.AppendText(e.Data + Environment.NewLine);
-                    TerminalO.ScrollToEnd();
-                });
-            }
         }
 
         public void TerminalInputKD(object sender, System.Windows.Input.KeyEventArgs e)
@@ -222,12 +184,17 @@ namespace Frontend
 
         public void RunCode(object sender, EventArgs e)
         {
-            if (selectedFile && loggedIn)
-            //if (selectedFile)
+            if (selectedFile)
             {
                 CloseTerminal();
                 StartTerminal(FileSelected);
             }
+        }
+
+        public void OITerminal(object sender, EventArgs e)
+        {
+            CloseTerminal();
+            StartTerminal("",true);
         }
 
         public void ResizeW(object sender, EventArgs e)
@@ -273,7 +240,5 @@ namespace Frontend
                 AcademicFrame.Navigate(gitPage);
             }
         }
-
     }
-
 }
