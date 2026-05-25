@@ -42,6 +42,7 @@ namespace Frontend
 
             CodeEditor.Source = new Uri(path);
             TerminalGrid.Height = 0;
+            AcademicGrid.Width = 0;
             AcademicFrame.Navigate(new LRPage());
         }
 
@@ -131,6 +132,11 @@ namespace Frontend
             }
         }
 
+        public void KCTerminal(object sender, EventArgs e)
+        {
+            CloseTerminal();
+        }
+
         public void OpenFile(object sender, EventArgs e)
         {
             string route;
@@ -195,6 +201,18 @@ namespace Frontend
         {
             CloseTerminal();
             StartTerminal("",true);
+        }
+
+        public void OAArea(object sender, EventArgs e)
+        {
+            if(AcademicGrid.Width != 0)
+            {
+                AcademicGrid.Width = 0;
+            }
+            else
+            {
+                AcademicGrid.Width = 200;
+            }
         }
 
         public void ResizeW(object sender, EventArgs e)
