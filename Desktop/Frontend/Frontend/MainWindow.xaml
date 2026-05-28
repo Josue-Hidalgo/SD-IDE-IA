@@ -23,7 +23,9 @@
                         </Style>
                     </MenuItem.Resources>
                     <MenuItem Header="Open File" Background="#202020" Foreground="White" Click="OpenFile"/>
+                    <MenuItem Header="Open Directory" Background="#202020" Foreground="White" Click="OpenDirectory"/>
                     <MenuItem Header="Close File" Background="#202020" Foreground="White" Click="CloseFile"/>
+                    <MenuItem Header="Close Directory" Background="#202020" Foreground="White" Click="CloseFolder"/>
                     <MenuItem Header="Save File As..." Background="#202020" Foreground="White" Click="SaveFileAs"/>
                 </MenuItem>
                 <MenuItem Header="Git" Background="#202020" Foreground="White">
@@ -79,10 +81,66 @@
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Grid Grid.Row="0" Grid.Column="0">
+            <Grid x:Name="FilesGrid"  Grid.Column="0" Width="200">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Background="#202020">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="backFolderBTN" Content="↩" Foreground="White" Background="#202020" BorderThickness="0" Width="30" Grid.Column="0" Click="LastDIR">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <TextBlock x:Name="DirNameTB" Background="#202020" Foreground="White" Grid.Column="1" Text="" Height="30" VerticalAlignment="Center" Padding="5"/>
+                    <Button Content="↻" Foreground="White" Background="#202020" BorderThickness="0" Width="15" Grid.Column="2" Click="RefreshFolder">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </Grid>
+                    
+                <ListBox x:Name="FileList" Grid.Row="1" Background="#242424" BorderThickness="0" SelectionChanged="FileChange"
+                         ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="#242424"/>
+                            <Setter Property="Margin" Value="2"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="border" CornerRadius="4" Padding="2" Background="{TemplateBinding Background}">
+                                            <ContentPresenter/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="border" Property="BorderBrush" Value="#DE52FF"/>
+                                                <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    
+                </ListBox>
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="*"/>
@@ -90,13 +148,12 @@
                 </Grid.RowDefinitions>
 
                 <Border Background="#261C38"
-                CornerRadius="5"
                 Grid.Column="0"
                 Grid.Row="0"
                 Margin="0">
                     <TextBlock x:Name="FileName"  Text="" Margin="0,7" Foreground="White"/>
                 </Border>
-                <wv2:WebView2 x:Name="CodeEditor" Grid.Row="1" Grid.Column="0" Margin="0,5,0,0"/>
+                <wv2:WebView2 x:Name="CodeEditor" Grid.Row="1" Grid.Column="0" Margin="0,0,0,0"/>
                 <Grid x:Name="TerminalGrid" Height="200"  Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -125,7 +182,7 @@
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid x:Name="AcademicGrid" Width="200" Grid.Column="1">
+            <Grid x:Name="AcademicGrid" Width="200" Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>

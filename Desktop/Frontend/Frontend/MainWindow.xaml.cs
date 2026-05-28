@@ -1,15 +1,19 @@
-﻿using Microsoft.Win32;
+﻿using Frontend.Pages;
+using LibGit2Sharp; // Pa'l Git (Github)
+using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 //using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
-using Frontend.Pages;
-using LibGit2Sharp; // Pa'l Git (Github)
+using System.Windows.Media;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using WinForms = System.Windows.Forms; // Alias pa' evitar ambigüedad
-
 
 namespace Frontend
 {
@@ -20,6 +24,8 @@ namespace Frontend
     {
         Process terminal;
         string FileSelected = "";
+        string FolderSelected = "";
+        Stack<string> FolderFILO = new Stack<string>();
         bool selectedFile = false;
         bool terminalOpen = false;
         bool loggedIn = false; // <------ CAMBIO loged por loggedIn 
@@ -43,7 +49,28 @@ namespace Frontend
             CodeEditor.Source = new Uri(path);
             TerminalGrid.Height = 0;
             AcademicGrid.Width = 0;
+            FilesGrid.Width = 0;
+            backFolderBTN.Width = 0;
+
             AcademicFrame.Navigate(new LRPage());
+        }
+
+        public void ResizeW(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                WindowState = WindowState.Normal;
+            }
+            else
+            {
+                WindowState = WindowState.Maximized;
+            }
+        }
+
+        public void ShutDown(object sender, EventArgs e)
+        {
+            CloseTerminal();
+            Application.Current.Shutdown();
         }
 
         public void WindowMouseDown(object sender, MouseButtonEventArgs e)
@@ -100,7 +127,6 @@ namespace Frontend
                         });
                     }
                 }
-                Console.WriteLine("tuki?");
             });
             
             TerminalGrid.Height = 200;
@@ -159,7 +185,87 @@ namespace Frontend
             }
         }
 
+        public void OpenDirectory(object sender, EventArgs e)
+        {
+            if(FolderSelected != "")
+            {
+                FileList.Items.Clear();
+                FolderFILO.Clear();
+            }
+            var dialog = new CommonOpenFileDialog{IsFolderPicker=true};
+            if(dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                ODIR(dialog.FileName);
+                FilesGrid.Width = 200;
+            }
+        }
+
+        public void ODIR(string p)
+        {
+            FileList.Items.Clear();
+            FolderSelected = p;
+            DirNameTB.Text = Path.GetFileName(p);
+            foreach (string d in Directory.GetDirectories(p))
+            {
+                ListBoxItem i = new ListBoxItem();
+
+                i.Content = Path.GetFileName(d);
+                i.Background = new SolidColorBrush(Color.FromRgb(28, 12, 46));
+                FileList.Items.Add(i);
+            }
+            foreach (string d in Directory.GetFiles(p))
+            {
+                FileList.Items.Add(Path.GetFileName(d));
+            }
+        }
+
+        public void FileChange(object sender, SelectionChangedEventArgs e)
+        {
+            if (FileList.SelectedItem == null) return;
+            string p;
+            if (FileList.SelectedItem is ListBoxItem)
+            {
+                ListBoxItem it = (ListBoxItem)FileList.SelectedItem;
+                p = FolderSelected + "\\" + it.Content.ToString();
+            }
+            else 
+            {
+                p = FolderSelected + "\\" + FileList.SelectedItem;
+            }
+            Console.WriteLine(p);
+            if (File.Exists(p))
+            {
+                FileSelected = p;
+                TextReader reader = new StreamReader(FileSelected);
+                CodeEditor.CoreWebView2.ExecuteScriptAsync($"setValue(\"{(reader.ReadToEnd()).Replace("\r", "").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n")}\");");
+                FileName.Text = System.IO.Path.GetFileName(FileSelected);
+                selectedFile = true;
+            }
+            else if (Directory.Exists(p))
+            {
+                FolderFILO.Push(FolderSelected);
+                backFolderBTN.Width = 30;
+                ODIR(p);
+            }
+        }
+
+
+        public void CloseFolder(object sender, EventArgs e)
+        {
+            CF();
+            FolderSelected = "";
+            FileList.Items.Clear();
+            FilesGrid.Width = 0;
+            backFolderBTN.Width = 0;
+            FolderFILO.Clear();
+        }
+
         public void CloseFile(object sender, EventArgs e)
+        {
+            CF();
+        }
+
+        public void CF()
         {
             CodeEditor.CoreWebView2.ExecuteScriptAsync($"setValue(\"\");");
             FileName.Text = "";
@@ -168,6 +274,21 @@ namespace Frontend
             CloseTerminal();
         }
        
+        public void LastDIR(object sender, EventArgs e)
+        {
+            ODIR(FolderFILO.Pop());
+            if(FolderFILO.Count == 0)
+            {
+                backFolderBTN.Width = 0;
+            }
+        }
+
+        public void RefreshFolder(object sender, EventArgs e)
+        {
+            FileList.Items.Clear();
+            ODIR(FolderSelected);
+        }
+
         public async void SaveFileAs(object sender, EventArgs e)
         {
             SaveFileDialog SFD = new SaveFileDialog();
@@ -175,7 +296,6 @@ namespace Frontend
             if (SFD.ShowDialog() == true)
             {
                 string content = await CodeEditor.CoreWebView2.ExecuteScriptAsync("getValue();");
-                Console.WriteLine(content);
                 // ExecuteScriptAsync devuelve el valor JSON-encoded, así que hay que limpiar las comillas
                 content = content.Trim('"');
                 File.WriteAllText(SFD.FileName, content.Replace("\\\\n","\\hi").Replace("\\n", "\n").Replace("\\hi", "\\n")
@@ -213,24 +333,6 @@ namespace Frontend
             {
                 AcademicGrid.Width = 200;
             }
-        }
-
-        public void ResizeW(object sender, EventArgs e)
-        {
-            if(WindowState == WindowState.Maximized)
-            {
-                WindowState = WindowState.Normal;
-            }
-            else
-            {
-                WindowState = WindowState.Maximized;
-            }
-        }
-       
-        public void ShutDown(object sender, EventArgs e)
-        {
-            CloseTerminal();
-            Application.Current.Shutdown();
         }
 
         // GIT STUFF
