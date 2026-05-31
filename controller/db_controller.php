@@ -1,9 +1,9 @@
 <?php 
  function create_db_conn(){// sudo apt-get install php8.4-mysql
- 	$servername = "localhost";//cambiar valores por los de la base real
-	$username = "AcademycIDEIA";
-	$password = "#IDEIA";
-	$dbname = "IDEIA";
+ 	$servername = "localhost";
+	$username = "AcademycIDEIA";//"root";//"AcademycIDEIA";
+	$password = "#IDEIA";//"Qwertys123.";//"#IDEIA";
+	$dbname = "IDEIA";//"prueba";//"IDEIA";
 
 	$conn =  new mysqli($servername, $username, $password, $dbname);
 
@@ -69,7 +69,8 @@
 function create_assignment(string $code_course, string $assi_name, string $desc,string $deadline, bool $is_allowed){
 	$conn = create_db_conn();
 
- 	$sql = "CALL create_assignment(\"$code_course\", \"$assi_name\", \"$desc\", \"$deadline\", $is_allowed)";
+ 	$sql = "CALL create_assignment(\"$code_course\", \"$assi_name\", \"$desc\", \"$deadline\", ".((int)$is_allowed).")";
+
  	if ($conn->query($sql) === TRUE) {
  		$conn->close();
  		return TRUE;
@@ -207,6 +208,20 @@ function get_assignments_by_course(string $code_course){
  	return $assigments;
 }
 
+function  modify_assign(string $assign_name, string $code_course, string $desc, string $deadline, bool $is_allowed){
+	$conn = create_db_conn();
+
+	$sql = "UPDATE Assignment SET description_assignment = \"$desc\", deadline = \"$deadline\", is_allowed_after_deadline = ".((int)$is_allowed)." where code_course = \"$code_course\" and name_assignment = \"$assign_name\"";
+
+	if ($conn->query($sql) === TRUE) {
+ 		$conn->close();
+ 		return TRUE;
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+
+}
 
 function enroll_stud(int $id_stud, string $course_code){
 	$conn = create_db_conn();
