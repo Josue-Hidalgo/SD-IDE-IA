@@ -94,6 +94,7 @@ function RememberPassword(string $email){
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$json = file_get_contents('php://input');
 	$data = json_decode($json);
+	header('Content-type: application/json; charset=utf-8');
 	switch($data->action){
 		case 'insert_student':
 			$st_name = $data->username;
@@ -101,6 +102,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$st_pass =$data->password;
 			$st_last = $data->userLast;
 			Register_stud($st_email, $st_pass, $st_name, $st_last);
+			http_response_code(201);
+			$responseData =[
+				'success' => true,
+				'message' => 'Date received successfully',
+			];
+			echo json_encode($responseData);
 			break;
 		case 'create_prof':
 			$prof_name = $data->username;
@@ -108,6 +115,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$prof_pass =$data->password;
 			$prof_last = $data->userLast;
 			Register_prof($prof_email, $prof_pass, $prof_name, $prof_last);
+			http_response_code(201);
+			$responseData =[
+				'success' => true,
+				'message' => 'Date received successfully',
+			];
+			echo json_encode($responseData);
 			break;
 	}
 
