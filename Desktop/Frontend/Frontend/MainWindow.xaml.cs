@@ -28,6 +28,7 @@ namespace Frontend
         Stack<string> FolderFILO = new Stack<string>();
         bool selectedFile = false;
         bool terminalOpen = false;
+        bool ValidRepo = false;
         bool loggedIn = false; // <------ CAMBIO loged por loggedIn 
 
         // Variables pa'l Git
@@ -51,8 +52,6 @@ namespace Frontend
             AcademicGrid.Width = 0;
             FilesGrid.Width = 0;
             backFolderBTN.Width = 0;
-
-            AcademicFrame.Navigate(new LRPage());
         }
 
         public void ResizeW(object sender, EventArgs e)
@@ -249,7 +248,6 @@ namespace Frontend
             }
         }
 
-
         public void CloseFolder(object sender, EventArgs e)
         {
             CF();
@@ -323,42 +321,40 @@ namespace Frontend
             StartTerminal("",true);
         }
 
-        public void OAArea(object sender, EventArgs e)
+        public void AcademicBTN(object sender, EventArgs e)
         {
-            if(AcademicGrid.Width != 0)
-            {
-                AcademicGrid.Width = 0;
-            }
-            else
-            {
-                AcademicGrid.Width = 200;
-            }
+            AcademicFrame.Navigate(new LRPage());
+            OpenAcademicArea();
+        }
+
+        public void CloseAcademicArea(object sender, EventArgs e)
+        {
+            AcademicGrid.Width = 0;
+        }
+
+        public void OpenAcademicArea()
+        {
+            AcademicGrid.Width = 200;
         }
 
         // GIT STUFF
-        public void OpenRepo(object sender, EventArgs e)
+        public void OpenGitW(object sender, EventArgs e)
         {
-            var dialog = new WinForms.FolderBrowserDialog
+
+            var dialog = new CommonOpenFileDialog {IsFolderPicker = true};
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                Description = "Selecciona la carpeta del repositorio Git"
-            };
-
-            if (dialog.ShowDialog() == WinForms.DialogResult.OK)
-            {
-                string repoPath = dialog.SelectedPath;
-
-                if (!Repository.IsValid(repoPath))
-                {
-                    MessageBox.Show(
-                        "La carpeta seleccionada no es un repositorio Git válido.",
-                        "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                gitPage = new GitPage();
-                gitPage.LoadRepo(repoPath);
-                AcademicFrame.Navigate(gitPage);
+                ODIR(dialog.FileName);
+                FilesGrid.Width = 200;
             }
+            OpenAcademicArea();
+            gitPage = new GitPage();
+            gitPage.LoadRepo(dialog.FileName);
+            AcademicFrame.Navigate(gitPage);
+        }
+        public void VerifyGit(string path)
+        {
+            ValidRepo = Repository.IsValid(path);
         }
     }
 }

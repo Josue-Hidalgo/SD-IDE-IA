@@ -34,7 +34,8 @@
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </MenuItem.Resources>
-                    <MenuItem Header="Open Repo..." Background="#202020" Foreground="White" Click="OpenRepo"/>
+                    <MenuItem Header="Open Repository" Background="#202020" Foreground="White" Click="OpenGitW"/>
+                    <MenuItem Header="Close Repository window" Background="#202020" Foreground="White" Click="CloseAcademicArea"/>
                 </MenuItem>
                 <MenuItem Header="Run" Background="#202020" Foreground="White">
                     <MenuItem.Resources>
@@ -59,7 +60,8 @@
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </MenuItem.Resources>
-                    <MenuItem Header="Open/Close" Background="#202020" Foreground="White" Click="OAArea"/>
+                    <MenuItem Header="Open Academic Area" Background="#202020" Foreground="White" Click="AcademicBTN"/>
+                    <MenuItem Header="Close Academic Area" Background="#202020" Foreground="White" Click="CloseAcademicArea"/>
                 </MenuItem>
             </Menu>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
