@@ -101,26 +101,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$st_email =$data->email;
 			$st_pass =$data->password;
 			$st_last = $data->userLast;
-			Register_stud($st_email, $st_pass, $st_name, $st_last);
-			http_response_code(201);
-			$responseData =[
-				'success' => true,
-				'message' => 'Date received successfully',
-			];
-			echo json_encode($responseData);
+			$success = Register_stud($st_email, $st_pass, $st_name, $st_last);
+			if ($success) {
+				http_response_code(201);
+				$responseData =[
+					'success' => true,
+					'message' => 'Date received successfully',
+				];
+				echo json_encode($responseData);
+			} else {
+				http_response_code(400);
+				$responseData =[
+					'success' => FALSE,
+					'message' => 'User already exist.',
+				];
+				echo json_encode($responseData);
+
+			}
+			
+			
 			break;
 		case 'create_prof':
 			$prof_name = $data->username;
 			$prof_email =$data->email;
 			$prof_pass =$data->password;
 			$prof_last = $data->userLast;
-			Register_prof($prof_email, $prof_pass, $prof_name, $prof_last);
-			http_response_code(201);
-			$responseData =[
-				'success' => true,
-				'message' => 'Date received successfully',
-			];
-			echo json_encode($responseData);
+			$success = Register_prof($prof_email, $prof_pass, $prof_name, $prof_last);
+			if ($success) {
+				http_response_code(201);
+				$responseData =[
+					'success' => true,
+					'message' => 'Date received successfully',
+				];
+				echo json_encode($responseData);
+			} else {
+				http_response_code(400);
+				$responseData =[
+					'success' => FALSE,
+					'message' => 'User already exist.',
+				];
+				echo json_encode($responseData);
+
+			}
 			break;
 	}
 
