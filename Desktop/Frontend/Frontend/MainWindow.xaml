@@ -9,6 +9,55 @@
         Title="IDEIA" Height="450" Width="800" Background="#242424" WindowStyle="None" WindowStartupLocation="CenterScreen" BorderBrush="#242424"
         MouseDown="WindowMouseDown" ResizeMode="NoResize">
 
+    <Window.Resources>
+        <Style TargetType="MenuItem">
+            <Setter Property="Background" Value="#202020"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="6,4">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter x:Name="Icon" Grid.Column="0" Margin="0,0,6,0"
+                                              ContentSource="Icon" SnapsToDevicePixels="True"/>
+                                <ContentPresenter x:Name="HeaderHost" Grid.Column="1"
+                                              ContentSource="Header" RecognizesAccessKey="True"/>
+                                <Popup x:Name="PART_Popup"
+                                   Grid.Column="0"
+                                   IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                   Placement="Bottom"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   PopupAnimation="Fade">
+                                    <Border Background="#202020" CornerRadius="5" Padding="2"
+                                        BorderBrush="#3A1A5C" BorderThickness="1">
+                                        <ItemsPresenter/>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#3A1A5C"/>
+                            </Trigger>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#3A1A5C"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="10,0,10,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
