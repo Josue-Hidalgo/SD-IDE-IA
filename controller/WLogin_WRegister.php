@@ -19,7 +19,7 @@ function Login_web(string $email, string $password){
 	if ($value) {
 		createProf($value["prof_id"],$value["email"],$value["password"],$value["name"],$value["lastname"]);
 	}else {
-		return FALSE;//cambiar despues
+		return FALSE;
 	}
 }
 
@@ -90,6 +90,7 @@ function RememberPassword(string $email){
 	}
 	
 }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$json = file_get_contents('php://input');
 	$data = json_decode($json);
@@ -108,10 +109,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$prof_last = $data->userLast;
 			Register_prof($prof_email, $prof_pass, $prof_name, $prof_last);
 			break;
+	}
+
 }
+
+if($_GET['action'] === 'log_student'){
+	$email = $_GET['email'];
+	$password = $_GET['password'];
+	$data = Login_desk($email,$password);
+	header('Content-type: application/json');
+	echo json_encode($data);
 }
-
-
-
+if($_GET['action'] === 'log_prof'){
+	$email = $_GET['email'];
+	$password = $_GET['password'];
+	$data = Login_web($email,$password);
+}
 
 ?>
