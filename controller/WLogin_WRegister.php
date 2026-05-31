@@ -90,5 +90,28 @@ function RememberPassword(string $email){
 	}
 	
 }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	$json = file_get_contents('php://input');
+	$data = json_decode($json);
+	switch($data->action){
+		case 'insert_student':
+			$st_name = $data->username;
+			$st_email =$data->email;
+			$st_pass =$data->password;
+			$st_last = $data->userLast;
+			Register_stud($st_email, $st_pass, $st_name, $st_last);
+			break;
+		case 'create_prof':
+			$prof_name = $data->username;
+			$prof_email =$data->email;
+			$prof_pass =$data->password;
+			$prof_last = $data->userLast;
+			Register_prof($prof_email, $prof_pass, $prof_name, $prof_last);
+			break;
+}
+}
+
+
+
 
 ?>
