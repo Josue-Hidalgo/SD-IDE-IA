@@ -1,20 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Frontend.Pages
 {
@@ -29,7 +19,6 @@ namespace Frontend.Pages
             InitializeComponent();
             getData();
         }
-
 
         public async void Enroll(object sender, EventArgs e)
         {
@@ -63,9 +52,9 @@ namespace Frontend.Pages
         {
             if (CourseList.SelectedItem == null) return;
 
-            string[] code = CourseList.SelectedItem.ToString().Split(' ');
+            string[] code = CourseList.SelectedItem.ToString().Split('&');
 
-            NavigationService.Navigate(new AsignmentsPage(code[0], code[1]));
+            NavigationService.Navigate(new AsignmentsPage(code));
             NavigationService.RemoveBackEntry();
         }
 
@@ -76,13 +65,14 @@ namespace Frontend.Pages
             string url = "http://138.2.239.69/student_controller.php?" + "id_stud=" + user.id;
             string response = await client.GetStringAsync(url);
             CourseList.Items.Clear();
+            Console.WriteLine(response);
 
             if (!response.Contains("false"))
             {
                 courses = JsonConvert.DeserializeObject(response);
                 foreach (var course in courses)
                 {
-                    CourseList.Items.Add(course["code_course"] +" "+course["name_course"]);
+                    CourseList.Items.Add(course["code_course"] +"&"+course["name_course"]);
                 }
             }
         }

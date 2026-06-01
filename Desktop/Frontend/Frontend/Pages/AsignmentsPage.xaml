@@ -18,9 +18,9 @@
                     </Style>
                 </Button.Resources>
             </Button>
-            <TextBlock x:Name="CourseNameTB" Text="" FontSize="20" HorizontalAlignment="Left" Foreground="#808080"/>
+            <TextBlock x:Name="CourseNameTB" Text="" FontSize="20" Width="200" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#808080"/>
             <TextBlock Text="Assignments" FontSize="30" HorizontalAlignment="Center" Foreground="White" Margin="0,0,0,5"/>
-            <ListBox x:Name="AssList" Background="#242424" BorderThickness="0" SelectionChanged="AssChange"
+            <ListBox x:Name="AssList" Background="#2424" BorderThickness="0" SelectionChanged="AssChange"
              ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">

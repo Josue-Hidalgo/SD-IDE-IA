@@ -27,12 +27,12 @@ namespace Frontend.Pages
         string courseName = "";
         dynamic Asses = new { };
 
-        public AsignmentsPage(string CID,string CName)
+        public AsignmentsPage(string[] Course)
         {
-            courseID = CID;
-            courseName = CName;
+            courseID = Course[0];
+            courseName = Course[1];
             InitializeComponent();
-            CourseNameTB.Text = CID+" "+CName;
+            CourseNameTB.Text = Course[0]+"\n"+Course[1];
             getData();
         }
 
