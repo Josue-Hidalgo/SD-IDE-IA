@@ -2,7 +2,6 @@
 // Main JavaScript for the Professor Dashboard frontend
 // ===============================
 
-const API_BASE = "../controller";
 
 
 // Variables globales 
@@ -71,7 +70,7 @@ async function requestBackend(controller, options = {}) {
   const params = options.params || null;
   const body = options.body || null;
 
-  let url = `${API_BASE}/${controller}`;
+  let url = `${controller}`;
 
   if (params) {
     const queryParams = new URLSearchParams(params);
