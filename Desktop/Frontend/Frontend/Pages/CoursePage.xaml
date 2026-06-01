@@ -12,16 +12,39 @@
     <Grid Background="#2424">
         <StackPanel Orientation="Vertical" VerticalAlignment="Top" Margin="10,0,10,0">
             <TextBlock Text="Courses" FontSize="30" HorizontalAlignment="Center" Foreground="White"/>
-            <TextBox Text="" FontSize="15" HorizontalAlignment="Stretch"/>
-            <Button Content="Enroll Course" Background="#DE52FF" FontSize="15" Margin="0,5,0,0" Foreground="Black" BorderThickness="0">
+            <TextBox x:Name="courseCodeTB" Text="" FontSize="15" TextAlignment="Center" HorizontalAlignment="Stretch"/>
+            <Button Content="Enroll Course" Background="#DE52FF" FontSize="15" Margin="0,5,0,5" Foreground="Black" BorderThickness="0" Click="Enroll">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="10"/>
                     </Style>
                 </Button.Resources>
             </Button>
-            <ListBox x:Name="CourseList">
-
+            <ListBox x:Name="CourseList" Background="#2424" BorderThickness="0" SelectionChanged="CourseChange"
+                         ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Background" Value="#291B2B"/>
+                        <Setter Property="FontSize" Value="15"/>
+                        <Setter Property="Margin" Value="2"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border x:Name="border" CornerRadius="4" Padding="2" Background="{TemplateBinding Background}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="border" Property="BorderBrush" Value="#DE52FF"/>
+                                            <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
             </ListBox>
         </StackPanel>
     </Grid>

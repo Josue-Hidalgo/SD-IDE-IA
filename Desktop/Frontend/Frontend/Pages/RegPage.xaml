@@ -10,7 +10,7 @@
       HorizontalAlignment="Stretch"
       VerticalAlignment="Stretch">
 
-    <Grid Background="#242424">
+    <Grid Background="#2424">
         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="10,0,10,0">
             <Button Content="↩" FontSize="20" HorizontalAlignment="Left" Background="Transparent" BorderThickness="0" Click="backToLogin" Foreground="White"/>
             <TextBlock Text="Register" FontSize="30" HorizontalAlignment="Center" Foreground="White"/>

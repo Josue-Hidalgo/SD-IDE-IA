@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Mail;
@@ -58,7 +59,6 @@ namespace Frontend.Pages
             }
             else
             {
-                MessageBox.Show("Logged succesfully.", "Logged!", MessageBoxButton.OK, MessageBoxImage.Information);
                 dynamic json = JsonConvert.DeserializeObject(response);
                 Singleton user = Singleton.Instance;
                 user.id = json["stud_id"];

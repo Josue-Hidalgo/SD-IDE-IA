@@ -107,7 +107,7 @@
 
     </Page.Resources>
 
-    <Grid Background="#242424">
+    <Grid Background="#2424">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>

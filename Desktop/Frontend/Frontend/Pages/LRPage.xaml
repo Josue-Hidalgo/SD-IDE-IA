@@ -10,7 +10,7 @@
       VerticalAlignment="Stretch"
       Title="LRPage">
 
-    <Grid Background="#242424">
+    <Grid Background="#2424">
         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="10,0,10,0">
             <TextBlock Text="Login" FontSize="30" HorizontalAlignment="Center" Foreground="White"/>
             <TextBlock Text="Email" FontSize="20" HorizontalAlignment="Left" Foreground="White"/>

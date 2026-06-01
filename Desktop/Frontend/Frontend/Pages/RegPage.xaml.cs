@@ -63,7 +63,7 @@ namespace Frontend.Pages
             }
             else
             {
-                MessageBox.Show("The user already exists.", "Datos invalidos", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("The user already exists.", "Invalid data", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }
