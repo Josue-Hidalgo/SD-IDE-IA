@@ -246,20 +246,13 @@ function  modify_assign(string $assign_name, string $code_course, string $desc, 
 function enroll_stud(int $id_stud, string $course_code){
 	$conn = create_db_conn();
 
- 	$sql = "CALL get_assignments_by_course(\"$code_course\")";
- 	$result = $conn->query($sql);
- 	if ($result->num_rows >0) {
- 		$assigments = [];
- 		$count = 0;
- 		while($row = $result->fetch_assoc()){
- 			$assigments[$count] = $row;
- 			$count = $count+1;
- 		}
+ 	$sql = "CALL enroll_student($id_stud,\"$course_code\")";
+ 	if ($conn->query($sql) === TRUE) {
+ 		$conn->close();
+ 		return TRUE;
  	}else{
  		$conn->close();
  		return FALSE;
  	}
- 	$conn->close();
- 	return $assigments;
 }
 ?>
