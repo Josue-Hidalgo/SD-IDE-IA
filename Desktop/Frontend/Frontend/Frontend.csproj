@@ -95,6 +95,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Decorator\FormattedScript.cs" />
+    <Compile Include="Decorator\IScript.cs" />
+    <Compile Include="Decorator\Script.cs" />
+    <Compile Include="Decorator\ScriptDecorator.cs" />
+    <Compile Include="Decorator\SignedScript.cs" />
     <Compile Include="Singleton.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
