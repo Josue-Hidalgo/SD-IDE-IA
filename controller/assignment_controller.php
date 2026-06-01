@@ -16,5 +16,10 @@ function modify_assignment(string $assign_name, string $code_course, string $des
 	return modify_assign($assign_name, $code_course, $desc, $deadline, $is_allowed);
 }
 
-
+if($_GET['code_course']){
+	$code = $_GET['code_course'];
+	$data = get_all_assignment_by_course($code);
+	header('Content-type: application/json');
+	echo json_encode($data);
+}
 ?>
