@@ -82,8 +82,7 @@ namespace Frontend.Pages
                 courses = JsonConvert.DeserializeObject(response);
                 foreach (var course in courses)
                 {
-                    dynamic c = JsonConvert.DeserializeObject(response);
-                    CourseList.Items.Add(c[0]["code_course"] +" "+c[0]["name_course"]);
+                    CourseList.Items.Add(course["code_course"] +" "+course["name_course"]);
                 }
             }
         }

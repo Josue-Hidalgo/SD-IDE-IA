@@ -60,7 +60,6 @@ namespace Frontend.Pages
                 Asses = JsonConvert.DeserializeObject(response);
                 foreach (var Ass in Asses)
                 {
-                    dynamic a = JsonConvert.DeserializeObject(response);
                     AssList.Items.Add(Ass["name_assignment"]);
                 }
             }
