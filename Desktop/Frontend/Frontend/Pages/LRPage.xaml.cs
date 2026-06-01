@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http;
+using System.Net.Mail;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Frontend.Pages
 {
@@ -29,6 +23,51 @@ namespace Frontend.Pages
         {
             NavigationService.Navigate(new RegPage());
             NavigationService.RemoveBackEntry();
+        }
+
+        public void Login(object sender, EventArgs e)
+        {
+            bool valid = true;
+            if (EmailTB.Text == "") valid = false;
+            if (PasswordTB.Password == "") valid = false;
+
+            try
+            {
+                var addr = new MailAddress(EmailTB.Text);
+                if (valid) { getData(); }
+                else
+                {
+                    MessageBox.Show("All fields must be filled out to login.", "Invalid data", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Wrong email format.", "Invalid data", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        public async void getData()
+        {
+            var client = new HttpClient();
+            string url = "http://138.2.239.69/WLogin_WRegister.php?"+"action=log_student&email="+EmailTB.Text+"&password="+PasswordTB.Password;
+            string response = await client.GetStringAsync(url);
+
+            if (response.Contains("false"))
+            {
+                MessageBox.Show("wrong credentials.", "Invalid data", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("Logged succesfully.", "Logged!", MessageBoxButton.OK, MessageBoxImage.Information);
+                dynamic json = JsonConvert.DeserializeObject(response);
+                Singleton user = Singleton.Instance;
+                user.id = json["stud_id"];
+                user.name = json["name"];
+                user.Lname = json["lastname"];
+                user.email = json["email"];
+                NavigationService.Navigate(new CoursePage());
+                NavigationService.RemoveBackEntry();
+            }
         }
     }
 }

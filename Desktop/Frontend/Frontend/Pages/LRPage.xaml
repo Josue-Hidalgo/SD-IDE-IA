@@ -14,11 +14,18 @@
         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="10,0,10,0">
             <TextBlock Text="Login" FontSize="30" HorizontalAlignment="Center" Foreground="White"/>
             <TextBlock Text="Email" FontSize="20" HorizontalAlignment="Left" Foreground="White"/>
-            <TextBox x:Name="EmailTB" FontSize="20" HorizontalAlignment="Stretch" Foreground="White"/>
+            <TextBox x:Name="EmailTB" FontSize="20" HorizontalAlignment="Stretch" Foreground="Black"/>
             <TextBlock Text="Password" FontSize="20" HorizontalAlignment="Left" Foreground="White"/>
-            <PasswordBox x:Name="PasswordTB" FontSize="20" HorizontalAlignment="Stretch" Foreground="White"/>
+            <PasswordBox x:Name="PasswordTB" FontSize="20" HorizontalAlignment="Stretch" Foreground="Black"/>
             <TextBlock Text="Dont have an account?" FontSize="10" HorizontalAlignment="Center" Foreground="White"/>
             <Button Content="Create student account" Background="Transparent" BorderThickness="0" FontSize="10" HorizontalAlignment="Center" Foreground="#DE52FF" Click="showRegPage"/>
+            <Button Content="Login" Background="#DE52FF" FontSize="20" Margin="0,10,0,0" Click="Login" BorderThickness="0">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
         </StackPanel>
     </Grid>
 </Page>

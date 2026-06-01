@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using Newtonsoft.Json;
 
 namespace Frontend.Pages
 {
@@ -27,13 +21,50 @@ namespace Frontend.Pages
 
         public void Register(object sender, EventArgs e)
         {
-            NavigationService.Navigate(new LRPage());
-            NavigationService.RemoveBackEntry();
+            bool valid = true;
+            if(NameTB.Text == "") valid = false;
+            if(LNameTB.Text == "") valid = false;
+            if(EmailTB.Text == "") valid = false;
+            if(PasswordTB.Password == "") valid = false;
+
+            if (valid){SendData();}
+            else
+            {
+                MessageBox.Show("All fields must be filled out to register.", "Invalid data", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
         public void backToLogin(object sender, EventArgs e)
         {
             NavigationService.Navigate(new LRPage());
             NavigationService.RemoveBackEntry();
+        }
+
+        public async void SendData()
+        {
+            var client = new HttpClient();
+            var data = new
+            {
+                action = "insert_student",
+                email = EmailTB.Text,
+                password = PasswordTB.Password,
+                username = NameTB.Text,
+                userLast = LNameTB.Text
+            };
+            string url = "http://138.2.239.69/WLogin_WRegister.php";
+            string jsonText = JsonConvert.SerializeObject(data);
+            var encodeText = new StringContent(jsonText, Encoding.UTF8, "application/json");
+            HttpResponseMessage respuesta = await client.PostAsync(url,encodeText);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                MessageBox.Show("successfully registered.", "Registered!", MessageBoxButton.OK, MessageBoxImage.Information);
+                NavigationService.Navigate(new LRPage());
+                NavigationService.RemoveBackEntry();
+            }
+            else
+            {
+                MessageBox.Show("The user already exists.", "Datos invalidos", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
     }
 }

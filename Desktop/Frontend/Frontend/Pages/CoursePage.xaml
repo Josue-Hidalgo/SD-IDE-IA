@@ -10,13 +10,8 @@
       VerticalAlignment="Stretch">
 
     <Grid Background="#2424">
-        <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Margin="10,0,10,0">
+        <StackPanel Orientation="Vertical" VerticalAlignment="Top" Margin="10,0,10,0">
             <TextBlock Text="Courses" FontSize="30" HorizontalAlignment="Center" Foreground="White"/>
-            <ListBox>
-                <ListBoxItem>
-                    <TextBlock Text="hola"/>
-                </ListBoxItem>
-            </ListBox>
             <TextBox Text="" FontSize="15" HorizontalAlignment="Stretch"/>
             <Button Content="Enroll Course" Background="#DE52FF" FontSize="15" Margin="0,5,0,0" Foreground="Black" BorderThickness="0">
                 <Button.Resources>
@@ -25,6 +20,9 @@
                     </Style>
                 </Button.Resources>
             </Button>
+            <ListBox x:Name="CourseList">
+
+            </ListBox>
         </StackPanel>
     </Grid>
 </Page>
