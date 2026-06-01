@@ -10,6 +10,17 @@ function enroll_student(int $id_stud, string $course_code){
 	}
 }
 
+function get_enroll_courses(int $id_stud){
+	return get_all_stud_courses($id_stud);
+}
+
+if($_GET['id_stud']){
+	$id = $_GET['id_stud'];
+	$data = get_enroll_courses($id);
+	header('Content-type: application/json');
+	echo json_encode($data);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$json = file_get_contents('php://input');
 	$data = json_decode($json);
