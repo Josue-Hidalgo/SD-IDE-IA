@@ -2,7 +2,7 @@
  function create_db_conn(){// sudo apt-get install php8.4-mysql
  	$servername = "localhost";
 	$username = "AcademycIDEIA";//"root";//
-	$password = "#IDEIA#";//"Qwertys123.";
+	$password = "#IDEIA#";//"Qwertys123.";//
 	$dbname = "IDEA";//"prueba";//
 
 	$conn =  new mysqli($servername, $username, $password, $dbname);
@@ -92,7 +92,7 @@ function login_user_web(string $email, string $password){
  		$prof_data["name"] = $row["name_user"];
  		$prof_data["lastname"] = $row["lastname_user"];
  		$prof_data["email"] = $row["email_user"];
- 		$prof_data["password"] = $row["password"];
+ 		$prof_data["password"] = $row["password_user"];
  		$id_user = $row["id_user"];
  		while($conn->more_results()){
  			$conn->next_result();
@@ -121,7 +121,7 @@ function login_user_desk(string $email, string $password){
  		$stud_data["name"] = $row["name_user"];
  		$stud_data["lastname"] = $row["lastname_user"];
  		$stud_data["email"] = $row["email_user"];
- 		$stud_data["password"] = $row["password"];
+ 		$stud_data["password"] = $row["password_user"];
  		$id_user = $row["id_user"];
  		while($conn->more_results()){
  			$conn->next_result();
