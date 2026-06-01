@@ -116,7 +116,7 @@ CREATE TABLE Submission (
     submitted_at DATETIME NOT NULL,
     grade DECIMAL(5,2),
     feedback TEXT,
-    project_blob LONGBLOB, NOT NULL,
+    project_blob LONGBLOB NOT NULL,
 
     PRIMARY KEY (id_group, id_assignment),
 
