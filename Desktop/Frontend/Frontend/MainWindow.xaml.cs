@@ -42,7 +42,19 @@ namespace Frontend
         {
             InitializeComponent();
 
+            TerminalGrid.Height = 0;
+            AcademicGrid.Width = 0;
+            FilesGrid.Width = 0;
+            backFolderBTN.Width = 0;
+
+            // Espera a que WebView2 esté listo antes de navegar a Monaco.
+            CodeEditor.CoreWebView2InitializationCompleted += OnWebViewReady;
             CodeEditor.EnsureCoreWebView2Async();
+        }
+
+        private void OnWebViewReady(object sender, Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs e)
+        {
+            if (!e.IsSuccess) return;
 
             // Busca Monaco relativo al ejecutable; si no existe ahí,
             // cae al path de desarrollo (relativo al working directory de VS).
@@ -56,11 +68,7 @@ namespace Frontend
                 ? monacoRelativeToExe
                 : monacoRelativeToDev;
 
-            CodeEditor.Source = new Uri(path);
-            TerminalGrid.Height = 0;
-            AcademicGrid.Width = 0;
-            FilesGrid.Width = 0;
-            backFolderBTN.Width = 0;
+            CodeEditor.CoreWebView2.Navigate(new Uri(path).AbsoluteUri);
         }
 
         public void ResizeW(object sender, EventArgs e)

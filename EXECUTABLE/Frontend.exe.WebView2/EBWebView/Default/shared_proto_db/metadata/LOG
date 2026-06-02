@@ -1,2 +1,3 @@
-2026/06/01-19:37:43.001 379c Creating DB C:\Users\Josue Hidalgo\Documents\Github\SD-IDE-IA\Desktop\Frontend\Frontend\bin\Release\Frontend.exe.WebView2\EBWebView\Default\shared_proto_db\metadata since it was missing.
-2026/06/01-19:37:43.005 379c Reusing MANIFEST C:\Users\Josue Hidalgo\Documents\Github\SD-IDE-IA\Desktop\Frontend\Frontend\bin\Release\Frontend.exe.WebView2\EBWebView\Default\shared_proto_db\metadata/MANIFEST-000001
+2026/06/01-19:57:52.625 7540 Reusing MANIFEST C:\Users\Josue Hidalgo\Documents\Github\SD-IDE-IA\EXECUTABLE\Frontend.exe.WebView2\EBWebView\Default\shared_proto_db\metadata/MANIFEST-000001
+2026/06/01-19:57:52.625 7540 Recovering log #3
+2026/06/01-19:57:52.625 7540 Reusing old log C:\Users\Josue Hidalgo\Documents\Github\SD-IDE-IA\EXECUTABLE\Frontend.exe.WebView2\EBWebView\Default\shared_proto_db\metadata/000003.log 

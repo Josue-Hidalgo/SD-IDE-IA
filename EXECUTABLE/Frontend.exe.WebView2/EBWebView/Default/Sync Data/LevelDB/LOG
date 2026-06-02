@@ -1,2 +1,3 @@
-2026/06/01-19:37:42.987 6ff4 Creating DB C:\Users\Josue Hidalgo\Documents\Github\SD-IDE-IA\Desktop\Frontend\Frontend\bin\Release\Frontend.exe.WebView2\EBWebView\Default\Sync Data\LevelDB since it was missing.
-2026/06/01-19:37:42.998 6ff4 Reusing MANIFEST C:\Users\Josue Hidalgo\Documents\Github\SD-IDE-IA\Desktop\Frontend\Frontend\bin\Release\Frontend.exe.WebView2\EBWebView\Default\Sync Data\LevelDB/MANIFEST-000001
+2026/06/01-19:57:52.608 1d3c Reusing MANIFEST C:\Users\Josue Hidalgo\Documents\Github\SD-IDE-IA\EXECUTABLE\Frontend.exe.WebView2\EBWebView\Default\Sync Data\LevelDB/MANIFEST-000001
+2026/06/01-19:57:52.610 1d3c Recovering log #3
+2026/06/01-19:57:52.610 1d3c Reusing old log C:\Users\Josue Hidalgo\Documents\Github\SD-IDE-IA\EXECUTABLE\Frontend.exe.WebView2\EBWebView\Default\Sync Data\LevelDB/000003.log 
