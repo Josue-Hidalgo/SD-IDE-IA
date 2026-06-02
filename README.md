@@ -15,12 +15,16 @@ Nuestra solución busca fortalecer las competencias fundamentales en ingeniería
 
 ## Instalación Dependencias
 
-### Frontend
---
+### Frontend WEB
+- http://138.2.239.69/
+
+### Frontend DESKTOP
+- Entrar a EXECUTABLE
+- Ejecuta el ejecutable llamado Frontend.exe
+
 
 ### Backend
-- Instalar [Visual Studio](https://visualstudio.microsoft.com/)
-- 
+- Ejecutando desde una Máquina Virtual.
 
 ---
 
