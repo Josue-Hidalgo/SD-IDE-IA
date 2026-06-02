@@ -7,8 +7,8 @@ Nuestra solución busca fortalecer las competencias fundamentales en ingeniería
 ## Autores
 
 - [@Josue-Hidalgo](https://www.github.com/Josue-Hidalgo)
-- [@DayRPK25](https://github.com/DayRPK25)
-- [@IanUgaldeTec](https://github.com/IanUgaldeTec)
+- [@DídierSandovalMejias](https://github.com/DazeEdmond)
+- [@JoséAraya](https://github.com/Adiraell)
 - [@PauloHerrera1](https://github.com/PauloHerrera1)
 
 ---
