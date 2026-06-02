@@ -19,6 +19,7 @@ Nuestra solución busca fortalecer las competencias fundamentales en ingeniería
 - http://138.2.239.69/
 
 ### Frontend DESKTOP
+- Python v3.13 needed
 - Entrar a EXECUTABLE
 - Ejecuta el ejecutable llamado Frontend.exe
 
