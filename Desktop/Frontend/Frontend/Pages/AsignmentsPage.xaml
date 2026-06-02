@@ -1,0 +1,51 @@
+﻿<Page x:Class="Frontend.Pages.AsignmentsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Frontend.Pages"
+      mc:Ignorable="d" 
+      Title="AsignmentsPage"
+      HorizontalAlignment="Stretch"
+      VerticalAlignment="Stretch">
+
+    <Grid Background="#2424">
+        <StackPanel Orientation="Vertical" VerticalAlignment="Top" Margin="10,0,10,0">
+            <Button x:Name="backFolderBTN" Content="↩" HorizontalAlignment="Left" Foreground="White" Background="#2424" BorderThickness="0" Width="20" Click="backCourses">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <TextBlock x:Name="CourseNameTB" Text="" FontSize="20" Width="200" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#808080"/>
+            <TextBlock Text="Assignments" FontSize="30" HorizontalAlignment="Center" Foreground="White" Margin="0,0,0,5"/>
+            <ListBox x:Name="AssList" Background="#2424" BorderThickness="0" SelectionChanged="AssChange"
+             ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Background" Value="#291B2B"/>
+                        <Setter Property="FontSize" Value="15"/>
+                        <Setter Property="Margin" Value="2"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border x:Name="border" CornerRadius="4" Padding="2" Background="{TemplateBinding Background}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="border" Property="BorderBrush" Value="#DE52FF"/>
+                                            <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </StackPanel>
+    </Grid>
+</Page>
