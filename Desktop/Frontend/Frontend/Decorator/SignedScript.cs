@@ -14,7 +14,7 @@ namespace Frontend.Decorator
     internal class SignedScript : ScriptDecorator
     {
         /* Atributos */
-        
+
         private string signature;
         private readonly string csvPath;
 
@@ -34,7 +34,7 @@ namespace Frontend.Decorator
 
             string path = inner.GetPath();
             string line = File.ReadAllLines(csvPath)
-                .Skip(1) // saltar encabezado
+                .Skip(1)
                 .FirstOrDefault(l => l.StartsWith(path + ","));
 
             return line?.Split(',')[1];
@@ -52,11 +52,14 @@ namespace Frontend.Decorator
 
         private void SaveSignatureToCsv(string path, string hash)
         {
+            // Si ya existe y es oculto, quitarle el atributo antes de escribir
+            if (File.Exists(csvPath))
+                File.SetAttributes(csvPath, File.GetAttributes(csvPath) & ~FileAttributes.Hidden);
+
             var lines = File.Exists(csvPath)
                 ? File.ReadAllLines(csvPath).ToList()
                 : new List<string>();
 
-            // Encabezado si el archivo es nuevo
             if (lines.Count == 0)
                 lines.Add("path,sha256");
 
@@ -67,6 +70,9 @@ namespace Frontend.Decorator
             else lines.Add(entry);
 
             File.WriteAllLines(csvPath, lines);
+
+            // Volver a ocultar
+            File.SetAttributes(csvPath, File.GetAttributes(csvPath) | FileAttributes.Hidden);
         }
 
         /* Métodos */

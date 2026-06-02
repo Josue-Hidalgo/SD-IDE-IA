@@ -8,18 +8,12 @@ namespace Frontend.Decorator
 {
     internal class FormattedScript : ScriptDecorator
     {
-        private readonly string theme;
-
-        public FormattedScript(IScript inner, string theme = "dark") : base(inner)
+        public FormattedScript(IScript inner, Action onFormat) : base(inner)
         {
-            this.theme = theme;
+            onFormat?.Invoke();
         }
-        
+
         public override string GetText() => inner.GetText();
         public override string GetPath() => inner.GetPath();
-
-        public string GetTheme() => theme;
-    
-        /* ALGO MÁS ... */
     }
 }
