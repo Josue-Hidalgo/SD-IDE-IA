@@ -13,7 +13,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-using WinForms = System.Windows.Forms; // Alias pa' evitar ambigüedad
+using WinForms = System.Windows.Forms;
+
+using Frontend.Decorator;
 
 namespace Frontend
 {
@@ -25,6 +27,10 @@ namespace Frontend
         Process terminal;
         string FileSelected = "";
         string FolderSelected = "";
+
+        IScript script = null;
+        SignedScript signedScript = null;
+
         Stack<string> FolderFILO = new Stack<string>();
         bool selectedFile = false;
         bool terminalOpen = false;
@@ -40,12 +46,17 @@ namespace Frontend
 
             CodeEditor.EnsureCoreWebView2Async();
 
-            string path = System.IO.Path.GetFullPath(
-                System.IO.Path.Combine(
-                    Directory.GetCurrentDirectory(),
-                    @"..\..\..\Monaco\main.html"
-                )
-            );
+            // Busca Monaco relativo al ejecutable; si no existe ahí,
+            // cae al path de desarrollo (relativo al working directory de VS).
+            string exeDir = AppDomain.CurrentDomain.BaseDirectory;
+            string monacoRelativeToExe = System.IO.Path.GetFullPath(
+                System.IO.Path.Combine(exeDir, @"Monaco\main.html"));
+            string monacoRelativeToDev = System.IO.Path.GetFullPath(
+                System.IO.Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\Monaco\main.html"));
+
+            string path = File.Exists(monacoRelativeToExe)
+                ? monacoRelativeToExe
+                : monacoRelativeToDev;
 
             CodeEditor.Source = new Uri(path);
             TerminalGrid.Height = 0;
@@ -74,7 +85,7 @@ namespace Frontend
 
         public void WindowMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(e.ChangedButton == MouseButton.Left)
+            if (e.ChangedButton == MouseButton.Left)
             {
                 this.DragMove();
             }
@@ -127,7 +138,7 @@ namespace Frontend
                     }
                 }
             });
-            
+
             TerminalGrid.Height = 200;
             terminalOpen = true;
         }
@@ -148,7 +159,7 @@ namespace Frontend
 
         public void TerminalInputKD(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if(e.Key == Key.Enter && terminalOpen)
+            if (e.Key == Key.Enter && terminalOpen)
             {
                 terminal.StandardInput.WriteLine(TerminalI.Text);
                 TerminalO.AppendText(TerminalI.Text);
@@ -171,9 +182,33 @@ namespace Frontend
             if (OFD.ShowDialog() == true)
             {
                 route = OFD.FileName;
+
+                // Verificar integridad antes de abrir
+                string csvPath = System.IO.Path.ChangeExtension(route, ".signatures.csv");
+                var baseScript = new Script(route);
+                signedScript = new SignedScript(new FormattedScript(baseScript, () =>
+                {
+                    _ = CodeEditor.CoreWebView2.ExecuteScriptAsync("changeLanguage('python');");
+                }), csvPath);
+                script = signedScript;
+
+                if (!signedScript.VerifySignature())
+                {
+                    MessageBox.Show(
+                        $"The file '{System.IO.Path.GetFileName(route)}' does not have a valid signature.",
+                        "Access Denied",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                    CF();
+                    signedScript = null;
+                    script = null;
+                    return;
+                }
+
                 FileSelected = route;
                 TextReader reader = new StreamReader(route);
-                CodeEditor.CoreWebView2.ExecuteScriptAsync($"setValue(\"{(reader.ReadToEnd()).Replace("\r","").Replace("\\","\\\\").Replace("\"","\\\"").Replace("\n","\\n")}\");");
+                CodeEditor.CoreWebView2.ExecuteScriptAsync($"setValue(\"{(reader.ReadToEnd()).Replace("\r", "").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n")}\");");
                 reader.Close();
                 FileName.Text = System.IO.Path.GetFileName(route);
                 selectedFile = true;
@@ -186,13 +221,13 @@ namespace Frontend
 
         public void OpenDirectory(object sender, EventArgs e)
         {
-            if(FolderSelected != "")
+            if (FolderSelected != "")
             {
                 FileList.Items.Clear();
                 FolderFILO.Clear();
             }
-            var dialog = new CommonOpenFileDialog{IsFolderPicker=true};
-            if(dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            var dialog = new CommonOpenFileDialog { IsFolderPicker = true };
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 ODIR(dialog.FileName);
                 FilesGrid.Width = 200;
@@ -227,7 +262,7 @@ namespace Frontend
                 ListBoxItem it = (ListBoxItem)FileList.SelectedItem;
                 p = FolderSelected + "\\" + it.Content.ToString();
             }
-            else 
+            else
             {
                 p = FolderSelected + "\\" + FileList.SelectedItem;
             }
@@ -271,11 +306,11 @@ namespace Frontend
             selectedFile = false;
             CloseTerminal();
         }
-       
+
         public void LastDIR(object sender, EventArgs e)
         {
             ODIR(FolderFILO.Pop());
-            if(FolderFILO.Count == 0)
+            if (FolderFILO.Count == 0)
             {
                 backFolderBTN.Width = 0;
             }
@@ -289,17 +324,30 @@ namespace Frontend
 
         public async void SaveFileAs(object sender, EventArgs e)
         {
+
             SaveFileDialog SFD = new SaveFileDialog();
             SFD.Filter = "Python (*.py)|*.py|All Files (*.*)|*.*";
+
             if (SFD.ShowDialog() == true)
             {
                 string content = await CodeEditor.CoreWebView2.ExecuteScriptAsync("getValue();");
                 // ExecuteScriptAsync devuelve el valor JSON-encoded, así que hay que limpiar las comillas
                 content = content.Trim('"');
-                File.WriteAllText(SFD.FileName, content.Replace("\\\\n","\\hi").Replace("\\n", "\n").Replace("\\hi", "\\n")
+                File.WriteAllText(SFD.FileName, content.Replace("\\\\n", "\\hi").Replace("\\n", "\n").Replace("\\hi", "\\n")
                     .Replace("\\\\r", "\\hi").Replace("\\r", "\r").Replace("\\hi", "\\r")
                     .Replace("\\\\t", "\\hi").Replace("\\t", "\t").Replace("\\hi", "\\t")
-                    .Replace("\\\"", "\"").Replace("\\\'","\'").Replace("\\\\","\\"));
+                    .Replace("\\\"", "\"").Replace("\\\'", "\'").Replace("\\\\", "\\"));
+
+                script = new Script(SFD.FileName);
+                script = new FormattedScript(script, () =>
+                {
+                    _ = CodeEditor.CoreWebView2.ExecuteScriptAsync("changeLanguage('python');");
+                });
+                string csvPath = System.IO.Path.ChangeExtension(SFD.FileName, ".signatures.csv");
+                signedScript = new SignedScript(script, csvPath);
+                script = signedScript;
+                signedScript.RegenerateSignature();
+
                 FileName.Text = System.IO.Path.GetFileName(SFD.FileName);
                 FileSelected = SFD.FileName;
                 selectedFile = true;
@@ -318,7 +366,7 @@ namespace Frontend
         public void OITerminal(object sender, EventArgs e)
         {
             CloseTerminal();
-            StartTerminal("",true);
+            StartTerminal("", true);
         }
 
         public void AcademicBTN(object sender, EventArgs e)
