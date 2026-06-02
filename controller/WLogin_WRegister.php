@@ -20,7 +20,7 @@ function Login_web(string $email, string $password){
 		createProf($value["prof_id"],$value["email"],$value["password"],$value["name"],$value["lastname"]);
 
 		return $value;
-		
+
 	}else {
 		return FALSE;
 	}
@@ -151,17 +151,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 }
 
-if($_GET['action'] === 'log_student'){
-	$email = $_GET['email'];
-	$password = $_GET['password'];
-	$data = Login_desk($email,$password);
-	header('Content-type: application/json');
+if (isset($_GET['action']) && $_GET['action'] === 'log_student') {
+	$email = $_GET['email'] ?? '';
+	$password = $_GET['password'] ?? '';
+
+	$data = Login_desk($email, $password);
+
+	header('Content-type: application/json; charset=utf-8');
 	echo json_encode($data);
-}
-if($_GET['action'] === 'log_prof'){
-	$email = $_GET['email'];
-	$password = $_GET['password'];
-	$data = Login_web($email,$password);
+	exit;
 }
 
-?>
+if (isset($_GET['action']) && $_GET['action'] === 'log_prof') {
+	header('Content-type: application/json; charset=utf-8');
+
+	$email = $_GET['email'] ?? '';
+	$password = $_GET['password'] ?? '';
+
+	$data = Login_web($email, $password);
+
+	if ($data) {
+		echo json_encode([
+			'success' => true,
+			'message' => 'Login correcto.',
+			'name' => $data['name'],
+			'lastname' => $data['lastname'],
+			'email' => $data['email']
+		]);
+	} else {
+		http_response_code(401);
+		echo json_encode([
+			'success' => false,
+			'message' => 'Correo o contraseña incorrectos.'
+		]);
+	}
+
+	exit;
+}
