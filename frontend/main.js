@@ -193,17 +193,13 @@ async function login() {
 
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value.trim();
-  const professorIdInput = document.getElementById("loginProfessorId").value.trim();
+
 
   if (email === "" || password === "") {
     showAlert("loginMessage", "Debe ingresar correo y contraseña.", "warning");
     return;
   }
 
-  if (professorIdInput !== "") {
-    professorId = professorIdInput;
-    localStorage.setItem("professorId", professorId);
-  }
 
   try {
     const response = await requestBackend("WLogin_WRegister.php", {
@@ -224,10 +220,8 @@ async function login() {
     return;
   }
 
-professorId = String(response.data.prof_id || "");
 loggedProfessorEmail = response.data.email || email;
 
-localStorage.setItem("professorId", professorId);
 localStorage.setItem("professorEmail", loggedProfessorEmail);
 
 showDashboard(response.data.name || loggedProfessorEmail);
@@ -335,17 +329,9 @@ async function createCourse() {
 
     showAlert("courseMessage", "Curso guardado en el backend correctamente.", "success");
 
-    if (professorId) {
-      await loadCourses();
-    } else {
-      const courses = window.loadedCourses || [];
-      courses.push({
-        code_course: code,
-        name_course: name,
-        description_course: description
-      });
-      renderCourses(courses);
-    }
+    await loadCourses();
+
+
   } catch (error) {
     showAlert("courseMessage", "Error de conexion al crear el curso.", "danger");
   }
@@ -353,31 +339,16 @@ async function createCourse() {
 // Carga los cursos del profesor desde el backend y los muestra en la interfaz
 async function loadCourses() {
   const container = document.getElementById("coursesContainer");
+
   container.innerHTML = `
     <div class="col-12">
-      <div class="alert alert-secondary">Cargando cursos...</div>
+      <div class="alert alert-secondary">Cargando cursos</div>
     </div>
   `;
 
-  if (!professorId) {
-    container.innerHTML = `
-      <div class="col-12">
-        <div class="alert alert-warning">
-          El backend no devuelve el ID del profesor cuando uno inicia sesion.
-          Para cargar cursos los cursos hay que ingresar el ID de profesor en el login.
-          La creación de cursos si se manda al backend usando la sesión PHP.
-        </div>
-      </div>
-    `;
-    return;
-  }
-
   try {
     const response = await requestBackend("course_controller.php", {
-      method: "GET",
-      params: {
-        prof_id: professorId
-      }
+      method: "GET"
     });
 
     if (!response.ok) {
@@ -585,10 +556,5 @@ function resetAssignmentForm() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  const professorIdInput = document.getElementById("loginProfessorId");
-  if (professorIdInput) professorIdInput.value = professorId;
-
-  if (loggedProfessorEmail) {
-    showDashboard(loggedProfessorEmail);
-  }
+  showLogin();
 });
