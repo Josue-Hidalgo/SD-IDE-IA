@@ -35,9 +35,7 @@ namespace Frontend
         bool selectedFile = false;
         bool terminalOpen = false;
         bool ValidRepo = false;
-        bool loggedIn = false; // <------ CAMBIO loged por loggedIn 
-
-        // Variables pa'l Git
+        bool loggedIn = false;         
         GitPage gitPage = null;
 
         public MainWindow()
