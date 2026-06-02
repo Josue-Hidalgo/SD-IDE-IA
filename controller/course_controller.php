@@ -19,11 +19,19 @@ function get_all_courses(int $prof_id){
 	return get_all_prof_courses($prof_id);
 }
 
-if($_GET['prof_id']){
-	$id = $_GET['prof_id'];
-	$data = get_all_courses($id);
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 	header('Content-type: application/json');
+
+	if (!isset($_SESSION['prof_id'])) {
+		echo json_encode([]);
+		exit;
+	}
+
+	$id = $_SESSION['prof_id'];
+	$data = get_all_courses($id);
+
 	echo json_encode($data);
+	exit;
 }
 
 

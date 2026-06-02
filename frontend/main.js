@@ -2,7 +2,9 @@
 // Main JavaScript for the Professor Dashboard frontend
 // ===============================
 
-const API_BASE = "../controller";
+
+//
+const API_BASE = ".";
 
 
 // Variables globales 
@@ -213,14 +215,22 @@ async function login() {
       }
     });
 
-    if (!response.ok) {
-      showAlert("loginMessage", "No se pudo conectar con el login del backend.", "danger");
-      return;
-    }
+  if (!response.ok || response.data?.success !== true) {
+    showAlert(
+      "loginMessage",
+      response.data?.message || "Correo o contraseña incorrectos.",
+      "danger"
+    );
+    return;
+  }
 
-    loggedProfessorEmail = email;
-    localStorage.setItem("professorEmail", email);
-    showDashboard(email);
+professorId = String(response.data.prof_id || "");
+loggedProfessorEmail = response.data.email || email;
+
+localStorage.setItem("professorId", professorId);
+localStorage.setItem("professorEmail", loggedProfessorEmail);
+
+showDashboard(response.data.name || loggedProfessorEmail);
   } catch (error) {
     showAlert("loginMessage", "Error de conexión.", "danger");
   }
