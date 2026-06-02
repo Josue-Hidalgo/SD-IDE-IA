@@ -1,38 +1,26 @@
 var editor;
-var txtL = true;
 
-require(["./vs/editor/editor.main"],()=>{
-    editor = monaco.editor.create(document.getElementById("container"),{
-        value:'',
-        language:"txt",
-        theme:"vs-dark",
-        automaticLayout: true
+require(["./vs/editor/editor.main"], () => {
+    editor = monaco.editor.create(document.getElementById("container"), {
+        value: "",
+        language: "plaintext",
+        theme: "vs-dark",
+        automaticLayout: true,
     });
 });
 
-function changeLanguage(){
-    if(txtL){
-        editor = monaco.editor.create(document.getElementById("container"),{
-        value:'',
-        language:"python",
-        theme:"vs-dark",
-        automaticLayout: true
-    });
-    }else{
-        editor = monaco.editor.create(document.getElementById("container"),{
-        value:'',
-        language:"txt",
-        theme:"vs-dark",
-        automaticLayout: true
-    });
-    txtL = !txtL;
-    }
+function changeLanguage(lang) {
+    if (!editor) return;
+    var model = editor.getModel();
+    monaco.editor.setModelLanguage(model, lang || "python");
 }
 
-function getValue(){
+function getValue() {
+    if (!editor) return "";
     return editor.getValue();
 }
 
-function setValue(value){
+function setValue(value) {
+    if (!editor) return;
     editor.setValue(value);
 }
