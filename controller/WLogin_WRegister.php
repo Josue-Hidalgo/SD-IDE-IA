@@ -18,6 +18,9 @@ function Login_web(string $email, string $password){
 	$value = login_user_web($email, $password);
 	if ($value) {
 		createProf($value["prof_id"],$value["email"],$value["password"],$value["name"],$value["lastname"]);
+
+		return $value;
+		
 	}else {
 		return FALSE;
 	}
