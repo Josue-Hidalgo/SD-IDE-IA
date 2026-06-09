@@ -1,3 +1,2 @@
-2026/06/01-19:57:52.661 7d44 Reusing MANIFEST C:\Users\Josue Hidalgo\Documents\Github\SD-IDE-IA\EXECUTABLE\Frontend.exe.WebView2\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
-2026/06/01-19:57:52.666 7d44 Recovering log #3
-2026/06/01-19:57:52.668 7d44 Reusing old log C:\Users\Josue Hidalgo\Documents\Github\SD-IDE-IA\EXECUTABLE\Frontend.exe.WebView2\EBWebView\Default\Local Storage\leveldb/000003.log 
+2026/06/08-18:51:50.745 8a38 Creating DB C:\Users\dj03g\OD\TEC\DisenoDeSoftware\proyecto\SD-IDE-IA\EXECUTABLE\Frontend.exe.WebView2\EBWebView\Default\Local Storage\leveldb since it was missing.
+2026/06/08-18:51:50.754 8a38 Reusing MANIFEST C:\Users\dj03g\OD\TEC\DisenoDeSoftware\proyecto\SD-IDE-IA\EXECUTABLE\Frontend.exe.WebView2\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
