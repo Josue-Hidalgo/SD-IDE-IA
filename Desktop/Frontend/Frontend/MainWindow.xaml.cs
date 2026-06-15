@@ -1,21 +1,20 @@
-﻿using Frontend.Pages;
+﻿using Frontend.Decorator;
+using Frontend.Pages;
 using LibGit2Sharp; // Pa'l Git (Github)
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography;
 //using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-using WinForms = System.Windows.Forms;
-
-using Frontend.Decorator;
 
 namespace Frontend
 {
@@ -35,12 +34,12 @@ namespace Frontend
         bool selectedFile = false;
         bool terminalOpen = false;
         bool ValidRepo = false;
-        bool loggedIn = false;         
         GitPage gitPage = null;
 
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = new ShortcutsCommandContext(this);
 
             TerminalGrid.Height = 0;
             AcademicGrid.Width = 0;
@@ -69,6 +68,11 @@ namespace Frontend
                 : monacoRelativeToDev;
 
             CodeEditor.CoreWebView2.Navigate(new Uri(path).AbsoluteUri);
+        }
+
+        public void MinimizeW(object sender, EventArgs e)
+        {
+            WindowState = WindowState.Minimized;
         }
 
         public void ResizeW(object sender, EventArgs e)
@@ -114,33 +118,49 @@ namespace Frontend
             }
             else
             {
-                terminal.StartInfo = new ProcessStartInfo("py")
+                terminal.StartInfo = new ProcessStartInfo("cmd.exe")
                 {
                     RedirectStandardInput = true,
-                    RedirectStandardError = true,
+                    RedirectStandardError = false,
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
                     CreateNoWindow = true,
-                    Arguments = $@" -u {path}"
+                    Arguments = $"/K py -u \"{path}\" 2>&1 & echo _-_Python-File-End_-_"
                 };
             }
+
             terminal.Start();
             var stdo = terminal.StandardOutput;
             Task.Run(async () =>
             {
-                char[] buffer = new char[1];
+                int blocks = 1024;
+                string text = "";
+                char[] buffer = new char[blocks];
+                bool finished = true;
 
-                while (!stdo.EndOfStream)
+                while (!stdo.EndOfStream && finished)
                 {
-                    int read = await stdo.ReadAsync(buffer, 0, 1);
+                    int read = await stdo.ReadAsync(buffer, 0, blocks);
 
                     if (read > 0)
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            TerminalO.AppendText(buffer[0].ToString());
+                            string chunk = new string(buffer, 0, read);
+                            text += chunk;
+                            TerminalO.Text = text;
                             TerminalO.ScrollToEnd();
                         });
+
+                        if (text.Contains("_-_Python-File-End_-_"))
+                        {
+                            finished = false;
+                            Dispatcher.Invoke(() =>
+                            {
+                                TerminalO.Text = TerminalO.Text.Replace("_-_Python-File-End_-_","");
+                                TerminalO.ScrollToEnd();
+                            });
+                        }
                     }
                 }
             });
@@ -154,6 +174,7 @@ namespace Frontend
             if (terminal != null && !terminal.HasExited)
             {
                 terminal.Kill();
+                terminal.WaitForExit();
                 terminal.Dispose();
                 terminal = null;
             }
@@ -181,48 +202,50 @@ namespace Frontend
 
         public void OpenFile(object sender, EventArgs e)
         {
-            string route;
             OpenFileDialog OFD = new OpenFileDialog();
             OFD.Filter = "Python (*.py)|*.py|All Files (*.*)|*.*";
             OFD.FilterIndex = 0;
             if (OFD.ShowDialog() == true)
             {
-                route = OFD.FileName;
-
-                // Verificar integridad antes de abrir
-                string csvPath = System.IO.Path.ChangeExtension(route, ".signatures.csv");
-                var baseScript = new Script(route);
-                signedScript = new SignedScript(new FormattedScript(baseScript, () =>
-                {
-                    _ = CodeEditor.CoreWebView2.ExecuteScriptAsync("changeLanguage('python');");
-                }), csvPath);
-                script = signedScript;
-
-                if (!signedScript.VerifySignature())
-                {
-                    MessageBox.Show(
-                        $"The file '{System.IO.Path.GetFileName(route)}' does not have a valid signature.",
-                        "Access Denied",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error
-                    );
-                    CF();
-                    signedScript = null;
-                    script = null;
-                    return;
-                }
-
-                FileSelected = route;
-                TextReader reader = new StreamReader(route);
-                CodeEditor.CoreWebView2.ExecuteScriptAsync($"setValue(\"{(reader.ReadToEnd()).Replace("\r", "").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n")}\");");
-                reader.Close();
-                FileName.Text = System.IO.Path.GetFileName(route);
-                selectedFile = true;
+                OpFiAux(OFD.FileName);
             }
             if (!selectedFile)
             {
                 FileName.Text = "";
             }
+        }
+
+        public void OpFiAux(string route)
+        {
+
+            // Verificar integridad antes de abrir
+            string csvPath = System.IO.Path.ChangeExtension(route, ".signatures.csv");
+            var baseScript = new Script(route);
+            signedScript = new SignedScript(new FormattedScript(baseScript, () => {}), csvPath);
+            script = signedScript;
+
+            if (!signedScript.VerifySignature())
+            {
+                MessageBox.Show(
+                    $"The file '{System.IO.Path.GetFileName(route)}' does not have a valid signature.",
+                    "Access Denied",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+                CF();
+                _ = CodeEditor.CoreWebView2.ExecuteScriptAsync("changeLanguage('txt');");
+                signedScript = null;
+                script = null;
+                return;
+            }
+
+            _ = CodeEditor.CoreWebView2.ExecuteScriptAsync("changeLanguage('python');");
+            FileSelected = route;
+            TextReader reader = new StreamReader(route);
+            CodeEditor.CoreWebView2.ExecuteScriptAsync($"setValue(\"{(reader.ReadToEnd()).Replace("\r", "").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n")}\");");
+            reader.Close();
+            FileName.Text = System.IO.Path.GetFileName(route);
+            selectedFile = true;
         }
 
         public void OpenDirectory(object sender, EventArgs e)
@@ -275,11 +298,8 @@ namespace Frontend
             Console.WriteLine(p);
             if (File.Exists(p))
             {
-                FileSelected = p;
-                TextReader reader = new StreamReader(FileSelected);
-                CodeEditor.CoreWebView2.ExecuteScriptAsync($"setValue(\"{(reader.ReadToEnd()).Replace("\r", "").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n")}\");");
-                FileName.Text = System.IO.Path.GetFileName(FileSelected);
-                selectedFile = true;
+                OpFiAux(p);
+
             }
             else if (Directory.Exists(p))
             {
@@ -325,24 +345,21 @@ namespace Frontend
         public void RefreshFolder(object sender, EventArgs e)
         {
             FileList.Items.Clear();
-            ODIR(FolderSelected);
+            if(FolderSelected != "")
+                ODIR(FolderSelected);
         }
 
         public async void SaveFileAs(object sender, EventArgs e)
         {
-
             SaveFileDialog SFD = new SaveFileDialog();
             SFD.Filter = "Python (*.py)|*.py|All Files (*.*)|*.*";
 
             if (SFD.ShowDialog() == true)
             {
                 string content = await CodeEditor.CoreWebView2.ExecuteScriptAsync("getValue();");
-                // ExecuteScriptAsync devuelve el valor JSON-encoded, así que hay que limpiar las comillas
-                content = content.Trim('"');
-                File.WriteAllText(SFD.FileName, content.Replace("\\\\n", "\\hi").Replace("\\n", "\n").Replace("\\hi", "\\n")
-                    .Replace("\\\\r", "\\hi").Replace("\\r", "\r").Replace("\\hi", "\\r")
-                    .Replace("\\\\t", "\\hi").Replace("\\t", "\t").Replace("\\hi", "\\t")
-                    .Replace("\\\"", "\"").Replace("\\\'", "\'").Replace("\\\\", "\\"));
+
+                content = JsonConvert.DeserializeObject<string>(content);
+                File.WriteAllText(SFD.FileName, content);
 
                 script = new Script(SFD.FileName);
                 script = new FormattedScript(script, () =>
@@ -400,15 +417,67 @@ namespace Frontend
             {
                 ODIR(dialog.FileName);
                 FilesGrid.Width = 200;
+                OpenAcademicArea();
+                gitPage = new GitPage();
+                gitPage.LoadRepo(dialog.FileName);
+                AcademicFrame.Navigate(gitPage);
             }
-            OpenAcademicArea();
-            gitPage = new GitPage();
-            gitPage.LoadRepo(dialog.FileName);
-            AcademicFrame.Navigate(gitPage);
         }
         public void VerifyGit(string path)
         {
             ValidRepo = Repository.IsValid(path);
+        }
+
+        public void NewFile(object sender, EventArgs e)
+        {
+            SaveFileDialog SFD = new SaveFileDialog();
+            SFD.Filter = "Python (*.py)|*.py|All Files (*.*)|*.*";
+
+            if (SFD.ShowDialog() == true)
+            {
+                File.WriteAllText(SFD.FileName, "");
+
+                script = new Script(SFD.FileName);
+                script = new FormattedScript(script, () =>
+                {
+                    _ = CodeEditor.CoreWebView2.ExecuteScriptAsync("changeLanguage('python');");
+                });
+                string csvPath = System.IO.Path.ChangeExtension(SFD.FileName, ".signatures.csv");
+                signedScript = new SignedScript(script, csvPath);
+                script = signedScript;
+                signedScript.RegenerateSignature();
+
+                FileName.Text = System.IO.Path.GetFileName(SFD.FileName);
+                FileSelected = SFD.FileName;
+                selectedFile = true;
+                OpFiAux(FileSelected);
+                RefreshFolder(null, null);
+            }
+        }
+        public async void Save(object sender, EventArgs e)
+        {
+            if (selectedFile) {
+                string content = await CodeEditor.CoreWebView2.ExecuteScriptAsync("getValue();");
+
+                content = JsonConvert.DeserializeObject<string>(content);
+                File.WriteAllText(FileSelected, content);
+
+                script = new Script(FileSelected);
+                script = new FormattedScript(script, () =>
+                {
+                    _ = CodeEditor.CoreWebView2.ExecuteScriptAsync("changeLanguage('python');");
+                });
+                string csvPath = System.IO.Path.ChangeExtension(FileSelected, ".signatures.csv");
+                signedScript = new SignedScript(script, csvPath);
+                script = signedScript;
+                signedScript.RegenerateSignature();
+
+                FileName.Text = System.IO.Path.GetFileName(FileSelected);
+            }
+            else
+            {
+                SaveFileAs(null,null);
+            }
         }
     }
 }

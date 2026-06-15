@@ -9,6 +9,22 @@
         Title="IDEIA" Height="450" Width="800" Background="#242424" WindowStyle="None" WindowStartupLocation="CenterScreen" BorderBrush="#242424"
         MouseDown="WindowMouseDown" ResizeMode="NoResize">
 
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding newFileCommand}"/>
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding openFileCommand}"/>
+        <KeyBinding Key="O" Modifiers="Ctrl+Alt" Command="{Binding openDirectoryCommand}"/>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding saveCommand}"/>
+        <KeyBinding Key="S" Modifiers="Ctrl+Alt" Command="{Binding saveFileAsCommand}"/>
+        <KeyBinding Key="Q" Modifiers="Ctrl" Command="{Binding closeFileCommand}"/>
+        <KeyBinding Key="Q" Modifiers="Ctrl+Alt" Command="{Binding closeDirectoryCommand}"/>
+        <KeyBinding Key="F5" Modifiers="" Command="{Binding runCommand}"/>
+        <KeyBinding Key="G" Modifiers="Ctrl" Command="{Binding openRepositoryCommand}"/>
+        <KeyBinding Key="T" Modifiers="Ctrl" Command="{Binding openIntegratedTerminalCommand}"/>
+        <KeyBinding Key="K" Modifiers="Ctrl" Command="{Binding killTerminalCommand}"/>
+        <KeyBinding Key="E" Modifiers="Ctrl" Command="{Binding openAcademicAreaCommand}"/>
+        <KeyBinding Key="H" Modifiers="Ctrl" Command="{Binding hideAcademicAreaCommand}"/>
+    </Window.InputBindings>
+    
     <Window.Resources>
         <Style TargetType="MenuItem">
             <Setter Property="Background" Value="#202020"/>
@@ -30,6 +46,10 @@
                                               ContentSource="Icon" SnapsToDevicePixels="True"/>
                                 <ContentPresenter x:Name="HeaderHost" Grid.Column="1"
                                               ContentSource="Header" RecognizesAccessKey="True"/>
+                                <TextBlock Grid.Column="2"
+                                               Margin="20,0,0,0"
+                                               Foreground="Gray"
+                                               Text="{TemplateBinding InputGestureText}"/>
                                 <Popup x:Name="PART_Popup"
                                    Grid.Column="0"
                                    IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
@@ -71,11 +91,13 @@
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </MenuItem.Resources>
-                    <MenuItem Header="Open File" Background="#202020" Foreground="White" Click="OpenFile"/>
-                    <MenuItem Header="Open Directory" Background="#202020" Foreground="White" Click="OpenDirectory"/>
-                    <MenuItem Header="Close File" Background="#202020" Foreground="White" Click="CloseFile"/>
-                    <MenuItem Header="Close Directory" Background="#202020" Foreground="White" Click="CloseFolder"/>
-                    <MenuItem Header="Save File As..." Background="#202020" Foreground="White" Click="SaveFileAs"/>
+                    <MenuItem Header="New File" InputGestureText="Ctrl+N" Background="#202020" Foreground="White" Click="NewFile"/>
+                    <MenuItem Header="Open File" InputGestureText="Ctrl+O" Background="#202020" Foreground="White" Click="OpenFile"/>
+                    <MenuItem Header="Open Directory" InputGestureText="Ctrl+Alt+O" Background="#202020" Foreground="White" Click="OpenDirectory"/>
+                    <MenuItem Header="Save" InputGestureText="Ctrl+S" Background="#202020" Foreground="White" Click="Save"/>
+                    <MenuItem Header="Save File As..." InputGestureText="Ctrl+Alt+S" Background="#202020" Foreground="White" Click="SaveFileAs"/>
+                    <MenuItem Header="Close File" InputGestureText="Ctrl+Q" Background="#202020" Foreground="White" Click="CloseFile"/>
+                    <MenuItem Header="Close Directory" InputGestureText="Ctrl+Alt+Q" Background="#202020" Foreground="White" Click="CloseFolder"/>
                 </MenuItem>
                 <MenuItem Header="Git" Background="#202020" Foreground="White">
                     <MenuItem.Resources>
@@ -83,8 +105,8 @@
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </MenuItem.Resources>
-                    <MenuItem Header="Open Repository" Background="#202020" Foreground="White" Click="OpenGitW"/>
-                    <MenuItem Header="Close Repository window" Background="#202020" Foreground="White" Click="CloseAcademicArea"/>
+                    <MenuItem Header="Open Repository" InputGestureText="Ctrl+G" Background="#202020" Foreground="White" Click="OpenGitW"/>
+                    <MenuItem Header="Close Repository window" InputGestureText="Ctrl+H" Background="#202020" Foreground="White" Click="CloseAcademicArea"/>
                 </MenuItem>
                 <MenuItem Header="Run" Background="#202020" Foreground="White">
                     <MenuItem.Resources>
@@ -92,7 +114,7 @@
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </MenuItem.Resources>
-                    <MenuItem Header="Run" Background="#202020" Foreground="White" Click="RunCode"/>
+                    <MenuItem Header="Run" InputGestureText="F5" Background="#202020" Foreground="White" Click="RunCode"/>
                 </MenuItem>
                 <MenuItem Header="Terminal" Background="#202020" Foreground="White">
                     <MenuItem.Resources>
@@ -100,8 +122,8 @@
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </MenuItem.Resources>
-                    <MenuItem Header="Open Integrated Terminal" Background="#202020" Foreground="White" Click="OITerminal"/>
-                    <MenuItem Header="Close/kill" Background="#202020" Foreground="White" Click="KCTerminal"/>
+                    <MenuItem Header="Open Integrated Terminal" InputGestureText="Ctrl+T" Background="#202020" Foreground="White" Click="OITerminal"/>
+                    <MenuItem Header="Close/kill" InputGestureText="Ctrl+K" Background="#202020" Foreground="White" Click="KCTerminal"/>
                 </MenuItem>
                 <MenuItem Header="Academic" Background="#202020" Foreground="White">
                     <MenuItem.Resources>
@@ -109,11 +131,18 @@
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </MenuItem.Resources>
-                    <MenuItem Header="Open Academic Area" Background="#202020" Foreground="White" Click="AcademicBTN"/>
-                    <MenuItem Header="Close Academic Area" Background="#202020" Foreground="White" Click="CloseAcademicArea"/>
+                    <MenuItem Header="Open Academic Area" InputGestureText="Ctrl+E" Background="#202020" Foreground="White" Click="AcademicBTN"/>
+                    <MenuItem Header="Close Academic Area" InputGestureText="Ctrl+H" Background="#202020" Foreground="White" Click="CloseAcademicArea"/>
                 </MenuItem>
             </Menu>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="Minimize" Content="  -  " Click="MinimizeW" Background="#201919" BorderThickness="0" VerticalContentAlignment="Center" Padding="0,0,0,2" Margin="2">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
                 <Button x:Name="Resize" Content=" ▢ " Click="ResizeW" Background="#201919" BorderThickness="0" VerticalContentAlignment="Center" Padding="0,0,0,2" Margin="2">
                     <Button.Resources>
                         <Style TargetType="Border">
@@ -210,7 +239,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
-                    <TextBox x:Name="TerminalO" Grid.Row="0" Text="" Background="#191919" IsReadOnly="True" BorderBrush="#210036" Foreground="White" FontFamily="Consolas" Margin="0,5">
+                    <TextBox x:Name="TerminalO" Grid.Row="0" Text="" TextWrapping="Wrap" Background="#191919" IsReadOnly="True" BorderBrush="#210036" Foreground="White" FontFamily="Consolas" Margin="0,5">
                         <TextBox.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="10"/>

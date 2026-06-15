@@ -95,6 +95,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ShortcutClases.cs" />
     <Compile Include="Decorator\FormattedScript.cs" />
     <Compile Include="Decorator\IScript.cs" />
     <Compile Include="Decorator\Script.cs" />
