@@ -34,7 +34,7 @@ namespace Frontend
 
         public override void Execute(object parameter)
         {
-            win.OpenFile(null, null);
+            win.NewFile(null, null);
         }
     }
 

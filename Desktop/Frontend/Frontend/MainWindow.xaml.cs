@@ -221,10 +221,7 @@ namespace Frontend
             // Verificar integridad antes de abrir
             string csvPath = System.IO.Path.ChangeExtension(route, ".signatures.csv");
             var baseScript = new Script(route);
-            signedScript = new SignedScript(new FormattedScript(baseScript, () =>
-            {
-                _ = CodeEditor.CoreWebView2.ExecuteScriptAsync("changeLanguage('python');");
-            }), csvPath);
+            signedScript = new SignedScript(new FormattedScript(baseScript, () => {}), csvPath);
             script = signedScript;
 
             if (!signedScript.VerifySignature())
@@ -236,11 +233,13 @@ namespace Frontend
                     MessageBoxImage.Error
                 );
                 CF();
+                _ = CodeEditor.CoreWebView2.ExecuteScriptAsync("changeLanguage('txt');");
                 signedScript = null;
                 script = null;
                 return;
             }
 
+            _ = CodeEditor.CoreWebView2.ExecuteScriptAsync("changeLanguage('python');");
             FileSelected = route;
             TextReader reader = new StreamReader(route);
             CodeEditor.CoreWebView2.ExecuteScriptAsync($"setValue(\"{(reader.ReadToEnd()).Replace("\r", "").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n")}\");");
@@ -346,7 +345,8 @@ namespace Frontend
         public void RefreshFolder(object sender, EventArgs e)
         {
             FileList.Items.Clear();
-            ODIR(FolderSelected);
+            if(FolderSelected != "")
+                ODIR(FolderSelected);
         }
 
         public async void SaveFileAs(object sender, EventArgs e)
@@ -430,7 +430,29 @@ namespace Frontend
 
         public void NewFile(object sender, EventArgs e)
         {
-            
+            SaveFileDialog SFD = new SaveFileDialog();
+            SFD.Filter = "Python (*.py)|*.py|All Files (*.*)|*.*";
+
+            if (SFD.ShowDialog() == true)
+            {
+                File.WriteAllText(SFD.FileName, "");
+
+                script = new Script(SFD.FileName);
+                script = new FormattedScript(script, () =>
+                {
+                    _ = CodeEditor.CoreWebView2.ExecuteScriptAsync("changeLanguage('python');");
+                });
+                string csvPath = System.IO.Path.ChangeExtension(SFD.FileName, ".signatures.csv");
+                signedScript = new SignedScript(script, csvPath);
+                script = signedScript;
+                signedScript.RegenerateSignature();
+
+                FileName.Text = System.IO.Path.GetFileName(SFD.FileName);
+                FileSelected = SFD.FileName;
+                selectedFile = true;
+                OpFiAux(FileSelected);
+                RefreshFolder(null, null);
+            }
         }
         public async void Save(object sender, EventArgs e)
         {
