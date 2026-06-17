@@ -15,8 +15,8 @@
         <KeyBinding Key="O" Modifiers="Ctrl+Alt" Command="{Binding openDirectoryCommand}"/>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding saveCommand}"/>
         <KeyBinding Key="S" Modifiers="Ctrl+Alt" Command="{Binding saveFileAsCommand}"/>
-        <KeyBinding Key="Q" Modifiers="Ctrl" Command="{Binding closeFileCommand}"/>
-        <KeyBinding Key="Q" Modifiers="Ctrl+Alt" Command="{Binding closeDirectoryCommand}"/>
+        <KeyBinding Key="F4" Modifiers="Ctrl" Command="{Binding closeFileCommand}"/>
+        <KeyBinding Key="F4" Modifiers="Ctrl+Alt" Command="{Binding closeDirectoryCommand}"/>
         <KeyBinding Key="F5" Modifiers="" Command="{Binding runCommand}"/>
         <KeyBinding Key="G" Modifiers="Ctrl" Command="{Binding openRepositoryCommand}"/>
         <KeyBinding Key="T" Modifiers="Ctrl" Command="{Binding openIntegratedTerminalCommand}"/>
@@ -96,8 +96,8 @@
                     <MenuItem Header="Open Directory" InputGestureText="Ctrl+Alt+O" Background="#202020" Foreground="White" Click="OpenDirectory"/>
                     <MenuItem Header="Save" InputGestureText="Ctrl+S" Background="#202020" Foreground="White" Click="Save"/>
                     <MenuItem Header="Save File As..." InputGestureText="Ctrl+Alt+S" Background="#202020" Foreground="White" Click="SaveFileAs"/>
-                    <MenuItem Header="Close File" InputGestureText="Ctrl+Q" Background="#202020" Foreground="White" Click="CloseFile"/>
-                    <MenuItem Header="Close Directory" InputGestureText="Ctrl+Alt+Q" Background="#202020" Foreground="White" Click="CloseFolder"/>
+                    <MenuItem Header="Close File" InputGestureText="Ctrl+F4" Background="#202020" Foreground="White" Click="CloseFile"/>
+                    <MenuItem Header="Close Directory" InputGestureText="Ctrl+Alt+F4" Background="#202020" Foreground="White" Click="CloseFolder"/>
                 </MenuItem>
                 <MenuItem Header="Git" Background="#202020" Foreground="White">
                     <MenuItem.Resources>
