@@ -1,19 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Frontend.Pages
 {
@@ -25,14 +14,18 @@ namespace Frontend.Pages
     {
         string courseID = "";
         string courseName = "";
+        string courseDesc = "";
         dynamic Asses = new { };
+        string[] Course = {};
 
         public AsignmentsPage(string[] Course)
         {
+            this.Course = Course;
             courseID = Course[0];
             courseName = Course[1];
             InitializeComponent();
             CourseNameTB.Text = Course[0]+"\n"+Course[1];
+            CourseDescTB.Text = Course[2];
             getData();
         }
 

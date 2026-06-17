@@ -6,6 +6,7 @@ require(["./vs/editor/editor.main"], () => {
         language: "plaintext",
         theme: "vs-dark",
         automaticLayout: true,
+        contextmenu: false,
     });
 });
 

@@ -11,6 +11,23 @@
 
     <Grid Background="#2424">
         <StackPanel Orientation="Vertical" VerticalAlignment="Top" Margin="10,0,10,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25*"/>
+                    <ColumnDefinition Width="75*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="28"/>
+                </Grid.RowDefinitions>
+                <Button Content="Log Out" Grid.Column="0" Grid.Row="0" Background="#610000" FontSize="10" Margin="0,5,0,5" Foreground="White" BorderThickness="0" Click="LogOut">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="7"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+            
             <TextBlock Text="Courses" FontSize="30" HorizontalAlignment="Center" Foreground="White"/>
             <TextBox x:Name="courseCodeTB" Text="" FontSize="15" TextAlignment="Center" HorizontalAlignment="Stretch"/>
             <Button Content="Enroll Course" Background="#DE52FF" FontSize="15" Margin="0,5,0,5" Foreground="Black" BorderThickness="0" Click="Enroll">

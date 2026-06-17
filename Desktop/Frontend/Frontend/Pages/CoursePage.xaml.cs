@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Windows;
@@ -14,10 +16,22 @@ namespace Frontend.Pages
     public partial class CoursePage : Page
     {
         dynamic courses = new {};
+        Dictionary<string, JObject> courseData = new Dictionary<string, JObject>();
         public CoursePage()
         {
             InitializeComponent();
             getData();
+        }
+
+        public void LogOut(object sender, EventArgs e)
+        {
+            Singleton user = Singleton.Instance;
+            user.id = "";
+            user.name = "";
+            user.Lname = "";
+            user.email = "";
+            NavigationService.Navigate(new LRPage());
+            NavigationService.RemoveBackEntry();
         }
 
         public async void Enroll(object sender, EventArgs e)
@@ -52,7 +66,9 @@ namespace Frontend.Pages
         {
             if (CourseList.SelectedItem == null) return;
 
-            string[] code = CourseList.SelectedItem.ToString().Split('&');
+            JObject course = courseData[CourseList.SelectedItem.ToString()];
+
+            string[] code = { (string)course["code_course"], (string)course["name_course"], (string)course["description_course"] };
 
             NavigationService.Navigate(new AsignmentsPage(code));
             NavigationService.RemoveBackEntry();
@@ -65,6 +81,7 @@ namespace Frontend.Pages
             string url = "http://138.2.239.69/student_controller.php?" + "id_stud=" + user.id;
             string response = await client.GetStringAsync(url);
             CourseList.Items.Clear();
+            courseData.Clear();
             Console.WriteLine(response);
 
             if (!response.Contains("false"))
@@ -72,7 +89,10 @@ namespace Frontend.Pages
                 courses = JsonConvert.DeserializeObject(response);
                 foreach (var course in courses)
                 {
-                    CourseList.Items.Add(course["code_course"] +"&"+course["name_course"]);
+                    Console.Write(course);
+                    string data = course["code_course"] + "&" + course["name_course"];
+                    CourseList.Items.Add(data);
+                    courseData[data] = course;
                 }
             }
         }

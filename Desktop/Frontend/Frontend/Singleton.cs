@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Frontend
+﻿namespace Frontend
 {
 	public sealed class Singleton
 	{

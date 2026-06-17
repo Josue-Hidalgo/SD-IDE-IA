@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Windows;
@@ -49,9 +47,18 @@ namespace Frontend.Pages
 
         public async void getData()
         {
+            string response = "";
             var client = new HttpClient();
             string url = "http://138.2.239.69/WLogin_WRegister.php?"+"action=log_student&email="+EmailTB.Text+"&password="+PasswordTB.Password;
-            string response = await client.GetStringAsync(url);
+            try
+            {
+                response = await client.GetStringAsync(url);
+            }
+            catch
+            {
+                MessageBox.Show("The server is not responding.", "Server did not respond", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
 
             if (response.Contains("false"))
             {

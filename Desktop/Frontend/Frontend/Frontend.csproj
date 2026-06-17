@@ -95,6 +95,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Pages\AsignmentDescription.xaml.cs">
+      <DependentUpon>AsignmentDescription.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ShortcutClases.cs" />
     <Compile Include="Decorator\FormattedScript.cs" />
     <Compile Include="Decorator\IScript.cs" />
@@ -114,6 +117,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\AsignmentDescription.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\AsignmentsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Security.Cryptography;
 //using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
@@ -48,9 +47,15 @@ namespace Frontend
 
             // Espera a que WebView2 esté listo antes de navegar a Monaco.
             CodeEditor.CoreWebView2InitializationCompleted += OnWebViewReady;
-            CodeEditor.EnsureCoreWebView2Async();
+            UnableWebContextMenu();   
         }
 
+        private async void UnableWebContextMenu()
+        {
+            await CodeEditor.EnsureCoreWebView2Async();
+            CodeEditor.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = false;
+            CodeEditor.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
+        }
         private void OnWebViewReady(object sender, Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs e)
         {
             if (!e.IsSuccess) return;
@@ -477,6 +482,16 @@ namespace Frontend
             else
             {
                 SaveFileAs(null,null);
+            }
+        }
+
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.C || e.Key == Key.V && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                Console.WriteLine("Greetings, you did nothing dumbass :P");
+                Clipboard.SetText("Im dumb for using the clipboard :P");
+                e.Handled = true;
             }
         }
     }
