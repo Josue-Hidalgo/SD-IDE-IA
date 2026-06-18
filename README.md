@@ -7,20 +7,25 @@ Nuestra solución busca fortalecer las competencias fundamentales en ingeniería
 ## Autores
 
 - [@Josue-Hidalgo](https://www.github.com/Josue-Hidalgo)
-- [@DayRPK25](https://github.com/DayRPK25)
-- [@IanUgaldeTec](https://github.com/IanUgaldeTec)
+- [@DídierSandovalMejias](https://github.com/DazeEdmond)
+- [@JoséAraya](https://github.com/Adiraell)
 - [@PauloHerrera1](https://github.com/PauloHerrera1)
 
 ---
 
 ## Instalación Dependencias
 
-### Frontend
---
+### Frontend WEB
+- http://138.2.239.69/
+
+### Frontend DESKTOP
+- Python v3.13 needed
+- Entrar a EXECUTABLE
+- Ejecuta el ejecutable llamado Frontend.exe
+
 
 ### Backend
-- Instalar [Visual Studio](https://visualstudio.microsoft.com/)
-- 
+- Ejecutando desde una Máquina Virtual.
 
 ---
 
