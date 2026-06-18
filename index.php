@@ -71,6 +71,12 @@ if($_GET['action']){
 			header('Content-type: application/json');
 			echo json_encode($data);
 			break;
+		case 'remember_pass':
+			$email = $_GET['email'];
+			$data = RememberPassword($email);
+			header('Content-type: application/json');
+			echo json_encode($data);
+			break;
 	}
 	
 }
@@ -80,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$data = json_decode($json);
 	header('Content-type: application/json; charset=utf-8');
 	switch($data->action){
-		case 'insert_student':
+		case 'create_student':
 			$st_name = $data->username;
 			$st_email =$data->email;
 			$st_pass =$data->password;

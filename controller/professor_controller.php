@@ -27,36 +27,5 @@ function getProfId(){
 	return $_SESSION['prof_id'];
 }
 
-if($_GET['action']){
-	$action = $_GET['action'];
-	switch($action){
-		case 'get_id':
-			$data = getProfId();
-			header('Content-type: application/json');
-			echo json_encode($data);
-			break;
-
-		case 'get_name':
-			$data = getProfName();
-			header('Content-type: application/json');
-			echo json_encode($data);
-			break;
-
-		case 'get_LName':
-			$data = getProfLName();
-			header('Content-type: application/json');
-			echo json_encode($data);
-			break;
-
-		case 'get_email':
-			$data = getProfEmail();
-			header('Content-type: application/json');
-			echo json_encode($data);
-			break;
-	}
-
-	
-	
-}
 
 ?>
