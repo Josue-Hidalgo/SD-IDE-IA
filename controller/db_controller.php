@@ -1,6 +1,9 @@
 <?php 
  function create_db_conn(){// sudo apt-get install php8.4-mysql
  	$servername = "localhost";
+	$username = "AcademycIDEIA";//"root";//
+	$password = "#IDEIA#";//"Qwertys123.";//
+	$dbname = "IDEA";//"prueba";//
 
 	$conn =  new mysqli($servername, $username, $password, $dbname);
 
