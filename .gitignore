@@ -4,6 +4,13 @@ bin/
 obj/
 !release/
 
+### Test
+# Composer dependencies
+TestingEnvironment/www/vendor/
+
+# Docker volume data
+TestingEnvironment/docker/
+
 # Visual Studio files
 .vs/
 *.user

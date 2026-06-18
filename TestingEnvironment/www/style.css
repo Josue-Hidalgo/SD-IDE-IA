@@ -1,0 +1,321 @@
+:root {
+  --ide-black: #0a0a0a;
+  --ide-bg: #111111;
+  --ide-purple: #261c38;
+  --ide-purple-light: #322548;
+  --ide-purple-border: #3a1a5c;
+  --ide-accent: #9d6bff;
+  --ide-accent-hover: #b48dff;
+  --ide-accent-soft: rgba(157, 107, 255, 0.15);
+  --ide-text: #ececec;
+  --ide-text-muted: #a0a0b0;
+  --ide-radius: 12px;
+
+  --bs-primary: #261c38;
+  --bs-primary-rgb: 38, 28, 56;
+  --bs-secondary: #1a1a1a;
+  --bs-secondary-rgb: 26, 26, 26;
+  --bs-success: #7c5cbf;
+  --bs-success-rgb: 124, 92, 191;
+  --bs-info: #5b4a78;
+  --bs-info-rgb: 91, 74, 120;
+  --bs-danger: #c45c7a;
+  --bs-danger-rgb: 196, 92, 122;
+  --bs-body-bg: var(--ide-bg);
+  --bs-body-color: var(--ide-text);
+  --bs-border-color: var(--ide-purple-border);
+  --bs-link-color: var(--ide-accent);
+  --bs-link-hover-color: var(--ide-accent-hover);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--ide-bg);
+  color: var(--ide-text);
+  min-height: 100vh;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* ── Navbar ── */
+.ide-navbar {
+  background-color: #000000;
+  border-bottom: 1px solid var(--ide-purple-border);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
+}
+
+.navbar-logo {
+  height: 38px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.navbar-user.d-none {
+  display: none !important;
+}
+
+.navbar-user-name {
+  color: var(--ide-text-muted);
+  font-size: 0.9rem;
+}
+
+.btn-outline-accent {
+  color: var(--ide-accent);
+  border-color: var(--ide-purple-border);
+  background: transparent;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.btn-outline-accent:hover {
+  color: #fff;
+  background-color: var(--ide-purple);
+  border-color: var(--ide-accent);
+}
+
+/* ── Cards & sections ── */
+.card-section {
+  max-width: 950px;
+  margin: 20px auto;
+  padding: 28px;
+  background-color: var(--ide-purple);
+  border: 1px solid var(--ide-purple-border);
+  border-radius: var(--ide-radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.card-section h2,
+.card-section h4,
+.card-section h5 {
+  color: var(--ide-text);
+}
+
+.text-muted {
+  color: var(--ide-text-muted) !important;
+}
+
+/* ── Forms ── */
+.form-control,
+.form-select {
+  background-color: var(--ide-black);
+  border: 1px solid var(--ide-purple-border);
+  color: var(--ide-text);
+  border-radius: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control::placeholder {
+  color: #6b6b7b;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--ide-black);
+  border-color: var(--ide-accent);
+  color: var(--ide-text);
+  box-shadow: 0 0 0 0.2rem var(--ide-accent-soft);
+}
+
+.form-label {
+  color: var(--ide-text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.form-check-input {
+  background-color: var(--ide-black);
+  border-color: var(--ide-purple-border);
+}
+
+.form-check-input:checked {
+  background-color: var(--ide-accent);
+  border-color: var(--ide-accent);
+}
+
+.form-check-label {
+  color: var(--ide-text-muted);
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  background-color: var(--ide-purple-light);
+  border-color: var(--ide-purple-border);
+  color: #fff;
+  font-weight: 500;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #3d2d58;
+  border-color: var(--ide-accent);
+  color: #fff;
+}
+
+.btn-success {
+  background-color: #5a4080;
+  border-color: var(--ide-purple-border);
+  color: #fff;
+}
+
+.btn-success:hover,
+.btn-success:focus {
+  background-color: #6e5099;
+  border-color: var(--ide-accent);
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: var(--ide-black);
+  border-color: var(--ide-purple-border);
+  color: var(--ide-text-muted);
+}
+
+.btn-secondary:hover {
+  background-color: #1a1a1a;
+  border-color: var(--ide-text-muted);
+  color: var(--ide-text);
+}
+
+.btn-outline-primary {
+  color: var(--ide-accent);
+  border-color: var(--ide-purple-border);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--ide-accent-soft);
+  border-color: var(--ide-accent);
+  color: var(--ide-accent-hover);
+}
+
+/* ── Course cards ── */
+.course-card {
+  height: 100%;
+  padding: 20px;
+  border: 1px solid var(--ide-purple-border);
+  border-radius: var(--ide-radius);
+  background-color: var(--ide-purple-light);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.course-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--ide-accent);
+  box-shadow: 0 8px 24px rgba(157, 107, 255, 0.12);
+}
+
+.course-code {
+  font-size: 0.8rem;
+  color: var(--ide-accent);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.course-name {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-top: 8px;
+  color: var(--ide-text);
+}
+
+.course-description {
+  margin-top: 8px;
+  color: var(--ide-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* ── Assignments ── */
+.assignment-card {
+  border: 1px solid var(--ide-purple-border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background-color: var(--ide-black);
+  transition: border-color 0.2s;
+}
+
+.assignment-card:hover {
+  border-color: rgba(157, 107, 255, 0.4);
+}
+
+.assignment-title {
+  font-weight: 600;
+  color: var(--ide-text);
+}
+
+.assignment-date {
+  font-size: 0.82rem;
+  color: var(--ide-text-muted);
+  margin-top: 4px;
+}
+
+.tasks-box {
+  border: 1px solid var(--ide-purple-border);
+  border-radius: var(--ide-radius);
+  padding: 20px;
+  background-color: var(--ide-black);
+  min-height: 250px;
+}
+
+.tasks-box h5 {
+  color: var(--ide-text);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ide-purple-border);
+}
+
+/* ── Alerts (dark theme) ── */
+.alert {
+  border-radius: 8px;
+  border-width: 1px;
+}
+
+.alert-danger {
+  background-color: rgba(196, 92, 122, 0.12);
+  border-color: rgba(196, 92, 122, 0.35);
+  color: #f0a0b4;
+}
+
+.alert-info {
+  background-color: var(--ide-accent-soft);
+  border-color: rgba(157, 107, 255, 0.3);
+  color: var(--ide-accent-hover);
+}
+
+.alert-secondary {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: var(--ide-purple-border);
+  color: var(--ide-text-muted);
+}
+
+/* ── Links ── */
+a {
+  color: var(--ide-accent);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+a:hover {
+  color: var(--ide-accent-hover);
+}
+
+/* ── Dashboard header ── */
+#dashboardSection > .d-flex h2 {
+  font-weight: 600;
+}
+
+/* datetime picker icon visibility on dark bg */
+input[type="datetime-local"] {
+  color-scheme: dark;
+}
