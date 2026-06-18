@@ -1,2 +1,35 @@
 # SD-IDE-IA 
-## (Integrated Development Environment for Independent Assessment)
+Este proyecto propone un IDE educativo que limite el uso indebido de herramientas externas y fomente el aprendizaje auténtico de la programación mediante control de entregas, trazabilidad y versionamiento con Git. 
+Nuestra solución busca fortalecer las competencias fundamentales en ingeniería de software, reducir el plagio y permitir una evaluación más transparente y precisa del progreso estudiantil.
+
+---
+
+## Autores
+
+- [@Josue-Hidalgo](https://www.github.com/Josue-Hidalgo)
+- [@DídierSandovalMejias](https://github.com/DazeEdmond)
+- [@JoséAraya](https://github.com/Adiraell)
+- [@PauloHerrera1](https://github.com/PauloHerrera1)
+
+---
+
+## Instalación Dependencias
+
+### Frontend WEB
+- http://138.2.239.69/
+
+### Frontend DESKTOP
+- Python v3.13 needed
+- Entrar a EXECUTABLE
+- Ejecuta el ejecutable llamado Frontend.exe
+
+
+### Backend
+- Ejecutando desde una Máquina Virtual.
+
+---
+
+## Documentación
+
+ - [Documentación Requerimientos](https://drive.google.com/file/d/17P3Tf9kg_DNLkBXA-ELDiUl4HBih47jN/view?usp=sharing)
+ - [Documentación Diseño de Software](https://drive.google.com/file/d/1-LtUCMNshLEDbHNwN6PRhEaLReRhc4Cn/view?usp=sharing)
