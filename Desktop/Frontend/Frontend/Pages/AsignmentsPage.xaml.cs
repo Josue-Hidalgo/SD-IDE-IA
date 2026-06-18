@@ -1,7 +1,11 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Navigation;
 
 namespace Frontend.Pages
@@ -16,7 +20,8 @@ namespace Frontend.Pages
         string courseName = "";
         string courseDesc = "";
         dynamic Asses = new { };
-        string[] Course = {};
+        string[] Course = { };
+        Dictionary<string, JObject> AssignmentData = new Dictionary<string, JObject>();
 
         public AsignmentsPage(string[] Course)
         {
@@ -24,7 +29,7 @@ namespace Frontend.Pages
             courseID = Course[0];
             courseName = Course[1];
             InitializeComponent();
-            CourseNameTB.Text = Course[0]+"\n"+Course[1];
+            CourseNameTB.Text = Course[0] + "\n" + Course[1];
             CourseDescTB.Text = Course[2];
             getData();
         }
@@ -39,6 +44,12 @@ namespace Frontend.Pages
         {
             if (AssList.SelectedItem == null) return;
 
+            JObject Ass = AssignmentData[AssList.SelectedItem.ToString()];
+            string[] AssData = { (string)Ass["id_assignment"], (string)Ass["name_assignment"], 
+                (string)Ass["description_assignment"], (string)Ass["deadline"], (string)Ass["is_allowed_after_deadline"] };
+
+            NavigationService.Navigate(new AsignmentDescription(Course,AssData));
+            NavigationService.RemoveBackEntry();
         }
 
         public async void getData()
@@ -47,6 +58,7 @@ namespace Frontend.Pages
             string url = "http://138.2.239.69/index.php?" + "action=get_assign_by_course&code_course=" + courseID;
             string response = await client.GetStringAsync(url);
             AssList.Items.Clear();
+            AssignmentData.Clear();
 
             if (!response.Contains("false"))
             {
@@ -54,6 +66,7 @@ namespace Frontend.Pages
                 foreach (var Ass in Asses)
                 {
                     AssList.Items.Add(Ass["name_assignment"]);
+                    AssignmentData[(string)Ass["name_assignment"]] = Ass;
                 }
             }
         }

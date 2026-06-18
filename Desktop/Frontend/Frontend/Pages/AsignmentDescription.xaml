@@ -18,10 +18,14 @@
                     </Style>
                 </Button.Resources>
             </Button>
-            <TextBlock x:Name="AssName" Text="" FontSize="20" Width="200" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#808080"/>
-            <TextBlock x:Name="AssDescription" Text="" FontSize="15" Width="200" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#808080"/>
+            <TextBlock x:Name="AssName" Text="" FontSize="20" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#FFFFFF"/>
+            <TextBlock Text="Description:" FontSize="15" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#FFFFFF"/>
+            <TextBlock x:Name="AssDescription" Text="" FontSize="15" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#808080"/>
+            <TextBlock Text="Deadline:" FontSize="15" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#FFFFFF"/>
+            <TextBlock x:Name="AssDeadline" Text="" FontSize="15" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#808080"/>
+            <TextBlock x:Name="afterDeadline" Text="" FontSize="15" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#FFFFFF"/>
             <Button x:Name="AssDropFile" Content="Drop or select a file to upload" FontSize="10" AllowDrop="True" Height="40" Background="#242424" 
-                    BorderBrush="#2A0033" Margin="0,5,0,5" Width="200" HorizontalAlignment="Left" Foreground="#E694FF" Click="UploadFile"
+                    BorderBrush="#2A0033" Margin="0,5,0,5" Width="175" HorizontalAlignment="Left" Foreground="#E694FF" Click="UploadFile"
                     DragEnter="AssDropFile_DragEnter" DragDrop.Drop="AssDropFile_Drop">
                 <Button.Resources>
                     <Style TargetType="Border">

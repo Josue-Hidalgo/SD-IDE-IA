@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 using System.Windows.Navigation;
+using Newtonsoft.Json.Linq;
 
 namespace Frontend.Pages
 {
@@ -16,15 +17,31 @@ namespace Frontend.Pages
         string assignmentID = "";
         string assignmentName = "";
         string assignmentDesc = "";
-        dynamic AsignmentData = new { };
+        string assignmentDeadline = "";
         string[] files = { };
         string[] Course = { };
-        string[] Assignment = { };
-        public AsignmentDescription(string[] Course, string[] Assignment)
+        string[] Assignment;
+        public AsignmentDescription(string[] Course, string[] Ass)
         {
-            this.Assignment = Assignment;
-            this.Course = Course;
             InitializeComponent();
+
+            Assignment = Ass;
+
+            assignmentID = Ass[0];
+            assignmentName = Ass[1];
+            assignmentDesc = Ass[2];
+            assignmentDeadline = Ass[3];
+
+            AssName.Text = assignmentName;
+            AssDescription.Text = assignmentDesc;
+            AssDeadline.Text = assignmentDeadline;
+
+            if (Ass[4] == "0")
+            { afterDeadline.Text = "Allowed after deadline: ✓"; } 
+            else 
+            { afterDeadline.Text = "Allowed after deadline: ✕"; }
+            
+            this.Course = Course;
         }
         
         public void BackAssignments(object sender,EventArgs e)

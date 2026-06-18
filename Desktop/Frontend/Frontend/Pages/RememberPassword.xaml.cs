@@ -39,28 +39,19 @@ namespace Frontend.Pages
                     try
                     {
                         response = await client.GetStringAsync(url);
-                        MessageBox.Show("Password sent to your mail.", "Succesfull", MessageBoxButton.OK, MessageBoxImage.Information);
+                        if (response.Contains("true"))
+                        {
+                            MessageBox.Show("Password sent to your mail.", "Succesfull", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Email could not be sent.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
                     }
                     catch
                     {
                         MessageBox.Show("The server is not responding.", "Server did not respond", MessageBoxButton.OK, MessageBoxImage.Information);
                         return;
-                    }
-
-                    if (response.Contains("false"))
-                    {
-                        MessageBox.Show("Email could not be sent.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                    else
-                    {
-                        dynamic json = JsonConvert.DeserializeObject(response);
-                        Singleton user = Singleton.Instance;
-                        user.id = json["stud_id"];
-                        user.name = json["name"];
-                        user.Lname = json["lastname"];
-                        user.email = json["email"];
-                        NavigationService.Navigate(new CoursePage());
-                        NavigationService.RemoveBackEntry();
                     }
                 }
                 else
