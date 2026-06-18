@@ -1,14 +1,13 @@
 <?php
 session_start();
-?>
-<?php  
-include 'professor_controller.php';
-include 'student_controller.php';
-include 'course_controller.php';
-include 'assignment_controller.php';
-include 'WLogin_WRegister.php';
 
-if($_GET['action']){
+include_once 'professor_controller.php';
+include_once 'student_controller.php';
+include_once 'course_controller.php';
+include_once 'assignment_controller.php';
+include_once 'WLogin_WRegister.php';
+
+if(isset($_GET['action'])){
 	$action = $_GET['action'];
 	switch($action){
 		case 'get_id':
@@ -48,7 +47,20 @@ if($_GET['action']){
 			$password = $_GET['password'];
 			$data = Login_web($email,$password);
 			header('Content-type: application/json');
-			echo json_encode($data);
+			if ($data) {
+				echo json_encode([
+					'success' => true,
+					'name' => $data['name'],
+					'lastname' => $data['lastname'],
+					'email' => $data['email']
+				]);
+			} else {
+				http_response_code(401);
+				echo json_encode([
+					'success' => false,
+					'message' => 'Correo o contraseña incorrectos.'
+				]);
+			}
 			break;
 
 		case 'get_enroll_courses':
@@ -59,7 +71,7 @@ if($_GET['action']){
 			break;
 
 		case 'get_all_courses':
-			$id = $_GET['prof_id'];
+			$id = isset($_GET['prof_id']) ? $_GET['prof_id'] : $_SESSION['prof_id'];
 			$data = get_all_courses($id);
 			header('Content-type: application/json');
 			echo json_encode($data);

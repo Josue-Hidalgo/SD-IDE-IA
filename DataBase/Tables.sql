@@ -111,17 +111,17 @@ CREATE TABLE Enrollment (
 -- 8. SUBMISSION
 -- ************************************
 CREATE TABLE Submission (
-    id_group INT NOT NULL,
+    id_student INT NOT NULL,
     id_assignment INT NOT NULL,
     submitted_at DATETIME NOT NULL,
     grade DECIMAL(5,2),
     feedback TEXT,
     project_blob LONGBLOB NOT NULL,
 
-    PRIMARY KEY (id_group, id_assignment),
+    PRIMARY KEY (id_student, id_assignment),
 
-    FOREIGN KEY (id_group)
-        REFERENCES `Group`(id_group)
+    FOREIGN KEY (id_student)
+        REFERENCES Student(id_student)
         ON DELETE CASCADE,
 
     FOREIGN KEY (id_assignment)

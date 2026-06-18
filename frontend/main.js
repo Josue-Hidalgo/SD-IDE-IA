@@ -57,7 +57,7 @@ function parseBackendResponse(text) {
     if (jsonStart !== -1) {
       try {
         return JSON.parse(cleanText.slice(jsonStart));
-      } catch (ignored) {}
+      } catch (ignored) { }
     }
 
     if (cleanText.includes("false")) return false;
@@ -202,7 +202,7 @@ async function login() {
 
 
   try {
-    const response = await requestBackend("WLogin_WRegister.php", {
+    const response = await requestBackend("api.php", {
       method: "GET",
       params: {
         action: "log_prof",
@@ -211,20 +211,20 @@ async function login() {
       }
     });
 
-  if (!response.ok || response.data?.success !== true) {
-    showAlert(
-      "loginMessage",
-      response.data?.message || "Correo o contraseña incorrectos.",
-      "danger"
-    );
-    return;
-  }
+    if (!response.ok || response.data?.success !== true) {
+      showAlert(
+        "loginMessage",
+        response.data?.message || "Correo o contraseña incorrectos.",
+        "danger"
+      );
+      return;
+    }
 
-loggedProfessorEmail = response.data.email || email;
+    loggedProfessorEmail = response.data.email || email;
 
-localStorage.setItem("professorEmail", loggedProfessorEmail);
+    localStorage.setItem("professorEmail", loggedProfessorEmail);
 
-showDashboard(response.data.name || loggedProfessorEmail);
+    showDashboard(response.data.name || loggedProfessorEmail);
   } catch (error) {
     showAlert("loginMessage", "Error de conexión.", "danger");
   }
@@ -245,7 +245,7 @@ async function register() {
   }
 
   try {
-    const response = await requestBackend("WLogin_WRegister.php", {
+    const response = await requestBackend("api.php", {
       method: "POST",
       body: {
         action: "create_prof",
@@ -309,9 +309,10 @@ async function createCourse() {
   }
 
   try {
-    const response = await requestBackend("course_controller.php", {
+    const response = await requestBackend("api.php", {
       method: "POST",
       body: {
+        action: "create_course",
         course_code: code,
         name_course: name,
         description
@@ -347,8 +348,11 @@ async function loadCourses() {
   `;
 
   try {
-    const response = await requestBackend("course_controller.php", {
-      method: "GET"
+    const response = await requestBackend("api.php", {
+      method: "GET",
+      params: {
+        action: "get_all_courses" 
+      }
     });
 
     if (!response.ok) {
@@ -435,10 +439,10 @@ async function createAssignment() {
     return;
   }
 
-  const action = editingAssignmentName ? "modify" : "create";
+  const action = editingAssignmentName ? "modify_assign" : "create_assign";
 
   try {
-    const response = await requestBackend("assignment_controller.php", {
+    const response = await requestBackend("api.php", {
       method: "POST",
       body: {
         action,
@@ -477,9 +481,10 @@ async function loadAssignments() {
   if (!selectedCourse) return;
 
   try {
-    const response = await requestBackend("assignment_controller.php", {
+    const response = await requestBackend("api.php", {
       method: "GET",
       params: {
+        action: "get_assign_by_course",
         code_course: getCourseCode(selectedCourse)
       }
     });
