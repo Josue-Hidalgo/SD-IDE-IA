@@ -12,19 +12,20 @@ function createProf(int $prof_id,string $email, string $password, string $userna
 	$_SESSION['userLast'] = $userLast;
 }
 
-function getProfName(Professor $prof){
+function getProfName(){
 	return $_SESSION['username'];
 }
 
-function getProfEmail(Professor $prof){
+function getProfEmail(){
 	return $_SESSION['email'];
 }
 
-function getProfLName(Professor $prof){
+function getProfLName(){
 	return $_SESSION['userLast'];
 }
-function getProfId(Professor $prof){
+function getProfId(){
 	return $_SESSION['prof_id'];
 }
+
 
 ?>

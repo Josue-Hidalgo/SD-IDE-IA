@@ -255,4 +255,24 @@ function enroll_stud(int $id_stud, string $course_code){
  		return FALSE;
  	}
 }
+
+function get_all_stud_mail_in_course(string $code_course){
+	$conn = create_db_conn();
+
+
+	$sql = "SELECT User.email_user FROM Enrollment INNER JOIN Student ON Enrollment.id_student = Student.id_student INNER JOIN User ON Student.id_user = User.id_user WHERE Enrollment.code_course = \"$code_course\"";
+	$result = $conn->query($sql);
+
+	if ($result->num_rows >0) {
+ 		$student_mail = [];
+ 		while($row = $result->fetch_assoc()){
+ 			$student_mail[] = $row;
+ 		}
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+ 	$conn->close();
+ 	return $student_mail;
+}
 ?>

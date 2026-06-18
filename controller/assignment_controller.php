@@ -1,11 +1,19 @@
-
-
 <?php
 include 'assignment_model.php';
-include 'db_controller.php';
+include_once 'db_controller.php';
+require 'vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 function create_assign(string $code_course, string $assign_name, string $desc, string $deadline, bool $is_allowed){
-	return create_assignment($code_course, $assign_name, $desc, $deadline, $is_allowed);
+	$value = create_assignment($code_course, $assign_name, $desc, $deadline, $is_allowed);
+	if($value){
+		notify_students($code_course, $assign_name);
+		return $value;
+	}else{
+		return FALSE;
+	}
 }
 
 function get_all_assignment_by_course(string $code_course){
@@ -16,69 +24,38 @@ function modify_assignment(string $assign_name, string $code_course, string $des
 	return modify_assign($assign_name, $code_course, $desc, $deadline, $is_allowed);
 }
 
-if($_GET['code_course']){
-	$code = $_GET['code_course'];
-	$data = get_all_assignment_by_course($code);
-	header('Content-type: application/json');
-	echo json_encode($data);
-}
+function notify_students(string $code_course, string $assign_title){//
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$json = file_get_contents('php://input');
-	$data = json_decode($json);
-	header('Content-type: application/json; charset=utf-8');
-	switch($data->action){
-		case 'create':
-			$as_name = $data->assign_name;
-			$cr_code =$data->course_code;
-			$as_desc =$data->assign_desc;
-			$as_deadline = $data->assign_deadline;
-			$as_is_allowed = $data->allowed;
-			$success = create_assignment($cr_code, $as_name, $as_desc, $as_deadline, $as_is_allowed);
-			if ($success) {
-				http_response_code(201);
-				$responseData =[
-					'success' => true,
-					'message' => 'Date received successfully',
-				];
-				echo json_encode($responseData);
-			} else {
-				http_response_code(400);
-				$responseData =[
-					'success' => FALSE,
-					'message' => 'User already exist.',
-				];
-				echo json_encode($responseData);
+	$students = get_all_stud_mail_in_course($code_course);
 
-			}
-			
-			
-			break;
-		case 'modify':
-			$as_name = $data->assign_name;
-			$cr_code =$data->course_code;
-			$as_desc =$data->assign_desc;
-			$as_deadline = $data->assign_deadline;
-			$as_is_allowed = $data->allowed;
-			$success = modify_assignment($as_name, $cr_code, $as_desc, $as_deadline, $as_is_allowed);
-			if ($success) {
-				http_response_code(201);
-				$responseData =[
-					'success' => true,
-					'message' => 'Date received successfully',
-				];
-				echo json_encode($responseData);
-			} else {
-				http_response_code(400);
-				$responseData =[
-					'success' => FALSE,
-					'message' => 'User already exist.',
-				];
-				echo json_encode($responseData);
+	$mail = new PHPMailer(true);
+	try{
+		$mail->isSMTP();
+		$mail->Host = 'smtp.gmail.com';
+		$mail->SMTPAuth = true;
+		$mail->Username = 'ideia12026@gmail.com';
+		$mail->Password = 'nxkl gbcbmgci awbe';
+		$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+		$mail->Port = 587;
 
-			}
-			break;
+		//recipients
+		$mail->setFrom('ideia12026@gmail.com','IDEIA-ACADEMIC');
+		foreach ($students as $stud) {
+
+			$mail->addAddress($stud["email_user"]);
+		}
+
+		//contenido del correo
+		$mail->isHTML(true);
+		$mail->Subject = "New Assignment from course $code_course";
+		$mail->Body = "The new assignment $assign_title is now available";
+		$mail->AltBody = "The new assignment $assign_title is now available";
+
+		$mail->send();
+	} catch (Exception $e){
+		echo "no se envio correo :(. error: {$mail->ErrorInfo}";
 	}
 
 }
+
 ?>
