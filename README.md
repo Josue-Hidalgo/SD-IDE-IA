@@ -1,3 +1,5 @@
+<img width="1080" height="1080" alt="LogoTitle" src="https://github.com/user-attachments/assets/c4a9481e-d4fb-46c3-88cb-772f513b3aa6" />
+
 # SD-IDE-IA 
 Este proyecto propone un IDE educativo que limite el uso indebido de herramientas externas y fomente el aprendizaje auténtico de la programación mediante control de entregas, trazabilidad y versionamiento con Git. 
 Nuestra solución busca fortalecer las competencias fundamentales en ingeniería de software, reducir el plagio y permitir una evaluación más transparente y precisa del progreso estudiantil.
