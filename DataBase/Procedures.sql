@@ -215,7 +215,7 @@ DELIMITER ;
 DELIMITER $$
 
 CREATE PROCEDURE create_submission (
-    IN p_id_group INT,
+    IN p_id_student INT,
     IN p_id_assignment INT,
     IN p_blob LONGBLOB
 )
@@ -243,13 +243,13 @@ BEGIN
 
     -- 4. Insertar submission
     INSERT INTO Submission (
-        id_group,
+        id_student,
         id_assignment,
         submitted_at,
         project_blob
     )
     VALUES (
-        p_id_group,
+        p_id_student,
         p_id_assignment,
         NOW(),
         p_blob
@@ -514,7 +514,7 @@ DELIMITER ;
 DELIMITER $$
 
 CREATE PROCEDURE grade_submission (
-    IN p_id_group INT,
+    IN p_id_student INT,
     IN p_id_assignment INT,
     IN p_grade DECIMAL(5,2),
     IN p_feedback TEXT
@@ -523,7 +523,7 @@ BEGIN
     UPDATE Submission
     SET grade = p_grade,
         feedback = p_feedback
-    WHERE id_group = p_id_group
+    WHERE id_student = p_id_student
       AND id_assignment = p_id_assignment;
 END$$
 

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Frontend"
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
-        Title="IDEIA" Height="450" Width="800" Background="#242424" WindowStyle="None" WindowStartupLocation="CenterScreen" BorderBrush="#242424"
+        Title="IDEIA" Height="450" Width="800" Background="#242424" WindowStyle="None" WindowStartupLocation="CenterScreen" BorderBrush="#242424" Icon="Assets/Logo.ico"
         MouseDown="WindowMouseDown" ResizeMode="NoResize"
         PreviewKeyDown="Window_PreviewKeyDown">
 
