@@ -487,7 +487,7 @@ namespace Frontend
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.C || e.Key == Key.V && Keyboard.Modifiers == ModifierKeys.Control)
+            if((e.Key == Key.C || e.Key == Key.V) && Keyboard.Modifiers == ModifierKeys.Control)
             {
                 Console.WriteLine("Greetings, you did nothing dumbass :P");
                 Clipboard.SetText("Im dumb for using the clipboard :P");

@@ -76,5 +76,11 @@ namespace Frontend.Pages
                 NavigationService.RemoveBackEntry();
             }
         }
+
+        public void RememberPassword(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new RememberPassword());
+            NavigationService.RemoveBackEntry();
+        }
     }
 }

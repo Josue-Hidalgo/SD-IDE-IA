@@ -19,6 +19,7 @@
             <PasswordBox x:Name="PasswordTB" FontSize="20" HorizontalAlignment="Stretch" Foreground="Black"/>
             <TextBlock Text="Dont have an account?" FontSize="10" HorizontalAlignment="Center" Foreground="White"/>
             <Button Content="Create student account" Background="Transparent" BorderThickness="0" FontSize="10" HorizontalAlignment="Center" Foreground="#DE52FF" Click="showRegPage"/>
+            <Button Content="Forgot password?" Background="Transparent" BorderThickness="0" FontSize="10" HorizontalAlignment="Center" Foreground="#DE52FF" Click="RememberPassword"/>
             <Button Content="Login" Background="#DE52FF" FontSize="20" Margin="0,10,0,0" Click="Login" BorderThickness="0">
                 <Button.Resources>
                     <Style TargetType="Border">
@@ -26,6 +27,7 @@
                     </Style>
                 </Button.Resources>
             </Button>
+            
         </StackPanel>
     </Grid>
 </Page>
