@@ -100,8 +100,12 @@ function login_user_web(string $email, string $password){
  		}
  		$result2 = $conn->query("SELECT id_professor from Professor where id_user = $id_user");
 
- 		$row2 = $result2->fetch_assoc();
- 		$prof_data["prof_id"] = $row2["id_professor"];
+ 		if ($result2 && $row2 = $result2->fetch_assoc()) {
+ 			$prof_data["prof_id"] = $row2["id_professor"];
+ 		} else {
+ 			$conn->close();
+ 			return FALSE;
+ 		}
  	}else{
  		$conn->close();
  		return FALSE;
@@ -129,8 +133,12 @@ function login_user_desk(string $email, string $password){
  		}
  		$result2 = $conn->query("SELECT id_student from Student where id_user = $id_user");
 
- 		$row2 = $result2->fetch_assoc();
- 		$stud_data["stud_id"] = $row2["id_student"];
+ 		if ($result2 && $row2 = $result2->fetch_assoc()) {
+ 			$stud_data["stud_id"] = $row2["id_student"];
+ 		} else {
+ 			$conn->close();
+ 			return FALSE;
+ 		}
  	}else{
  		$conn->close();
  		return FALSE;
