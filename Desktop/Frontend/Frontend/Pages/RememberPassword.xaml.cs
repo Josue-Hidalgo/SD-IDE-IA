@@ -1,6 +1,8 @@
 ﻿using MimeKit;
+using Newtonsoft.Json;
 using System;
 using System.Net;
+using System.Net.Http;
 using System.Net.Mail;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,9 +14,6 @@ namespace Frontend.Pages
     /// </summary>
     public partial class RememberPassword : Page
     {
-        string email = "ideia12026@gmail.com";
-        string emailName = "IDEIA";
-        string emailPassword = "nxkl gbcb mgci awbe";
         public RememberPassword()
         {
             InitializeComponent();
@@ -26,36 +25,42 @@ namespace Frontend.Pages
             NavigationService.RemoveBackEntry();
         }
 
-        public void RememberPasswordF(object sender,EventArgs e)
+        public async void RememberPasswordF(object sender,EventArgs e)
         {
-            string Subject = "Password from IDEIA";
-            string Body = "Your password is: smthng";
-
             bool valid = true;
             if (EmailTB.Text == "") valid = false;
 
             try
             {
-                string addresToName = "Name";
-                if (valid) { 
-                    var addresFrom = new MailAddress(email, emailName);
-                    var addresTo = new MailAddress(EmailTB.Text,addresToName);
-                    var Email = new MailMessage(addresFrom,addresTo);
-                    Email.Subject = Subject;
-                    Email.Body = Body;
-                    SmtpClient Client = new SmtpClient("smtp.gmail.com");
-                    Client.Port = 587;
-                    Client.EnableSsl = true;
-                    Client.UseDefaultCredentials = false;
-                    Client.Credentials = new NetworkCredential(email, emailPassword);
+                if (valid) {
+                    string response = "";
+                    var client = new HttpClient();
+                    string url = "http://138.2.239.69/index.php?" + "action=remember_pass" + "&email=" + EmailTB.Text;
                     try
                     {
-                        Client.Send(Email);
-                        MessageBox.Show("Password sent succesfully.", "Password sent", MessageBoxButton.OK, MessageBoxImage.Information);
+                        response = await client.GetStringAsync(url);
+                        MessageBox.Show("Password sent to your mail.", "Succesfull", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     catch
                     {
-                        MessageBox.Show("something went wrong when sending the email.", "Something went wrong :o", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show("The server is not responding.", "Server did not respond", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
+                    }
+
+                    if (response.Contains("false"))
+                    {
+                        MessageBox.Show("Email could not be sent.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        dynamic json = JsonConvert.DeserializeObject(response);
+                        Singleton user = Singleton.Instance;
+                        user.id = json["stud_id"];
+                        user.name = json["name"];
+                        user.Lname = json["lastname"];
+                        user.email = json["email"];
+                        NavigationService.Navigate(new CoursePage());
+                        NavigationService.RemoveBackEntry();
                     }
                 }
                 else

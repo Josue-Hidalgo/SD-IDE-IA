@@ -49,14 +49,14 @@ namespace Frontend.Pages
         {
             string response = "";
             var client = new HttpClient();
-            string url = "http://138.2.239.69/WLogin_WRegister.php?"+"action=log_student&email="+EmailTB.Text+"&password="+PasswordTB.Password;
+            string url = "http://138.2.239.69/index.php?"+"action=log_student&email="+EmailTB.Text+"&password="+PasswordTB.Password;
             try
             {
                 response = await client.GetStringAsync(url);
             }
-            catch
+            catch(Exception e)
             {
-                MessageBox.Show("The server is not responding.", "Server did not respond", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("The server is not responding."+e.Message, "Server did not respond", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 

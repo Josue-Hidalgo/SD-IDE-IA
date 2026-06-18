@@ -42,10 +42,11 @@ namespace Frontend.Pages
             Singleton user = Singleton.Instance;
             var data = new
             {
+                action = "enroll_student",
                 course_code = courseCodeTB.Text,
                 id_stud = user.id
             };
-            string url = "http://138.2.239.69/student_controller.php";
+            string url = "http://138.2.239.69/index.php";
             string jsonText = JsonConvert.SerializeObject(data);
             var encodeText = new StringContent(jsonText, Encoding.UTF8, "application/json");
             HttpResponseMessage respuesta = await client.PostAsync(url, encodeText);
@@ -78,7 +79,7 @@ namespace Frontend.Pages
         {
             var client = new HttpClient();
             Singleton user = Singleton.Instance;
-            string url = "http://138.2.239.69/student_controller.php?" + "id_stud=" + user.id;
+            string url = "http://138.2.239.69/index.php?" + "action=get_enroll_courses&id_stud=" + user.id;
             string response = await client.GetStringAsync(url);
             CourseList.Items.Clear();
             courseData.Clear();

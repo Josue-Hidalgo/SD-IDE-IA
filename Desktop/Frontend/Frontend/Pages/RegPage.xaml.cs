@@ -44,13 +44,13 @@ namespace Frontend.Pages
             var client = new HttpClient();
             var data = new
             {
-                action = "insert_student",
+                action = "create_student",
                 email = EmailTB.Text,
                 password = PasswordTB.Password,
                 username = NameTB.Text,
                 userLast = LNameTB.Text
             };
-            string url = "http://138.2.239.69/WLogin_WRegister.php";
+            string url = "http://138.2.239.69/index.php";
             string jsonText = JsonConvert.SerializeObject(data);
             var encodeText = new StringContent(jsonText, Encoding.UTF8, "application/json");
             HttpResponseMessage respuesta = await client.PostAsync(url,encodeText);
