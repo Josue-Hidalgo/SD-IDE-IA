@@ -58,4 +58,12 @@ function notify_students(string $code_course, string $assign_title){//
 
 }
 
+function create_submission(int $id_stud, int $id_assign, string $project_name, string $project_data){
+	return create_submit($id_stud, $id_assign, $project_name, $project_data);
+}
+
+function grade_submission(int $id_stud, int $id_assign, float $grade, string $feedback){
+	return grade_submit($id_stud, $id_assign, $grade, $feedback);
+}
+
 ?>

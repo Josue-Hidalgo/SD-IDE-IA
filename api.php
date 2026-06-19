@@ -71,6 +71,7 @@ if($_GET['action']){
 			header('Content-type: application/json');
 			echo json_encode($data);
 			break;
+			
 		case 'remember_pass':
 			$email = $_GET['email'];
 			$data = RememberPassword($email);
@@ -108,8 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				echo json_encode($responseData);
 
 			}
-			
-			
 			break;
 
 		case 'create_prof':
@@ -204,9 +203,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				echo json_encode($responseData);
 
 			}
-			
-			
 			break;
+
 		case 'modify_assign':
 			$as_name = $data->assign_name;
 			$cr_code =$data->course_code;
@@ -218,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				http_response_code(201);
 				$responseData =[
 					'success' => true,
-					'message' => 'Date received successfully',
+					'message' => 'Data received successfully',
 				];
 				echo json_encode($responseData);
 			} else {
@@ -228,7 +226,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					'message' => 'User already exist.',
 				];
 				echo json_encode($responseData);
+			}
+			break;
+		case 'create_submission':
+			$id_stud = $data->id_stud;
+			$id_assign = $data->id_assign;
+			$project_name = $data->project_name;
+			$project_data = base64_decode($data->project_data);
 
+			$success = create_submission($id_stud, $id_assign, $project_name, $project_data);
+
+			if ($success) {
+				http_response_code(201);
+				$responseData =[
+					'success' => true,
+					'message' => 'Data received successfully',
+				];
+				echo json_encode($responseData);
+			} else {
+				http_response_code(400);
+				$responseData =[
+					'success' => FALSE,
+					'message' => 'User already exist.',
+				];
+				echo json_encode($responseData);
+			}
+			break;
+
+		case 'grade_submission':
+			$id_stud = $data->id_stud;
+			$id_assign = $data->id_assign;
+			$grade = $data->grade;
+			$feedback = $data->feedback;
+
+			$success = grade_submission($id_stud, $id_assign, $grade, $feedback);
+
+			if ($success) {
+				http_response_code(201);
+				$responseData =[
+					'success' => true,
+					'message' => 'Data received successfully',
+				];
+				echo json_encode($responseData);
+			} else {
+				http_response_code(400);
+				$responseData =[
+					'success' => FALSE,
+					'message' => 'User already exist.',
+				];
+				echo json_encode($responseData);
 			}
 			break;
 	}

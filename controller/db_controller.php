@@ -275,4 +275,37 @@ function get_all_stud_mail_in_course(string $code_course){
  	$conn->close();
  	return $student_mail;
 }
+
+function create_submit(int $id_stud, int $id_assign, string $project_name, string $project_data){
+	$conn = create_db_conn();
+
+	$stmt= $conn->prepare("CALL create_submission(?,?,?,?)");
+	$stmt->bind_param("ss", $id_stud, $id_assign, $project_name, $project_data);
+
+	if ($stmt->execute()) {
+		$stmt->close();
+		$conn->close();
+		return true;
+	} else {
+		$stmt->close();
+		$conn->close();
+		return false;
+	}
+}
+
+function grade_submit(int $id_stud, int $id_assign, float $grade, string $feedback){
+	$conn = create_db_conn();
+
+	$escaped_feedback = $conn->real_escape_string($feedback);
+
+	$sql = "CALL grade_submission($id_stud,$id_assign,$grade,\"$escaped_feedback\")";
+
+ 	if ($conn->query($sql) === TRUE) {
+ 		$conn->close();
+ 		return TRUE;
+ 	}else{s
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+}
 ?>
