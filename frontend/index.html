@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>SD-IDE-IA - Frontend</title>
+  <title>IDE-IA</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
@@ -17,12 +17,14 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-  <a class="navbar-brand fw-bold" href="#">SD-IDE-IA</a>
+<nav class="navbar navbar-expand-lg ide-navbar px-4 py-2">
+  <a class="navbar-brand p-0 m-0" href="#">
+    <img src="img/LogoTitle.png" alt="IDE-IA" class="navbar-logo">
+  </a>
 
-  <div class="ms-auto d-none" id="navbarUser">
-    <span class="text-white me-3" id="loggedUserName">Profesor</span>
-    <button class="btn btn-outline-light btn-sm" onclick="logout()">Cerrar sesión</button>
+  <div class="ms-auto navbar-user d-none" id="navbarUser">
+    <span class="navbar-user-name" id="loggedUserName">Profesor</span>
+    <button class="btn btn-outline-accent btn-sm" onclick="logout()">Cerrar sesión</button>
   </div>
 </nav>
 
