@@ -303,7 +303,7 @@ function grade_submit(int $id_stud, int $id_assign, float $grade, string $feedba
  	if ($conn->query($sql) === TRUE) {
  		$conn->close();
  		return TRUE;
- 	}else{s
+ 	}else{
  		$conn->close();
  		return FALSE;
  	}
