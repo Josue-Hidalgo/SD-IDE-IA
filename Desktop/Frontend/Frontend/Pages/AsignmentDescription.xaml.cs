@@ -39,9 +39,9 @@ namespace Frontend.Pages
             AssDeadline.Text = assignmentDeadline;
 
             if (Ass[4] == "0")
-            { afterDeadline.Text = "Allowed after deadline: ✓"; } 
+            { afterDeadline.Text = "Allowed after deadline: ✕"; } 
             else 
-            { afterDeadline.Text = "Allowed after deadline: ✕"; }
+            { afterDeadline.Text = "Allowed after deadline: ✓"; }
             
             this.Course = Course;
         }
