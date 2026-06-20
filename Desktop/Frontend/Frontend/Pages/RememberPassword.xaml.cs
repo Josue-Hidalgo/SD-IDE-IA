@@ -1,9 +1,5 @@
-﻿using MimeKit;
-using Newtonsoft.Json;
-using System;
-using System.Net;
+﻿using System;
 using System.Net.Http;
-using System.Net.Mail;
 using System.Windows;
 using System.Windows.Controls;
 

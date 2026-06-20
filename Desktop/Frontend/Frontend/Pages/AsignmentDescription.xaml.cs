@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
+using System;
 using System.IO;
+using System.Net.Http;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Win32;
 using System.Windows.Navigation;
-using Newtonsoft.Json.Linq;
 
 namespace Frontend.Pages
 {
@@ -50,7 +52,7 @@ namespace Frontend.Pages
             NavigationService.RemoveBackEntry();
         }
 
-        public void UploadFile(object sender, EventArgs e)
+        public async void UploadFile(object sender, EventArgs e)
         {
             OpenFileDialog OFD = new OpenFileDialog();
             OFD.Filter = "All Files (*.*)|*.*";
@@ -60,7 +62,41 @@ namespace Frontend.Pages
                 string route = OFD.FileName;
                 TextReader reader = new StreamReader(route);
                 string content = (reader.ReadToEnd()).Replace("\r", "").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n");
-                Console.WriteLine(content);
+
+                byte[] FileBytes = Encoding.UTF8.GetBytes(content);
+                string blob = Convert.ToBase64String(FileBytes);
+
+                Singleton user = Singleton.Instance;
+
+                var client = new HttpClient();
+                var data = new
+                {
+                    action = "create_submission",
+                    id_stud = user.id,
+                    id_assign = assignmentID,
+                    project_name = System.IO.Path.GetFileName(OFD.FileName),
+                    project_data = blob
+                };
+                string url = "http://138.2.239.69/api.php";
+                //string url = "http://localhost:8080/api.php";
+                string jsonText = JsonConvert.SerializeObject(data);
+                var encodeText = new StringContent(jsonText, Encoding.UTF8, "application/json");
+                HttpResponseMessage respuesta = await client.PostAsync(url, encodeText);
+
+                Console.WriteLine("DATAA");
+                Console.WriteLine(blob);
+                Console.WriteLine(System.IO.Path.GetFileName(OFD.FileName));
+                Console.WriteLine(respuesta);
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("You submited your file succesfully.", "SUBMITED!", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Submission failed.", "Failed :(", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
                 reader.Close();
             }
         }
@@ -76,15 +112,49 @@ namespace Frontend.Pages
             e.Effects = DragDropEffects.All;
         }
 
-        private void AssDropFile_Drop(object sender, DragEventArgs e)
+        private async void AssDropFile_Drop(object sender, DragEventArgs e)
         {
             string[] filesDropped = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            if(filesDropped.Length > 1)
+            {
+                MessageBox.Show("You can only submit 1 file per assignment.", "More than one file", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
 
             foreach (string f in filesDropped)
             {
                 TextReader reader = new StreamReader(f);
                 string content = (reader.ReadToEnd()).Replace("\r", "").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n");
-                Console.WriteLine(content);
+                
+                byte[] FileBytes = Encoding.UTF8.GetBytes(content);
+                string blob = Convert.ToBase64String(FileBytes);
+
+                Singleton user = Singleton.Instance;
+
+                var client = new HttpClient();
+                var data = new
+                {
+                    action = "create_submission",
+                    id_stud = user.id,
+                    id_assign = assignmentID,
+                    project_name = System.IO.Path.GetFileName(f),
+                    project_data = blob
+                };
+                string url = "http://138.2.239.69/api.php";
+                //string url = "http://localhost:8080/api.php";
+                string jsonText = JsonConvert.SerializeObject(data);
+                var encodeText = new StringContent(jsonText, Encoding.UTF8, "application/json");
+                HttpResponseMessage respuesta = await client.PostAsync(url, encodeText);
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("You submited your file succesfully.", "SUBMITED!", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Submission failed.", "Failed :(", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
                 reader.Close();
             }
         }
