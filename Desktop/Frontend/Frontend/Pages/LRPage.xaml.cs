@@ -49,8 +49,8 @@ namespace Frontend.Pages
         {
             string response = "";
             var client = new HttpClient();
-            //string url = "http://138.2.239.69/api.php?"+"action=log_student&email="+EmailTB.Text+"&password="+PasswordTB.Password;
-            string url = "http://localhost:8080/api.php?"+"action=log_student&email="+EmailTB.Text+"&password="+PasswordTB.Password;
+            string url = "http://138.2.239.69/api.php?"+"action=log_student&email="+EmailTB.Text+"&password="+PasswordTB.Password;
+            //string url = "http://localhost:8080/api.php?"+"action=log_student&email="+EmailTB.Text+"&password="+PasswordTB.Password;
             try
             {
                 response = await client.GetStringAsync(url);

@@ -50,8 +50,8 @@ namespace Frontend.Pages
                 username = NameTB.Text,
                 userLast = LNameTB.Text
             };
-            //string url = "http://138.2.239.69/api.php";
-            string url = "http://localhost:8080/api.php";
+            string url = "http://138.2.239.69/api.php";
+            //string url = "http://localhost:8080/api.php";
             string jsonText = JsonConvert.SerializeObject(data);
             var encodeText = new StringContent(jsonText, Encoding.UTF8, "application/json");
             HttpResponseMessage respuesta = await client.PostAsync(url,encodeText);

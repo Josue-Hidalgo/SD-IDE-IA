@@ -55,8 +55,8 @@ namespace Frontend.Pages
         public async void getData()
         {
             var client = new HttpClient();
-            //string url = "http://138.2.239.69/api.php?" + "action=get_assign_by_course&code_course=" + courseID;
-            string url = "http://localhost:8080/api.php?" + "action=get_assign_by_course&code_course=" + courseID;
+            string url = "http://138.2.239.69/api.php?" + "action=get_assign_by_course&code_course=" + courseID;
+            //string url = "http://localhost:8080/api.php?" + "action=get_assign_by_course&code_course=" + courseID;
             string response = await client.GetStringAsync(url);
             AssList.Items.Clear();
             AssignmentData.Clear();
