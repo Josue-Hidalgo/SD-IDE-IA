@@ -66,4 +66,8 @@ function grade_submission(int $id_stud, int $id_assign, float $grade, string $fe
 	return grade_submit($id_stud, $id_assign, $grade, $feedback);
 }
 
+function get_all_submissions_by_assignment(int $id_assign){
+	return get_submit_by_assign($id_assign);
+}
+
 ?>

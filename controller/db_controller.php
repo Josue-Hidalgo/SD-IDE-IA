@@ -280,7 +280,7 @@ function create_submit(int $id_stud, int $id_assign, string $project_name, strin
 	$conn = create_db_conn();
 
 	$stmt= $conn->prepare("CALL create_submission(?,?,?,?)");
-	$stmt->bind_param("ss", $id_stud, $id_assign, $project_name, $project_data);
+	$stmt->bind_param("iiss", $id_stud, $id_assign, $project_name, $project_data);
 
 	if ($stmt->execute()) {
 		$stmt->close();
@@ -303,9 +303,29 @@ function grade_submit(int $id_stud, int $id_assign, float $grade, string $feedba
  	if ($conn->query($sql) === TRUE) {
  		$conn->close();
  		return TRUE;
- 	}else{s
+ 	}else{
  		$conn->close();
  		return FALSE;
  	}
+}
+
+function get_submit_by_assign(int $id_assign){
+	$conn = create_db_conn();
+
+ 	$sql = "CALL get_submissions_by_assignment($id_assign)";
+ 	$result = $conn->query($sql);
+ 	if ($result->num_rows >0) {
+ 		$submissions = [];
+ 		$count = 0;
+ 		while($row = $result->fetch_assoc()){
+ 			$submissions[$count] = $row;
+ 			$count = $count+1;
+ 		}
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+ 	$conn->close();
+ 	return $submissions;
 }
 ?>

@@ -78,6 +78,13 @@ if($_GET['action']){
 			header('Content-type: application/json');
 			echo json_encode($data);
 			break;
+
+		case 'get_all_submits':
+			$id = $_GET['id_assign'];
+			$data = get_all_submissions_by_assignment($id);
+			header('Content-type: application/json');
+			echo json_encode($data);
+			break;
 	}
 	
 }
@@ -247,7 +254,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				http_response_code(400);
 				$responseData =[
 					'success' => FALSE,
-					'message' => 'User already exist.',
+					'message' => 'failed to submit file.',
 				];
 				echo json_encode($responseData);
 			}
