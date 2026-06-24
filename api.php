@@ -54,6 +54,7 @@ if($_GET['action']){
 					'name' => $data['name'],
 					'lastname' => $data['lastname'],
 					'email' => $data['email'],
+					'prof_id' => $data['prof_id'],
 				]);
 			}else{
 				http_response_code(401);
