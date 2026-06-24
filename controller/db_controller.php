@@ -276,6 +276,40 @@ function get_all_stud_mail_in_course(string $code_course){
  	return $student_mail;
 }
 
+function get_stud_mail(int $id_stud){
+	$conn = create_db_conn();
+
+
+	$sql = "SELECT User.email_user FROM Student INNER JOIN User ON Student.id_user = User.id_user WHERE Student.id_user = $id_stud";
+	$result = $conn->query($sql);
+
+	if ($result->num_rows >0) {
+		$row = $result->fetch_assoc();
+ 		$student_mail = $row["email_user"];
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+ 	$conn->close();
+ 	return $student_mail;
+}
+
+function get_assignment_name(int $id_assign){
+	$conn = create_db_conn();
+
+ 	$sql = "SELECT name_assignment from Assignment where id_assignment = $id_assign";
+ 	$result = $conn->query($sql);
+ 	if ($result->num_rows >0) {
+ 		$row = $result->fetch_assoc();
+ 		$name = $row["name_assignment"];
+ 		$conn->close();
+ 		return $name;
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+}
+
 function create_submit(int $id_stud, int $id_assign, string $project_name, string $project_data){
 	$conn = create_db_conn();
 

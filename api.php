@@ -48,7 +48,20 @@ if($_GET['action']){
 			$password = $_GET['password'];
 			$data = Login_web($email,$password);
 			header('Content-type: application/json');
-			echo json_encode($data);
+			if ($data){
+				echo json_encode([
+					'success' => true,
+					'name' => $data['name'],
+					'lastname' => $data['lastname'],
+					'email' => $data['email'],
+				]);
+			}else{
+				http_response_code(401);
+				echo json_encode([
+					'success' => false,
+					'message' => 'email or password incorrect',
+				]);
+			}
 			break;
 
 		case 'get_enroll_courses':
@@ -85,7 +98,23 @@ if($_GET['action']){
 			header('Content-type: application/json');
 			echo json_encode($data);
 			break;
-	}
+
+		case 'crete_temp_file':
+			$name = $_GET['name'];
+			$data = $_GET['data'];
+			$value = create_python_file($name,$data)
+			header('Content-type: application/json');
+			echo json_encode($value);
+			break;
+
+		
+
+		case 'delete_temp_file':
+			$name = $_GET['name'];
+			$value = delete_file($name)
+			header('Content-type: application/json');
+			echo json_encode($value);
+			break;
 	
 }
 
@@ -158,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				http_response_code(400);
 				$responseData =[
 					'success' => FALSE,
-					'message' => 'User already exist.',
+					'message' => 'Failed to enroll student.',
 				];
 				echo json_encode($responseData);
 			}
@@ -181,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				http_response_code(400);
 				$responseData =[
 					'success' => FALSE,
-					'message' => 'User already exist.',
+					'message' => 'Course already exist.',
 				];
 				echo json_encode($responseData);
 			}
@@ -205,7 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				http_response_code(400);
 				$responseData =[
 					'success' => FALSE,
-					'message' => 'User already exist.',
+					'message' => 'Failed to create assignment.',
 				];
 				echo json_encode($responseData);
 
@@ -230,7 +259,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				http_response_code(400);
 				$responseData =[
 					'success' => FALSE,
-					'message' => 'User already exist.',
+					'message' => 'Failed to modify assignment.',
 				];
 				echo json_encode($responseData);
 			}
@@ -279,7 +308,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				http_response_code(400);
 				$responseData =[
 					'success' => FALSE,
-					'message' => 'User already exist.',
+					'message' => 'Fail to grade submission.',
 				];
 				echo json_encode($responseData);
 			}
