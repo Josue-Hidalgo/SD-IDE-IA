@@ -221,9 +221,9 @@ async function login() {
     }
 
     loggedProfessorEmail = response.data.email || email;
-    loggedProfessorId = response.data.prof_id || null;
+    professorId = response.data.prof_id || null;
 
-    localStorage.setItem("professorId", loggedProfessorId);
+    localStorage.setItem("professorId", professorId);
     localStorage.setItem("professorEmail", loggedProfessorEmail);
 
     showDashboard(response.data.name || loggedProfessorEmail);
