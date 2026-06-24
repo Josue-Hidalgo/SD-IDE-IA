@@ -1,8 +1,10 @@
-﻿using Microsoft.Win32;
+﻿using LibGit2Sharp;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -44,8 +46,29 @@ namespace Frontend.Pages
             { afterDeadline.Text = "Allowed after deadline: ✓"; }
             
             this.Course = Course;
+            getAssGrade();
         }
         
+        public async void getAssGrade()
+        {
+            Singleton user = Singleton.Instance;
+
+            var client = new HttpClient();
+            string url = "http://138.2.239.69/api.php?" + "action=get_grade&id_stud=" + user.id+"&id_assign="+assignmentID;
+            string response = await client.GetStringAsync(url);
+            response = response.Trim();
+            Console.WriteLine(response);
+
+            Grade.Text = "-/100";
+
+            if (response != "0")
+            {
+                dynamic json = JsonConvert.DeserializeObject(response);
+                if (json["grade"] != null) Grade.Text = json["grade"] + "/100";
+                Submission.Text = "Submission:\n" + json["name"];
+            }
+        }
+
         public void BackAssignments(object sender,EventArgs e)
         {
             NavigationService.Navigate(new AsignmentsPage(Course));
@@ -66,6 +89,12 @@ namespace Frontend.Pages
                 byte[] FileBytes = Encoding.UTF8.GetBytes(content);
                 string blob = Convert.ToBase64String(FileBytes);
 
+                if (!System.IO.Path.GetFileName(OFD.FileName).Contains(".py"))
+                {
+                    MessageBox.Show("Your file should be a python file.", "Failed!", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
                 Singleton user = Singleton.Instance;
 
                 var client = new HttpClient();
@@ -83,11 +112,6 @@ namespace Frontend.Pages
                 var encodeText = new StringContent(jsonText, Encoding.UTF8, "application/json");
                 HttpResponseMessage respuesta = await client.PostAsync(url, encodeText);
 
-                Console.WriteLine("DATAA");
-                Console.WriteLine(blob);
-                Console.WriteLine(System.IO.Path.GetFileName(OFD.FileName));
-                Console.WriteLine(respuesta);
-
                 if (respuesta.IsSuccessStatusCode)
                 {
                     MessageBox.Show("You submited your file succesfully.", "SUBMITED!", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -99,12 +123,6 @@ namespace Frontend.Pages
 
                 reader.Close();
             }
-        }
-
-        public void FileChange(object sender, SelectionChangedEventArgs e)
-        {
-            if (FileList.SelectedItem == null) return;
-
         }
 
         private void AssDropFile_DragEnter(object sender, DragEventArgs e)
@@ -120,9 +138,13 @@ namespace Frontend.Pages
                 MessageBox.Show("You can only submit 1 file per assignment.", "More than one file", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-
             foreach (string f in filesDropped)
             {
+                if (!f.Contains(".py"))
+                {
+                    MessageBox.Show("Your file should be a python file.", "Failed!", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
                 TextReader reader = new StreamReader(f);
                 string content = (reader.ReadToEnd()).Replace("\r", "").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n");
                 
