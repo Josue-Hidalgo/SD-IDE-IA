@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: ideia_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_secret
+      MYSQL_DATABASE: IDEA
+      MYSQL_USER: AcademycIDEIA
+      MYSQL_PASSWORD: "#IDEIA#"
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  app:
+    image: php:8.2-apache
+    container_name: ideia_app
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./www:/var/www/html
+    depends_on:
+      - db
+
+volumes:
+  db_data:

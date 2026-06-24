@@ -1,0 +1,50 @@
+﻿<Page x:Class="Frontend.Pages.AsignmentDescription"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Frontend.Pages"
+      mc:Ignorable="d" 
+      Title="AsignmentDescription"
+      HorizontalAlignment="Stretch"
+      VerticalAlignment="Stretch">
+
+    <Grid Background="#2424">
+        <StackPanel Orientation="Vertical" VerticalAlignment="Top" Margin="10,0,10,0">
+            <Button x:Name="backFolderBTN" Content="↩" HorizontalAlignment="Left" Foreground="White" Background="#2424" BorderThickness="0" Width="20" Click="BackAssignments">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <TextBlock x:Name="AssName" Text="" FontSize="20" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#FFFFFF"/>
+            <TextBlock Text="Description:" FontSize="15" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#FFFFFF"/>
+            <TextBlock x:Name="AssDescription" Text="" FontSize="15" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#808080"/>
+            <TextBlock Text="Deadline:" FontSize="15" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#FFFFFF"/>
+            <TextBlock x:Name="AssDeadline" Text="" FontSize="15" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#808080"/>
+            <TextBlock x:Name="afterDeadline" Text="" FontSize="15" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#FFFFFF"/>
+            <TextBlock x:Name="Grade" Text="" FontSize="15" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#FFFFFF"/>
+            <Button x:Name="AssDropFile" Content="Drop or select a file to upload" FontSize="10" AllowDrop="True" Height="40" Background="#242424" 
+                    BorderBrush="#2A0033" Margin="0,5,0,5" Width="175" HorizontalAlignment="Left" Foreground="#E694FF" Click="UploadFile"
+                    DragEnter="AssDropFile_DragEnter" DragDrop.Drop="AssDropFile_Drop">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#FAAAFF"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <TextBlock x:Name="Submission" Text="" FontSize="15" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#FFFFFF"/>
+        </StackPanel>
+    </Grid>
+</Page>
