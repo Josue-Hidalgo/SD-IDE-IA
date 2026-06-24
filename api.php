@@ -99,7 +99,7 @@ if($_GET['action']){
 			echo json_encode($data);
 			break;
 
-		case 'crete_temp_file':
+		case 'create_temp_file':
 			$name = $_GET['name'];
 			$data = $_GET['data'];
 			$value = create_python_file($name,$data);
