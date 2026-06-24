@@ -118,13 +118,17 @@ function create_python_file(String $name,string $data){
 
 
 function execute_python_file(string $name){
-	$command = "python3 $file_path";
+	$command = "python3 /file/$file_path";
 
 	$output = system($command);
 
 	return $output;
 }
 
+function get_python_file_content(string $name){
+	$content = file_get_contents('/file/'.$name);
+	return $content;
+}
 
 function delete_file(string $name){
 	return unlink($file_path);

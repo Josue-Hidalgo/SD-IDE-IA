@@ -107,10 +107,19 @@ if($_GET['action']){
 			echo json_encode($value);
 			break;
 
-		/*case 'execute_temp_file':
+		case 'execute_temp_file':
 			$name = $_GET['name'];
-			$value*/
-
+			$value = execute_python_file($name);
+			header('Content-type: application/json');
+			echo json_encode($value);
+			break;
+		
+		case 'get_contents':
+			$name = $_GET['name'];
+			$value = get_python_file_content($name);
+			header('Content-type: application/json');
+			echo json_encode($value);
+			break;
 
 		case 'delete_temp_file':
 			$name = $_GET['name'];
