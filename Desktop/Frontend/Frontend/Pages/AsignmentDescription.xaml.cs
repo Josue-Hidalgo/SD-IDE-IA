@@ -57,7 +57,6 @@ namespace Frontend.Pages
             string url = "http://138.2.239.69/api.php?" + "action=get_grade&id_stud=" + user.id+"&id_assign="+assignmentID;
             string response = await client.GetStringAsync(url);
             response = response.Trim();
-            Console.WriteLine(response);
 
             Grade.Text = "-/100";
 
@@ -107,7 +106,6 @@ namespace Frontend.Pages
                     project_data = blob
                 };
                 string url = "http://138.2.239.69/api.php";
-                //string url = "http://localhost:8080/api.php";
                 string jsonText = JsonConvert.SerializeObject(data);
                 var encodeText = new StringContent(jsonText, Encoding.UTF8, "application/json");
                 HttpResponseMessage respuesta = await client.PostAsync(url, encodeText);
@@ -163,7 +161,6 @@ namespace Frontend.Pages
                     project_data = blob
                 };
                 string url = "http://138.2.239.69/api.php";
-                //string url = "http://localhost:8080/api.php";
                 string jsonText = JsonConvert.SerializeObject(data);
                 var encodeText = new StringContent(jsonText, Encoding.UTF8, "application/json");
                 HttpResponseMessage respuesta = await client.PostAsync(url, encodeText);

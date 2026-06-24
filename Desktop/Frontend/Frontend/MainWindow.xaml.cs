@@ -300,7 +300,6 @@ namespace Frontend
             {
                 p = FolderSelected + "\\" + FileList.SelectedItem;
             }
-            Console.WriteLine(p);
             if (File.Exists(p))
             {
                 OpFiAux(p);
@@ -489,8 +488,8 @@ namespace Frontend
         {
             if((e.Key == Key.C || e.Key == Key.V) && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                Console.WriteLine("Greetings, you did nothing dumbass :P");
-                Clipboard.SetText("Im dumb for using the clipboard :P");
+                Console.WriteLine("Greetings, you did nothing :P");
+                Clipboard.SetText("");
                 e.Handled = true;
             }
         }
