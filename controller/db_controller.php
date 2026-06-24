@@ -362,4 +362,21 @@ function get_submit_by_assign(int $id_assign){
  	$conn->close();
  	return $submissions;
 }
+
+function get_assign_grade(int $id_stud, int $id_assign){
+	$conn = create_db_conn();
+
+ 	$sql = "SELECT grade from Submission where id_student = $id_stud and id_assignment = $id_assign";
+ 	$result = $conn->query($sql);
+ 	if ($result->num_rows >0) {
+ 		$row = $result->fetch_assoc();
+ 		$grade = $row["grade"];
+ 		$conn->close();
+ 		return $grade;
+ 	}else{
+ 		$conn->close();
+ 		return 0;
+ 	}
+}
+
 ?>

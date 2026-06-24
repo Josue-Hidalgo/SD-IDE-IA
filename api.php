@@ -102,20 +102,31 @@ if($_GET['action']){
 		case 'crete_temp_file':
 			$name = $_GET['name'];
 			$data = $_GET['data'];
-			$value = create_python_file($name,$data)
+			$value = create_python_file($name,$data);
 			header('Content-type: application/json');
 			echo json_encode($value);
 			break;
 
-		
+		/*case 'execute_temp_file':
+			$name = $_GET['name'];
+			$value*/
+
 
 		case 'delete_temp_file':
 			$name = $_GET['name'];
-			$value = delete_file($name)
+			$value = delete_file($name);
 			header('Content-type: application/json');
 			echo json_encode($value);
 			break;
-	
+
+		case 'get_grade':
+			$id_stud = $_GET['id_stud'];
+			$id_assign = $_GET['id_assign'];
+			$value = get_assignment_grade($id_stud, $id_assign);
+			header('Content-type: application/json');
+			echo json_encode($value);
+			break;
+	}
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -264,6 +275,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				echo json_encode($responseData);
 			}
 			break;
+
 		case 'create_submission':
 			$id_stud = $data->id_stud;
 			$id_assign = $data->id_assign;
@@ -315,5 +327,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			break;
 	}
 }
+
 
 ?>

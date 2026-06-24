@@ -107,6 +107,10 @@ function get_all_submissions_by_assignment(int $id_assign){
 	return get_submit_by_assign($id_assign);
 }
 
+function get_assignment_grade(int $id_stud, int $id_assign){
+	return get_assign_grade($id_stud, $id_assign);
+}
+
 function create_python_file(String $name,string $data){
 	$value = file_put_contents('/file/'.$name, $data);
 	return ($value > 0);
