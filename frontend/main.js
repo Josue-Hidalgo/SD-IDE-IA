@@ -346,14 +346,12 @@ async function loadCourses() {
       <div class="alert alert-secondary">Cargando cursos</div>
     </div>
   `;
-  console.log(sessionStorage.getItem("prof_id"));
 
   try {
     const response = await requestBackend("api.php", {
       method: "GET",
       params: {
         action: "get_all_courses",
-        prof_id:sessionStorage.getItem("prof_id")
       }
     });
 
