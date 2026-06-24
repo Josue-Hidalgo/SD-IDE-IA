@@ -346,6 +346,7 @@ async function loadCourses() {
       <div class="alert alert-secondary">Cargando cursos</div>
     </div>
   `;
+  console.log(sessionStorage.getItem("prof_id"));
 
   try {
     const response = await requestBackend("api.php", {
