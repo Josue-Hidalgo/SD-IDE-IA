@@ -352,6 +352,7 @@ async function loadCourses() {
       method: "GET",
       params: {
         action: "get_all_courses",
+        prof_id: professorId,
       }
     });
 
