@@ -72,7 +72,7 @@ if($_GET['action']){
 			break;
 
 		case 'get_all_courses':
-			$id = getProfId();
+			$id = $_GET['prof_id'];
 			$data = get_all_courses($id);
 			header('Content-type: application/json');
 			echo json_encode($data);
