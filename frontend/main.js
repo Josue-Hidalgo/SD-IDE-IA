@@ -674,30 +674,24 @@ function downloadSubmission(subIndex) {
 
 async function runStudentCode(subIndex) {
     const sub = currentReviewSubmissions[subIndex];
-    console.log(currentReviewSubmissions);
-    console.log(sub);
-    const code = sub["project_blob"]; 
+    let rawCode = sub["project_blob"]; 
 
-    console.log(code);
-
-    if (!code) {
-        alert("No se encontró código en esta entrega.");
+    if (!rawCode) {
+        alert("No se encontró código.");
         return;
     }
 
-    const outputEl = document.getElementById("studentOutput");
-    const fileContent = document.getElementById("studentCodeBox");
-    const btn = document.getElementById("runStudentBtn");
-
     try {
-        const cleanCode = code.replace(/\\"/g, '"').replace(/\\'/g, "'");
+        const cleanCode = (typeof rawCode === 'string') 
+            ? JSON.parse('"' + rawCode + '"') 
+            : rawCode;
 
-        const filename = "stud_" + (Date.now()) + ".py";
+        const filename = "stud_" + Date.now() + ".py";
 
         const createRes = await fetch("api.php?action=create_temp_file_post&name=" + encodeURIComponent(filename), {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "data=" + encodeURIComponent(cleanCode)
+            body: "data=" + encodeURIComponent(cleanCode) // Ya está limpio
         });
         fileContent.textContent = cleanCode;
         const createResult = await createRes.text();
