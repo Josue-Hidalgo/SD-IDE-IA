@@ -44,7 +44,33 @@
                 </Button.Style>
             </Button>
 
-            <TextBlock x:Name="Submission" Text="" FontSize="15" Width="175" TextWrapping="Wrap" HorizontalAlignment="Left" Foreground="#FFFFFF"/>
+            <ListBox x:Name="FileList" Background="#2424" BorderThickness="0" SelectionChanged="FileChange"
+                        ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Background" Value="#291B2B"/>
+                        <Setter Property="FontSize" Value="15"/>
+                        <Setter Property="Margin" Value="2"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border x:Name="border" CornerRadius="4" Padding="2" Background="{TemplateBinding Background}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="border" Property="BorderBrush" Value="#DE52FF"/>
+                                            <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+
         </StackPanel>
     </Grid>
 </Page>

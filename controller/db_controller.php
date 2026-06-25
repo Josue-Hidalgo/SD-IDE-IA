@@ -1,9 +1,9 @@
 <?php 
  function create_db_conn(){// sudo apt-get install php8.4-mysql
  	$servername = "localhost";
-	$username = "AcademycIDEIA";//"root";//
-	$password = "#IDEIA#";//"Qwertys123.";//
-	$dbname = "IDEA";//"prueba";//
+	$username = "root";//"AcademycIDEIA";//
+	$password = "Qwertys123.";//"#IDEIA#";//
+	$dbname = "prueba";//"IDEA";//
 
 	$conn =  new mysqli($servername, $username, $password, $dbname);
 
@@ -275,4 +275,129 @@ function get_all_stud_mail_in_course(string $code_course){
  	$conn->close();
  	return $student_mail;
 }
+
+function get_stud_mail(int $id_stud){
+	$conn = create_db_conn();
+
+
+	$sql = "SELECT User.email_user FROM Student INNER JOIN User ON Student.id_user = User.id_user WHERE Student.id_user = $id_stud";
+	$result = $conn->query($sql);
+
+	if ($result->num_rows >0) {
+		$row = $result->fetch_assoc();
+ 		$student_mail = $row["email_user"];
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+ 	$conn->close();
+ 	return $student_mail;
+}
+
+function get_stud_info(int $id_stud){
+	$conn = create_db_conn();
+
+	$sql = "SELECT User.name_user, User.lastname_user FROM Student INNER JOIN User ON Student.id_user = User.id_user WHERE Student.id_user = $id_stud";
+	$result = $conn->query($sql);
+
+	if ($result->num_rows >0) {
+		$stud_info = [];
+		$row = $result->fetch_assoc();
+ 		$stud_info["name"] = $row["name_user"];
+ 		$stud_info["lastname"] = $row["lastname_user"];
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+ 	$conn->close();
+ 	return $stud_info;
+}
+
+function get_assignment_name(int $id_assign){
+	$conn = create_db_conn();
+
+ 	$sql = "SELECT name_assignment from Assignment where id_assignment = $id_assign";
+ 	$result = $conn->query($sql);
+ 	if ($result->num_rows >0) {
+ 		$row = $result->fetch_assoc();
+ 		$name = $row["name_assignment"];
+ 		$conn->close();
+ 		return $name;
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+}
+
+function create_submit(int $id_stud, int $id_assign, string $project_name, string $project_data){
+	$conn = create_db_conn();
+
+	$stmt= $conn->prepare("CALL create_submission(?,?,?,?)");
+	$stmt->bind_param("iiss", $id_stud, $id_assign, $project_name, $project_data);
+
+	if ($stmt->execute()) {
+		$stmt->close();
+		$conn->close();
+		return true;
+	} else {
+		$stmt->close();
+		$conn->close();
+		return false;
+	}
+}
+
+function grade_submit(int $id_stud, int $id_assign, float $grade, string $feedback){
+	$conn = create_db_conn();
+
+	$escaped_feedback = $conn->real_escape_string($feedback);
+
+	$sql = "CALL grade_submission($id_stud,$id_assign,$grade,\"$escaped_feedback\")";
+
+ 	if ($conn->query($sql) === TRUE) {
+ 		$conn->close();
+ 		return TRUE;
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+}
+
+function get_submit_by_assign(int $id_assign){
+	$conn = create_db_conn();
+
+ 	$sql = "CALL get_submissions_by_assignment($id_assign)";
+ 	$result = $conn->query($sql);
+ 	if ($result->num_rows >0) {
+ 		$submissions = [];
+ 		$count = 0;
+ 		while($row = $result->fetch_assoc()){
+ 			$submissions[$count] = $row;
+ 			$count = $count+1;
+ 		}
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+ 	$conn->close();
+ 	return $submissions;
+}
+
+function get_assign_grade(int $id_stud, int $id_assign){
+	$conn = create_db_conn();
+
+ 	$sql = "SELECT grade, project_name from Submission where id_student = $id_stud and id_assignment = $id_assign";
+ 	$result = $conn->query($sql);
+ 	$sub_data = [];
+ 	if ($result->num_rows >0) {
+ 		$row = $result->fetch_assoc();
+ 		$sub_data['grade'] = $row["grade"];
+ 		$sub_data['name'] = $row["project_name"];
+ 		$conn->close();
+ 		return $sub_data;
+ 	}else{
+ 		$conn->close();
+ 		return 0;
+ 	}
+}
+
 ?>

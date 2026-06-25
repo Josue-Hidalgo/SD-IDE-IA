@@ -52,13 +52,14 @@ if(isset($_GET['action'])){
 					'success' => true,
 					'name' => $data['name'],
 					'lastname' => $data['lastname'],
-					'email' => $data['email']
+					'email' => $data['email'],
+					'prof_id' => $data['prof_id'],
 				]);
-			} else {
+			}else{
 				http_response_code(401);
 				echo json_encode([
 					'success' => false,
-					'message' => 'Correo o contraseña incorrectos.'
+					'message' => 'email or password incorrect',
 				]);
 			}
 			break;
@@ -83,14 +84,65 @@ if(isset($_GET['action'])){
 			header('Content-type: application/json');
 			echo json_encode($data);
 			break;
+			
 		case 'remember_pass':
 			$email = $_GET['email'];
 			$data = RememberPassword($email);
 			header('Content-type: application/json');
 			echo json_encode($data);
 			break;
+
+		case 'get_all_submits':
+			$id = $_GET['id_assign'];
+			$data = get_all_submissions_by_assignment($id);
+			header('Content-type: application/json');
+			echo json_encode($data);
+			break;
+
+		case 'create_temp_file':
+			$name = $_GET['name'];
+			$data = $_GET['data'];
+			$value = create_python_file($name,$data);
+			header('Content-type: application/json');
+			echo json_encode($value);
+			break;
+
+		case 'execute_temp_file':
+			$name = $_GET['name'];
+			$value = execute_python_file($name);
+			header('Content-type: application/json');
+			echo json_encode($value);
+			break;
+		
+		case 'get_contents':
+			$name = $_GET['name'];
+			$value = get_python_file_content($name);
+			header('Content-type: application/json');
+			echo json_encode($value);
+			break;
+
+		case 'delete_temp_file':
+			$name = $_GET['name'];
+			$value = delete_file($name);
+			header('Content-type: application/json');
+			echo json_encode($value);
+			break;
+
+		case 'get_grade':
+			$id_stud = $_GET['id_stud'];
+			$id_assign = $_GET['id_assign'];
+			$value = get_assignment_grade($id_stud, $id_assign);
+			header('Content-type: application/json');
+			echo json_encode($value);
+			break;
+
+		case 'get_stud_info':
+			$id_stud = $_GET['id_stud'];
+			$value = get_stud_info($id_stud);
+			header('Content-type: application/json');
+			echo json_encode($value);
+			break;
 	}
-	
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -120,8 +172,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				echo json_encode($responseData);
 
 			}
-			
-			
 			break;
 
 		case 'create_prof':
@@ -164,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				http_response_code(400);
 				$responseData =[
 					'success' => FALSE,
-					'message' => 'User already exist.',
+					'message' => 'Failed to enroll student.',
 				];
 				echo json_encode($responseData);
 			}
@@ -187,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				http_response_code(400);
 				$responseData =[
 					'success' => FALSE,
-					'message' => 'User already exist.',
+					'message' => 'Course already exist.',
 				];
 				echo json_encode($responseData);
 			}
@@ -211,14 +261,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				http_response_code(400);
 				$responseData =[
 					'success' => FALSE,
-					'message' => 'User already exist.',
+					'message' => 'Failed to create assignment.',
 				];
 				echo json_encode($responseData);
 
 			}
-			
-			
 			break;
+
 		case 'modify_assign':
 			$as_name = $data->assign_name;
 			$cr_code =$data->course_code;
@@ -230,20 +279,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				http_response_code(201);
 				$responseData =[
 					'success' => true,
-					'message' => 'Date received successfully',
+					'message' => 'Data received successfully',
 				];
 				echo json_encode($responseData);
 			} else {
 				http_response_code(400);
 				$responseData =[
 					'success' => FALSE,
-					'message' => 'User already exist.',
+					'message' => 'Failed to modify assignment.',
 				];
 				echo json_encode($responseData);
+			}
+			break;
 
+		case 'create_submission':
+			$id_stud = $data->id_stud;
+			$id_assign = $data->id_assign;
+			$project_name = $data->project_name;
+			$project_data = base64_decode($data->project_data);
+
+			$success = create_submission($id_stud, $id_assign, $project_name, $project_data);
+
+			if ($success) {
+				http_response_code(201);
+				$responseData =[
+					'success' => true,
+					'message' => 'Data received successfully',
+				];
+				echo json_encode($responseData);
+			} else {
+				http_response_code(400);
+				$responseData =[
+					'success' => FALSE,
+					'message' => 'failed to submit file.',
+				];
+				echo json_encode($responseData);
+			}
+			break;
+
+		case 'grade_submission':
+			$id_stud = $data->id_stud;
+			$id_assign = $data->id_assign;
+			$grade = $data->grade;
+			$feedback = $data->feedback;
+
+			$success = grade_submission($id_stud, $id_assign, $grade, $feedback);
+
+			if ($success) {
+				http_response_code(201);
+				$responseData =[
+					'success' => true,
+					'message' => 'Data received successfully',
+				];
+				echo json_encode($responseData);
+			} else {
+				http_response_code(400);
+				$responseData =[
+					'success' => FALSE,
+					'message' => 'Fail to grade submission.',
+				];
+				echo json_encode($responseData);
 			}
 			break;
 	}
 }
+
 
 ?>

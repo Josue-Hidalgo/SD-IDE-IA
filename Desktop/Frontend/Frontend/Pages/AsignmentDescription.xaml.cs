@@ -123,6 +123,12 @@ namespace Frontend.Pages
             }
         }
 
+        public void FileChange(object sender, SelectionChangedEventArgs e)
+        {
+            if (FileList.SelectedItem == null) return;
+
+        }
+
         private void AssDropFile_DragEnter(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.All;
