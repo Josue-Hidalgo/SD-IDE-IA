@@ -719,7 +719,7 @@ async function runStudentCode(subIndex) {
         return;
     }
 
-    const outputEl = document.getElementById("pythonOutput");
+    const outputEl = document.getElementById("studentOutput");
     const fileContent = document.getElementById("studentCodeBox");
     const btn = document.getElementById("runStudentBtn");
 
@@ -733,7 +733,7 @@ async function runStudentCode(subIndex) {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: "data=" + encodeURIComponent(cleanCode)
         });
-        fileContent.textContent = cleanCode;
+        fileContent.textContent = code;
         const createResult = await createRes.text();
         
         const execRes = await requestBackend("api.php", {
