@@ -574,11 +574,11 @@ function openStudentDetail(subIndex) {
        </div>
        <div class="student-code-viewer mt-3">
          <div class="student-code-header">
-           <span class="student-code-label">📄 Código del estudiante</span>
-           <button class="btn-run-student" onclick="runStudentCode(${subIndex})">▶ Ejecutar</button>
+           <span class="student-code-label">&#128196; Código del estudiante</span>
+           <button class="btn-run-student" id="runStudentBtn" onclick="runStudentCode(${subIndex})">&#9654; Ejecutar</button>
          </div>
-         <textarea class="student-code-editor" readonly id="studentCode-${subIndex}">${escapeHtml(decodedCode)}</textarea>
-         <div class="student-code-output" id="studentOutput-${subIndex}">La salida aparecerá aquí…</div>
+         <textarea class="student-code-editor" readonly id="studentCodeBox">${escapeHtml(decodedCode)}</textarea>
+         <div class="student-code-output" id="studentOutput">La salida aparecerá aquí...</div>
        </div>`
     : `<div class="text-muted fst-italic mt-2">Sin archivo adjunto</div>`;
 
@@ -710,22 +710,32 @@ async function runStudentCode(subIndex) {
   const sub = currentReviewSubmissions[subIndex];
   if (!sub || !sub.project_data) return;
 
-  const outputEl = document.getElementById(`studentOutput-${subIndex}`);
-  const btn = outputEl?.previousElementSibling?.querySelector(".btn-run-student");
-  if (outputEl) outputEl.textContent = "Ejecutando…";
-  if (btn) { btn.disabled = true; btn.textContent = "⏳ Ejecutando…"; }
+  const outputEl = document.getElementById("studentOutput");
+  const btn      = document.getElementById("runStudentBtn");
 
+  if (outputEl) outputEl.textContent = "Ejecutando...";
+  if (btn) { btn.disabled = true; btn.textContent = "Ejecutando..."; }
+
+  // decodificar base64
   let code = "";
   try { code = atob(sub.project_data); } catch { code = sub.project_data; }
 
-  const filename = "stud_" + sub.id_student + "_" + Date.now() + ".py";
+  // bloquear input() — si el codigo del estudiante llama input() lanzara un error claro
+  const inputGuard = "import builtins\nbuiltins.input = lambda *a, **k: (_ for _ in ()).throw(RuntimeError('input() no esta permitido en entregas automaticas'))\n\n";
+  const safeCode = inputGuard + code;
+
+  const filename = "stud_" + (sub.id_student ?? Date.now()) + "_" + Date.now() + ".py";
 
   try {
-    const createRes = await requestBackend("api.php", {
-      method: "GET",
-      params: { action: "create_temp_file", name: filename, data: code }
+    // POST para evitar limite de tamano en URL con codigos grandes
+    const createRes = await fetch("api.php?action=create_temp_file_post&name=" + encodeURIComponent(filename), {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: "data=" + encodeURIComponent(safeCode),
+      credentials: "include"
     });
-    if (!createRes.data) {
+    const createData = parseBackendResponse(await createRes.text());
+    if (!createData) {
       if (outputEl) outputEl.textContent = "Error: no se pudo crear el archivo temporal.";
       return;
     }
@@ -743,14 +753,7 @@ async function runStudentCode(subIndex) {
   } catch (e) {
     if (outputEl) outputEl.textContent = "Error: " + e.message;
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = "▶ Ejecutar"; }
+    if (btn) { btn.disabled = false; btn.textContent = "Ejecutar"; }
   }
 }
 
-// ─────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────
-
-window.addEventListener("DOMContentLoaded", () => {
-  showLogin();
-});
