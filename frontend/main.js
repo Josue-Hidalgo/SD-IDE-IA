@@ -717,7 +717,9 @@ function hexToString(hex) {
 
 async function runStudentCode(subIndex) {
     const sub = currentReviewSubmissions[subIndex];
+    console.log("aqui");
     if (!sub || !sub.project_data) return;
+    console.log("alla");
 
     const outputEl = document.getElementById("studentOutput");
     const btn = document.getElementById("runStudentBtn");
