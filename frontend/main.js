@@ -734,6 +734,8 @@ async function runStudentCode(subIndex) {
             try { code = atob(code); } catch (e) { console.log("error:"+e) }
         }
 
+        console.log(code);
+
         if (!code.trim()) {
             throw new Error("Código vacío o corrupto");
         }
@@ -746,9 +748,11 @@ async function runStudentCode(subIndex) {
 
         const createRes = await fetch("api.php?action=create_temp_file_post&name=" + encodeURIComponent(filename), {
             method: "POST",
+            credentials: "include",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "data=" + encodeURIComponent(safeCode),
-            credentials: "include"
+            body: {
+              data:encodeURIComponent(safeCode),
+            },
         });
 
         const createData = await createRes.json();
