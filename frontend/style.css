@@ -319,3 +319,22 @@ a:hover {
 input[type="datetime-local"] {
   color-scheme: dark;
 }
+
+.submissions-container{
+    margin-top:15px;
+    padding-top:15px;
+    border-top:1px solid var(--ide-purple-border);
+}
+
+.student-card{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:12px;
+    margin-bottom:10px;
+
+    background:var(--ide-purple-light);
+
+    border-radius:8px;
+}

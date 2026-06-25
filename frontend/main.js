@@ -476,30 +476,60 @@ async function createAssignment() {
 }
 
 async function loadAssignments() {
-  const container = document.getElementById("assignmentsContainer");
+
+  const container =
+    document.getElementById("assignmentsContainer");
+
   container.innerHTML = `
-    <div class="alert alert-secondary">Cargando tareas...</div>
+    <div class="alert alert-secondary">
+      Cargando tareas...
+    </div>
   `;
 
   if (!selectedCourse) return;
 
   try {
-    const response = await requestBackend("api.php", {
-      method: "GET",
-      params: {
-        action: "get_assign_by_course",
-        code_course: getCourseCode(selectedCourse)
+
+    const response = await requestBackend(
+      "api.php",
+      {
+        method: "GET",
+        params: {
+          action: "get_assign_by_course",
+          code_course: getCourseCode(selectedCourse)
+        }
       }
-    });
+    );
 
     if (!response.ok) {
-      container.innerHTML = `<div class="alert alert-danger">No se pudieron cargar las tareas.</div>`;
+
+      container.innerHTML = `
+        <div class="alert alert-danger">
+          No se pudieron cargar las tareas.
+        </div>
+      `;
+
       return;
     }
 
-    renderAssignments(Array.isArray(response.data) ? response.data : []);
+    const assignments =
+      Array.isArray(response.data)
+        ? response.data
+        : [];
+
+    window.loadedAssignments = assignments;
+
+    renderAssignments(assignments);
+
   } catch (error) {
-    container.innerHTML = `<div class="alert alert-danger">Error de conexión al cargar tareas.</div>`;
+
+    container.innerHTML = `
+      <div class="alert alert-danger">
+        Error de conexión al cargar tareas.
+      </div>
+    `;
+
+    console.error(error);
   }
 }
 
@@ -519,19 +549,100 @@ function renderAssignments(assignments) {
     const allowed = getAssignmentAllowed(assignment);
 
     container.innerHTML += `
-      <div class="assignment-card">
-        <div class="assignment-title">${escapeHtml(name)}</div>
-        <p>${escapeHtml(description)}</p>
-        <div class="assignment-date">Fecha límite: ${escapeHtml(deadline)}</div>
-        <div>Entrega tardía: ${allowed ? "Permitida" : "No permitida"}</div>
-        <button class="btn btn-outline-primary btn-sm mt-2" onclick="editAssignment(${index})">
-          Modificar
+    <div class="assignment-card">
+
+        <div class="assignment-title">
+            ${assignment.name_assignment}
+        </div>
+
+        <div class="assignment-date">
+            ${assignment.deadline}
+        </div>
+
+        <button
+            class="btn btn-outline-success btn-sm mt-2"
+            onclick="toggleSubmissions(${index})">
+
+            Revisar entregas
+
         </button>
-      </div>
+
+        <div
+            id="submissions-${index}"
+            class="submissions-container d-none">
+
+        </div>
+
+    </div>
     `;
   });
 
   window.loadedAssignments = assignments;
+}
+
+async function toggleSubmissions(index){
+
+    const assignment =
+        window.loadedAssignments[index];
+
+    const container =
+        document.getElementById(
+            `submissions-${index}`
+        );
+
+    container.classList.toggle("d-none");
+
+    if(container.dataset.loaded)
+        return;
+
+    const response =
+        await requestBackend(
+            "api.php",
+            {
+                method:"GET",
+                params:{
+                    action:"get_all_submits",
+                    id_assign:
+                        assignment.id_assignment
+                }
+            }
+        );
+
+    renderSubmissions(
+        container,
+        response.data || [],
+        assignment.id_assignment
+    );
+
+    container.dataset.loaded = true;
+}
+
+function renderSubmissions(
+    container,
+    submissions,
+    assignmentId
+){
+
+    container.innerHTML = "";
+
+    submissions.forEach(sub => {
+
+        container.innerHTML += `
+            <div class="student-card">
+
+                <strong>
+                    ${sub.name_user}
+                    ${sub.lastname_user}
+                </strong>
+
+                <button
+                    class="btn btn-sm btn-primary">
+                    Evaluar
+                </button>
+
+            </div>
+        `;
+    });
 }
 
 // Maneja la edición de una tarea, cargando sus datos en el formulario para modificarla
