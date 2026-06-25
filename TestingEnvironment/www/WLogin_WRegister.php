@@ -1,8 +1,4 @@
 <?php
-session_start();
-?>
-
-<?php
 //use // instalar composer y luego usar -> sudo composer require phpmailer/phpmailer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;

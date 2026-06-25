@@ -1,5 +1,3 @@
-<?php session_start(); ?>
-
 <?php
 
 include 'course_model.php';

@@ -1,7 +1,4 @@
 <?php
-session_start();
-?>
-<?php
 include 'professor_model.php';
 
 function createProf(int $prof_id,string $email, string $password, string $username, string $userLast){

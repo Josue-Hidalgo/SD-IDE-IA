@@ -111,27 +111,38 @@ function get_assignment_grade(int $id_stud, int $id_assign){
 	return get_assign_grade($id_stud, $id_assign);
 }
 
-function create_python_file(String $name,string $data){
-	$value = file_put_contents('/file/'.$name, $data);
-	return ($value > 0);
+function create_python_file(string $name, string $data){
+	$value = file_put_contents('/tmp/' . $name, $data);
+	return ($value !== false && $value >= 0);
 }
 
-
 function execute_python_file(string $name){
-	$command = "python3 /file/$file_path";
+	$safe = escapeshellarg('/tmp/' . $name);
 
-	$output = system($command);
+	// detectar el binario de Python disponible
+	$python = '';
+	foreach (['python3', 'python', '/usr/bin/python3', '/usr/local/bin/python3'] as $bin) {
+		if (shell_exec("which $bin 2>/dev/null")) {
+			$python = $bin;
+			break;
+		}
+	}
 
-	return $output;
+	if (!$python) {
+		return "Error: Python no está instalado en el servidor.";
+	}
+
+	$output = shell_exec("$python $safe 2>&1");
+	return $output ?? "(sin salida)";
 }
 
 function get_python_file_content(string $name){
-	$content = file_get_contents('/file/'.$name);
+	$content = file_get_contents('/tmp/' . $name);
 	return $content;
 }
 
 function delete_file(string $name){
-	return unlink($file_path);
+	return unlink('/tmp/' . $name);
 }
 
 ?>

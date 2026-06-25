@@ -562,14 +562,24 @@ function openStudentDetail(subIndex) {
     return;
   }
 
+  let decodedCode = "";
+  if (sub.project_data) {
+    try { decodedCode = atob(sub.project_data); } catch { decodedCode = sub.project_data; }
+  }
+
   const fileSection = sub.project_name
     ? `<div class="detail-row">
          <span class="detail-label">Archivo:</span>
          <span class="detail-value">${escapeHtml(sub.project_name)}</span>
        </div>
-       <button class="btn btn-outline-primary btn-sm mt-2" onclick="downloadSubmission(${subIndex})">
-         Descargar archivo
-       </button>`
+       <div class="student-code-viewer mt-3">
+         <div class="student-code-header">
+           <span class="student-code-label">📄 Código del estudiante</span>
+           <button class="btn-run-student" onclick="runStudentCode(${subIndex})">▶ Ejecutar</button>
+         </div>
+         <textarea class="student-code-editor" readonly id="studentCode-${subIndex}">${escapeHtml(decodedCode)}</textarea>
+         <div class="student-code-output" id="studentOutput-${subIndex}">La salida aparecerá aquí…</div>
+       </div>`
     : `<div class="text-muted fst-italic mt-2">Sin archivo adjunto</div>`;
 
   const submittedAt = sub.submitted_at ? `<div class="detail-row">
@@ -689,6 +699,51 @@ async function runPythonCode() {
     });
   } catch (e) {
     output.textContent = "Error: " + e.message;
+  }
+}
+
+// ─────────────────────────────────────────
+// EJECUTAR CÓDIGO DEL ESTUDIANTE
+// ─────────────────────────────────────────
+
+async function runStudentCode(subIndex) {
+  const sub = currentReviewSubmissions[subIndex];
+  if (!sub || !sub.project_data) return;
+
+  const outputEl = document.getElementById(`studentOutput-${subIndex}`);
+  const btn = outputEl?.previousElementSibling?.querySelector(".btn-run-student");
+  if (outputEl) outputEl.textContent = "Ejecutando…";
+  if (btn) { btn.disabled = true; btn.textContent = "⏳ Ejecutando…"; }
+
+  let code = "";
+  try { code = atob(sub.project_data); } catch { code = sub.project_data; }
+
+  const filename = "stud_" + sub.id_student + "_" + Date.now() + ".py";
+
+  try {
+    const createRes = await requestBackend("api.php", {
+      method: "GET",
+      params: { action: "create_temp_file", name: filename, data: code }
+    });
+    if (!createRes.data) {
+      if (outputEl) outputEl.textContent = "Error: no se pudo crear el archivo temporal.";
+      return;
+    }
+
+    const execRes = await requestBackend("api.php", {
+      method: "GET",
+      params: { action: "execute_temp_file", name: filename }
+    });
+    if (outputEl) outputEl.textContent = execRes.data ?? "(sin salida)";
+
+    await requestBackend("api.php", {
+      method: "GET",
+      params: { action: "delete_temp_file", name: filename }
+    });
+  } catch (e) {
+    if (outputEl) outputEl.textContent = "Error: " + e.message;
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = "▶ Ejecutar"; }
   }
 }
 
