@@ -1,6 +1,8 @@
+<?php session_start(); ?>
+
 <?php
 
-include_once 'course_model.php';
+include 'course_model.php';
 include_once 'db_controller.php';
 
 function create_course_c(string $code_course, string $name_course, string $desc){
@@ -17,3 +19,4 @@ function get_all_courses(int $prof_id){
 	return get_all_prof_courses($prof_id);
 }
 
+?>

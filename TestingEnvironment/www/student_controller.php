@@ -13,3 +13,5 @@ function enroll_student(int $id_stud, string $course_code){
 function get_enroll_courses(int $id_stud){
 	return get_all_stud_courses($id_stud);
 }
+
+?>

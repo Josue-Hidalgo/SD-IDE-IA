@@ -1,0 +1,443 @@
+:root {
+  --ide-black: #0a0a0a;
+  --ide-bg: #111111;
+  --ide-purple: #261c38;
+  --ide-purple-light: #322548;
+  --ide-purple-border: #3a1a5c;
+  --ide-accent: #9d6bff;
+  --ide-accent-hover: #b48dff;
+  --ide-accent-soft: rgba(157, 107, 255, 0.15);
+  --ide-text: #ececec;
+  --ide-text-muted: #a0a0b0;
+  --ide-radius: 12px;
+
+  /* status colors */
+  --status-revisada:     #2a5c3a;
+  --status-revisada-fg:  #6ddf9a;
+  --status-revisada-border: #3d8a56;
+  --status-pendiente:    #5c4a10;
+  --status-pendiente-fg: #f0c040;
+  --status-pendiente-border: #8a6d1a;
+  --status-no-entregada:     #5c1a2a;
+  --status-no-entregada-fg:  #f07090;
+  --status-no-entregada-border: #8a2a3d;
+
+  --bs-primary: #261c38;
+  --bs-primary-rgb: 38, 28, 56;
+  --bs-secondary: #1a1a1a;
+  --bs-secondary-rgb: 26, 26, 26;
+  --bs-success: #7c5cbf;
+  --bs-success-rgb: 124, 92, 191;
+  --bs-info: #5b4a78;
+  --bs-info-rgb: 91, 74, 120;
+  --bs-danger: #c45c7a;
+  --bs-danger-rgb: 196, 92, 122;
+  --bs-body-bg: var(--ide-bg);
+  --bs-body-color: var(--ide-text);
+  --bs-border-color: var(--ide-purple-border);
+  --bs-link-color: var(--ide-accent);
+  --bs-link-hover-color: var(--ide-accent-hover);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background-color: var(--ide-bg);
+  color: var(--ide-text);
+  min-height: 100vh;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* ── Navbar ── */
+.ide-navbar {
+  background-color: #000;
+  border-bottom: 1px solid var(--ide-purple-border);
+  box-shadow: 0 2px 16px rgba(0,0,0,.45);
+}
+.navbar-logo { height: 38px; width: auto; display: block; object-fit: contain; }
+.navbar-user { display: flex; align-items: center; gap: .75rem; }
+.navbar-user.d-none { display: none !important; }
+.navbar-user-name { color: var(--ide-text-muted); font-size: .9rem; }
+
+.btn-outline-accent {
+  color: var(--ide-accent);
+  border-color: var(--ide-purple-border);
+  background: transparent;
+  transition: background .2s, border-color .2s, color .2s;
+}
+.btn-outline-accent:hover { color: #fff; background-color: var(--ide-purple); border-color: var(--ide-accent); }
+
+/* ── Cards & sections ── */
+.card-section {
+  max-width: 950px;
+  margin: 20px auto;
+  padding: 28px;
+  background-color: var(--ide-purple);
+  border: 1px solid var(--ide-purple-border);
+  border-radius: var(--ide-radius);
+  box-shadow: 0 8px 32px rgba(0,0,0,.35);
+}
+.card-section h2,
+.card-section h4,
+.card-section h5 { color: var(--ide-text); }
+.text-muted { color: var(--ide-text-muted) !important; }
+
+/* ── Forms ── */
+.form-control, .form-select {
+  background-color: var(--ide-black);
+  border: 1px solid var(--ide-purple-border);
+  color: var(--ide-text);
+  border-radius: 8px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.form-control::placeholder { color: #6b6b7b; }
+.form-control:focus, .form-select:focus {
+  background-color: var(--ide-black);
+  border-color: var(--ide-accent);
+  color: var(--ide-text);
+  box-shadow: 0 0 0 .2rem var(--ide-accent-soft);
+}
+.form-label { color: var(--ide-text-muted); font-size: .9rem; font-weight: 500; }
+.form-check-input { background-color: var(--ide-black); border-color: var(--ide-purple-border); }
+.form-check-input:checked { background-color: var(--ide-accent); border-color: var(--ide-accent); }
+.form-check-label { color: var(--ide-text-muted); }
+
+/* ── Buttons ── */
+.btn-primary {
+  background-color: var(--ide-purple-light);
+  border-color: var(--ide-purple-border);
+  color: #fff; font-weight: 500;
+  transition: background .2s, border-color .2s, transform .15s;
+}
+.btn-primary:hover, .btn-primary:focus { background-color: #3d2d58; border-color: var(--ide-accent); color: #fff; }
+
+.btn-success { background-color: #5a4080; border-color: var(--ide-purple-border); color: #fff; }
+.btn-success:hover, .btn-success:focus { background-color: #6e5099; border-color: var(--ide-accent); color: #fff; }
+
+.btn-secondary { background-color: var(--ide-black); border-color: var(--ide-purple-border); color: var(--ide-text-muted); }
+.btn-secondary:hover { background-color: #1a1a1a; border-color: var(--ide-text-muted); color: var(--ide-text); }
+
+.btn-outline-primary { color: var(--ide-accent); border-color: var(--ide-purple-border); }
+.btn-outline-primary:hover { background-color: var(--ide-accent-soft); border-color: var(--ide-accent); color: var(--ide-accent-hover); }
+
+/* boton revisar entregas en tarjeta de tarea */
+.btn-review {
+  background-color: var(--ide-accent-soft);
+  border: 1px solid var(--ide-purple-border);
+  color: var(--ide-accent);
+  font-size: .8rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+  white-space: nowrap;
+}
+.btn-review:hover { background-color: var(--ide-accent); color: #fff; border-color: var(--ide-accent); }
+
+/* botón ícono lápiz editar */
+.btn-icon-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--ide-purple-border);
+  border-radius: 6px;
+  color: var(--ide-text-muted);
+  cursor: pointer;
+  transition: background .2s, border-color .2s, color .2s;
+  flex-shrink: 0;
+}
+.btn-icon-edit:hover {
+  background-color: var(--ide-accent-soft);
+  border-color: var(--ide-accent);
+  color: var(--ide-accent);
+}
+.btn-icon-edit svg { pointer-events: none; }
+
+/* ── Course cards ── */
+.course-card {
+  height: 100%; padding: 20px;
+  border: 1px solid var(--ide-purple-border);
+  border-radius: var(--ide-radius);
+  background-color: var(--ide-purple-light);
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s, border-color .2s;
+}
+.course-card:hover { transform: translateY(-3px); border-color: var(--ide-accent); box-shadow: 0 8px 24px rgba(157,107,255,.12); }
+.course-code { font-size: .8rem; color: var(--ide-accent); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.course-name { font-size: 1.15rem; font-weight: 600; margin-top: 8px; color: var(--ide-text); }
+.course-description { margin-top: 8px; color: var(--ide-text-muted); font-size: .9rem; line-height: 1.5; }
+
+/* ── Assignment cards ── */
+.assignment-card {
+  border: 1px solid var(--ide-purple-border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background-color: var(--ide-black);
+  transition: border-color .2s;
+}
+.assignment-card:hover { border-color: rgba(157,107,255,.4); }
+.assignment-title { font-weight: 600; color: var(--ide-text); }
+.assignment-date { font-size: .82rem; color: var(--ide-text-muted); margin-top: 4px; }
+
+/* conteo de entregas dentro de tarjeta de tarea */
+.badge-submissions {
+  font-size: .78rem;
+  color: var(--ide-text-muted);
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--ide-purple-border);
+  border-radius: 6px;
+  padding: 2px 8px;
+  display: inline-block;
+}
+
+.tasks-box {
+  border: 1px solid var(--ide-purple-border);
+  border-radius: var(--ide-radius);
+  padding: 20px;
+  background-color: var(--ide-black);
+  min-height: 250px;
+}
+.tasks-box h5 { color: var(--ide-text); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--ide-purple-border); }
+
+/* ── Alerts ── */
+.alert { border-radius: 8px; border-width: 1px; }
+.alert-danger { background-color: rgba(196,92,122,.12); border-color: rgba(196,92,122,.35); color: #f0a0b4; }
+.alert-info   { background-color: var(--ide-accent-soft); border-color: rgba(157,107,255,.3); color: var(--ide-accent-hover); }
+.alert-secondary { background-color: rgba(255,255,255,.04); border-color: var(--ide-purple-border); color: var(--ide-text-muted); }
+.alert-success { background-color: rgba(61,138,86,.15); border-color: rgba(61,138,86,.4); color: #6ddf9a; }
+.alert-warning { background-color: rgba(200,160,0,.1); border-color: rgba(200,160,0,.35); color: #f0c040; }
+
+/* ── Links ── */
+a { color: var(--ide-accent); text-decoration: none; transition: color .15s; }
+a:hover { color: var(--ide-accent-hover); }
+
+/* datetime picker */
+input[type="datetime-local"] { color-scheme: dark; }
+
+/* ── REVIEW PANEL ── */
+.review-panel {
+  max-width: 950px;
+  margin: 20px auto;
+  padding: 0;
+  background-color: var(--ide-purple);
+  border: 1px solid var(--ide-purple-border);
+  border-radius: var(--ide-radius);
+  box-shadow: 0 8px 32px rgba(0,0,0,.45);
+  overflow: hidden;
+}
+
+.review-panel-header {
+  background-color: var(--ide-black);
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--ide-purple-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.review-panel-header-info { flex: 1; }
+.review-panel-title { font-size: 1.2rem; font-weight: 700; color: var(--ide-text); margin: 0 0 4px; }
+.review-panel-desc  { color: var(--ide-text-muted); font-size: .9rem; margin: 0 0 6px; }
+.review-panel-date  { color: var(--ide-accent); font-size: .82rem; font-weight: 600; }
+
+.review-panel-close {
+  background: transparent; border: 1px solid var(--ide-purple-border);
+  color: var(--ide-text-muted); border-radius: 6px;
+  padding: 4px 10px; cursor: pointer; font-size: .85rem;
+  transition: background .2s, color .2s;
+  white-space: nowrap;
+}
+.review-panel-close:hover { background: rgba(196,92,122,.2); color: #f07090; border-color: rgba(196,92,122,.5); }
+
+.review-panel-body {
+  padding: 20px 24px;
+}
+
+.review-section-label {
+  font-size: .75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--ide-text-muted);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ide-purple-border);
+}
+
+/* ── Student review cards ── */
+.student-review-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  border-left: 4px solid var(--ide-purple-border);
+  background-color: var(--ide-black);
+  cursor: pointer;
+  transition: transform .15s, border-color .2s, background .2s;
+}
+.student-review-card:hover { transform: translateX(3px); background-color: #141414; }
+
+.student-review-card.status-border-revisada     { border-left-color: var(--status-revisada-border); }
+.student-review-card.status-border-pendiente    { border-left-color: var(--status-pendiente-border); }
+.student-review-card.status-border-no_entregada { border-left-color: var(--status-no-entregada-border); }
+
+.student-review-info { display: flex; align-items: center; gap: 12px; flex: 1; }
+.student-review-name { font-weight: 600; color: var(--ide-text); }
+.student-review-grade { font-size: .85rem; color: var(--status-revisada-fg); font-weight: 700; background: rgba(61,138,86,.12); border-radius: 4px; padding: 1px 7px; }
+
+/* ── Status badges ── */
+.status-badge {
+  font-size: .78rem;
+  font-weight: 600;
+  padding: 3px 10px 3px 22px;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: .02em;
+  position: relative;
+}
+.status-badge::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.status-revisada {
+  background-color: var(--status-revisada);
+  color: var(--status-revisada-fg);
+  border: 1px solid var(--status-revisada-border);
+}
+.status-revisada::before { background-color: var(--status-revisada-fg); }
+
+.status-pendiente {
+  background-color: var(--status-pendiente);
+  color: var(--status-pendiente-fg);
+  border: 1px solid var(--status-pendiente-border);
+}
+.status-pendiente::before { background-color: var(--status-pendiente-fg); }
+
+.status-no-entregada {
+  background-color: var(--status-no-entregada);
+  color: var(--status-no-entregada-fg);
+  border: 1px solid var(--status-no-entregada-border);
+}
+.status-no-entregada::before { background-color: var(--status-no-entregada-fg); }
+
+/* ── Student detail panel ── */
+.student-detail-panel {
+  max-width: 950px;
+  margin: 0 auto 20px;
+  background-color: var(--ide-black);
+  border: 1px solid var(--ide-purple-border);
+  border-radius: var(--ide-radius);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,.5);
+}
+
+.detail-header {
+  background: linear-gradient(135deg, var(--ide-purple-light) 0%, var(--ide-purple) 100%);
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--ide-purple-border);
+}
+.detail-student-name { font-size: 1.1rem; font-weight: 700; color: var(--ide-text); }
+
+.detail-body { padding: 20px 24px; }
+
+.detail-row {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.detail-label { font-size: .82rem; color: var(--ide-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; min-width: 90px; }
+.detail-value { color: var(--ide-text); font-size: .95rem; }
+
+.grade-form { border-top: 1px solid var(--ide-purple-border); padding-top: 18px; }
+
+.grade-input {
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  max-width: 140px;
+  color: var(--ide-accent) !important;
+}
+
+/* ── Python runner ── */
+.python-runner {
+  max-width: 950px;
+  margin: 20px auto;
+  padding: 24px;
+  background-color: var(--ide-purple);
+  border: 1px solid var(--ide-purple-border);
+  border-radius: var(--ide-radius);
+}
+
+.python-runner h5 {
+  color: var(--ide-text);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.python-editor {
+  background-color: #0d0d0d;
+  border: 1px solid var(--ide-purple-border);
+  border-radius: 8px;
+  color: #a8d8a8;
+  font-family: "Consolas", "Fira Code", monospace;
+  font-size: .9rem;
+  padding: 14px;
+  resize: vertical;
+  min-height: 140px;
+  width: 100%;
+}
+.python-editor:focus { outline: none; border-color: var(--ide-accent); box-shadow: 0 0 0 .2rem var(--ide-accent-soft); }
+
+.python-output {
+  background-color: #0d0d0d;
+  border: 1px solid var(--ide-purple-border);
+  border-radius: 8px;
+  color: #c8f0c8;
+  font-family: "Consolas", "Fira Code", monospace;
+  font-size: .85rem;
+  padding: 12px;
+  min-height: 80px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin-top: 12px;
+}
+
+/* ── Legacy (kept for compat) ── */
+.submissions-container {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--ide-purple-border);
+}
+
+.student-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: var(--ide-purple-light);
+  border-radius: 8px;
+}
+
+#dashboardSection > .d-flex h2 { font-weight: 600; }
