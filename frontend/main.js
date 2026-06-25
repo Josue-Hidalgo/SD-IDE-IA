@@ -693,6 +693,9 @@ async function runStudentCode(subIndex) {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: "data=" + encodeURIComponent(cleanCode) 
         });
+
+        const outputEl = document.getElementById("studentOutput");
+        const fileContent = document.getElementById("studentCodeBox");
         fileContent.textContent = cleanCode;
         const createResult = await createRes.text();
         
