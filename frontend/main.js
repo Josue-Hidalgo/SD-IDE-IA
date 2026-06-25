@@ -703,7 +703,6 @@ async function runStudentCode(subIndex) {
             method: "GET",
             params: { action: "execute_temp_file", name: filename }
         });
-        
         outputEl.textContent = execRes["data"] ?? "(sin salida o error)";
 
     } catch (e) {
