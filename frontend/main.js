@@ -710,7 +710,9 @@ async function runStudentCode(subIndex) {
     const sub = currentReviewSubmissions[subIndex];
     console.log(currentReviewSubmissions);
     console.log(sub);
-    const code = sub.project_blob; 
+    const code = sub["project_blob"]; 
+
+    console.log(code);
 
     if (!code) {
         alert("No se encontró código en esta entrega.");
