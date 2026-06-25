@@ -1,9 +1,9 @@
 <?php 
  function create_db_conn(){// sudo apt-get install php8.4-mysql
  	$servername = "localhost";
-	$username = "AcademycIDEIA";//"root";//
-	$password = "#IDEIA#";//"Qwertys123.";//
-	$dbname = "IDEA";//"prueba";//
+	$username = "root";//"AcademycIDEIA";//
+	$password = "Qwertys123.";//"#IDEIA#";//
+	$dbname = "prueba";//"IDEA";//
 
 	$conn =  new mysqli($servername, $username, $password, $dbname);
 
@@ -292,6 +292,25 @@ function get_stud_mail(int $id_stud){
  	}
  	$conn->close();
  	return $student_mail;
+}
+
+function get_stud_info(int $id_stud){
+	$conn = create_db_conn();
+
+	$sql = "SELECT User.name_user, User.lastname_user FROM Student INNER JOIN User ON Student.id_user = User.id_user WHERE Student.id_user = $id_stud";
+	$result = $conn->query($sql);
+
+	if ($result->num_rows >0) {
+		$stud_info = [];
+		$row = $result->fetch_assoc();
+ 		$stud_info["name"] = $row["name_user"];
+ 		$stud_info["lastname"] = $row["lastname_user"];
+ 	}else{
+ 		$conn->close();
+ 		return FALSE;
+ 	}
+ 	$conn->close();
+ 	return $stud_info;
 }
 
 function get_assignment_name(int $id_assign){

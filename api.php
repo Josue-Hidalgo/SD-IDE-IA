@@ -136,6 +136,13 @@ if($_GET['action']){
 			header('Content-type: application/json');
 			echo json_encode($value);
 			break;
+
+		case 'get_stud_info':
+			$id_stud = $_GET['id_stud'];
+			$value = get_stud_info($id_stud);
+			header('Content-type: application/json');
+			echo json_encode($value);
+			break;
 	}
 }
 
