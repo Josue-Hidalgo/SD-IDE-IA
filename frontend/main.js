@@ -669,40 +669,6 @@ function downloadSubmission(subIndex) {
 }
 
 // ─────────────────────────────────────────
-// EJECUTOR DE PYTHON (nice-to-have)
-// ─────────────────────────────────────────
-
-async function runPythonCode() {
-  const code   = document.getElementById("pythonCode").value;
-  const output = document.getElementById("pythonOutput");
-  if (!code.trim()) return;
-
-  output.textContent = "Ejecutando…";
-  const filename = "temp_" + Date.now() + ".py";
-
-  try {
-    const createRes = await requestBackend("api.php", {
-      method: "GET",
-      params: { action: "create_temp_file", name: filename, data: code }
-    });
-    if (!createRes.data) { output.textContent = "Error: no se pudo crear el archivo."; return; }
-
-    const execRes = await requestBackend("api.php", {
-      method: "GET",
-      params: { action: "execute_temp_file", name: filename }
-    });
-    output.textContent = execRes.data ?? "(sin salida)";
-
-    await requestBackend("api.php", {
-      method: "GET",
-      params: { action: "delete_temp_file", name: filename }
-    });
-  } catch (e) {
-    output.textContent = "Error: " + e.message;
-  }
-}
-
-// ─────────────────────────────────────────
 // EJECUTAR CÓDIGO DEL ESTUDIANTE
 // ─────────────────────────────────────────
 
