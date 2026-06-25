@@ -720,6 +720,7 @@ async function runStudentCode(subIndex) {
     }
 
     const outputEl = document.getElementById("pythonOutput");
+    const fileContent = document.getElementById("studentCodeBox");
     const btn = document.getElementById("runStudentBtn");
 
     try {
@@ -732,17 +733,15 @@ async function runStudentCode(subIndex) {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: "data=" + encodeURIComponent(cleanCode)
         });
-
+        fileContent.textContent = cleanCode;
         const createResult = await createRes.text();
         
         const execRes = await requestBackend("api.php", {
             method: "GET",
             params: { action: "execute_temp_file", name: filename }
         });
-
-        if (outputEl) {
-            outputEl.textContent = execRes.data ?? "(sin salida o error)";
-        }
+        
+        outputEl.textContent = execRes["data"] ?? "(sin salida o error)";
 
     } catch (e) {
         console.error("Error al ejecutar:", e);
