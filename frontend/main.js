@@ -706,56 +706,28 @@ async function runPythonCode() {
 // EJECUTAR CÓDIGO DEL ESTUDIANTE
 // ─────────────────────────────────────────
 
-function hexToString(hex) {
-    const cleanHex = hex.startsWith('0x') ? hex.slice(2) : hex;
-    let str = '';
-    for (let i = 0; i < cleanHex.length; i += 2) {
-        str += String.fromCharCode(parseInt(cleanHex.substr(i, 2), 16));
-    }
-    return str;
-}
-
 async function runStudentCode(subIndex) {
     const sub = currentReviewSubmissions[subIndex];
+    if (!sub || !sub.project_data) return;
 
-    const outputEl = document.getElementById("studentOutput");
+    const outputEl = document.getElementById("pythonOutput"); 
     const btn = document.getElementById("runStudentBtn");
 
-    if (outputEl) outputEl.textContent = "Ejecutando...";
-    if (btn) { btn.disabled = true; btn.textContent = "Ejecutando..."; }
-
     try {
-        let code = sub.project_data;
-        
-        if (/^[0-9a-fA-F]+$/.test(code) || code.startsWith('0x')) {
-            code = hexToString(code);
-        } else {
-            try { code = atob(code); } catch (e) { console.log("error:"+e) }
-        }
-
-        console.log(code);
+        let code = sub.project_data.replace(/\\"/g, '"').replace(/\\'/g, "'");
 
         if (!code.trim()) {
-            throw new Error("Código vacío o corrupto");
+            throw new Error("El código está vacío");
         }
 
-        const inputGuard = "import builtins\n" +
-            "builtins.input = lambda *a, **k: (_ for _ in ()).throw(RuntimeError('input() no permitido'))\n\n";
-
-        const safeCode = inputGuard + code;
-        const filename = "stud_" + (sub.id_student ?? Date.now()) + ".py";
+        const filename = "stud_" + (sub.id_student || Date.now()) + ".py";
 
         const createRes = await fetch("api.php?action=create_temp_file_post&name=" + encodeURIComponent(filename), {
             method: "POST",
-            credentials: "include",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: {
-              data:encodeURIComponent(safeCode),
-            },
+            body: "data=" + encodeURIComponent(code), 
+            credentials: "include"
         });
-
-        const createData = await createRes.json();
-        if (!createData) throw new Error("Error creando archivo en servidor");
 
         const execRes = await requestBackend("api.php", {
             method: "GET",
@@ -764,12 +736,8 @@ async function runStudentCode(subIndex) {
 
         if (outputEl) outputEl.textContent = execRes.data ?? "(sin salida)";
 
-        await requestBackend("api.php", { method: "GET", params: { action: "delete_temp_file", name: filename } });
-
     } catch (e) {
         console.error(e);
-        if (outputEl) outputEl.textContent = "Error: " + e.message;
-    } finally {
-        if (btn) { btn.disabled = false; btn.textContent = "Ejecutar"; }
+        alert("Error: " + e.message);
     }
 }
