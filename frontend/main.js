@@ -706,54 +706,119 @@ async function runPythonCode() {
 // EJECUTAR CÓDIGO DEL ESTUDIANTE
 // ─────────────────────────────────────────
 
+function decodeProjectData(data) {
+  if (!data) return "";
+
+  if (typeof data === "string") {
+    try {
+      const decoded = atob(data);
+      if (decoded.includes("def ") || decoded.includes("print") || decoded.includes("#")) {
+        return decoded;
+      }
+    } catch {}
+
+    if (/^0x[0-9a-fA-F]+$/.test(data)) {
+      const hex = data.slice(2);
+      const bytes = new Uint8Array(
+        hex.match(/.{1,2}/g).map(b => parseInt(b, 16))
+      );
+      return new TextDecoder("utf-8").decode(bytes);
+    }
+
+    return data;
+  }
+
+  if (data instanceof ArrayBuffer) {
+    return new TextDecoder("utf-8").decode(new Uint8Array(data));
+  }
+
+  if (ArrayBuffer.isView(data)) {
+    return new TextDecoder("utf-8").decode(data);
+  }
+
+  return "";
+}
+
 async function runStudentCode(subIndex) {
   const sub = currentReviewSubmissions[subIndex];
   if (!sub || !sub.project_data) return;
 
   const outputEl = document.getElementById("studentOutput");
-  const btn      = document.getElementById("runStudentBtn");
+  const btn = document.getElementById("runStudentBtn");
 
   if (outputEl) outputEl.textContent = "Ejecutando...";
   if (btn) { btn.disabled = true; btn.textContent = "Ejecutando..."; }
 
-  // decodificar base64
-  let code = "";
-  try { code = atob(sub.project_data); } catch { code = sub.project_data; }
-
-  // bloquear input() — si el codigo del estudiante llama input() lanzara un error claro
-  const inputGuard = "import builtins\nbuiltins.input = lambda *a, **k: (_ for _ in ()).throw(RuntimeError('input() no esta permitido en entregas automaticas'))\n\n";
-  const safeCode = inputGuard + code;
-
-  const filename = "stud_" + (sub.id_student ?? Date.now()) + "_" + Date.now() + ".py";
-
   try {
-    // POST para evitar limite de tamano en URL con codigos grandes
-    const createRes = await fetch("api.php?action=create_temp_file_post&name=" + encodeURIComponent(filename), {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: "data=" + encodeURIComponent(safeCode),
-      credentials: "include"
-    });
+    const code = decodeProjectData(sub.project_data);
+
+    console.log("Código decodificado:");
+    console.log(code.slice(0, 200));
+
+    if (!code.trim()) {
+      throw new Error("Código vacío o corrupto");
+    }
+
+    const inputGuard =
+      "import builtins\n" +
+      "builtins.input = lambda *a, **k: (_ for _ in ()).throw(RuntimeError('input() no permitido'))\n\n";
+
+    const safeCode = inputGuard + code;
+
+    const filename =
+      "stud_" +
+      (sub.id_student ?? Date.now()) +
+      "_" +
+      Date.now() +
+      ".py";
+
+    const createRes = await fetch(
+      "api.php?action=create_temp_file_post&name=" +
+      encodeURIComponent(filename),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "data=" + encodeURIComponent(safeCode),
+        credentials: "include"
+      }
+    );
+
     const createData = parseBackendResponse(await createRes.text());
-    if (!createData) {
-      if (outputEl) outputEl.textContent = "Error: no se pudo crear el archivo temporal.";
-      return;
+
+    if (!createData || createData.error) {
+      throw new Error(createData?.error || "Error creando archivo");
     }
 
     const execRes = await requestBackend("api.php", {
       method: "GET",
-      params: { action: "execute_temp_file", name: filename }
+      params: {
+        action: "execute_temp_file",
+        name: filename
+      }
     });
-    if (outputEl) outputEl.textContent = execRes.data ?? "(sin salida)";
+
+    if (outputEl) {
+      outputEl.textContent = execRes.data ?? "(sin salida)";
+    }
 
     await requestBackend("api.php", {
       method: "GET",
-      params: { action: "delete_temp_file", name: filename }
+      params: {
+        action: "delete_temp_file",
+        name: filename
+      }
     });
+
   } catch (e) {
+    console.error(e);
     if (outputEl) outputEl.textContent = "Error: " + e.message;
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = "Ejecutar"; }
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "Ejecutar";
+    }
   }
 }
 
