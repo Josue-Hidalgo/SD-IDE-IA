@@ -691,7 +691,7 @@ async function runStudentCode(subIndex) {
         const createRes = await fetch("api.php?action=create_temp_file_post&name=" + encodeURIComponent(filename), {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "data=" + encodeURIComponent(cleanCode) // Ya está limpio
+            body: "data=" + encodeURIComponent(cleanCode) 
         });
         fileContent.textContent = cleanCode;
         const createResult = await createRes.text();
