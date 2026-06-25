@@ -708,36 +708,42 @@ async function runPythonCode() {
 
 async function runStudentCode(subIndex) {
     const sub = currentReviewSubmissions[subIndex];
-    if (!sub || !sub.project_data) return;
+    console.log(currentReviewSubmissions);
+    console.log(sub);
+    const code = sub.content || sub.project_data; 
 
-    const outputEl = document.getElementById("pythonOutput"); 
+    if (!code) {
+        alert("No se encontró código en esta entrega.");
+        return;
+    }
+
+    const outputEl = document.getElementById("pythonOutput");
     const btn = document.getElementById("runStudentBtn");
 
     try {
-        let code = sub.project_data.replace(/\\"/g, '"').replace(/\\'/g, "'");
+        const cleanCode = code.replace(/\\"/g, '"').replace(/\\'/g, "'");
 
-        if (!code.trim()) {
-            throw new Error("El código está vacío");
-        }
-
-        const filename = "stud_" + (sub.id_student || Date.now()) + ".py";
+        const filename = "stud_" + (sub.id ?? Date.now()) + ".py";
 
         const createRes = await fetch("api.php?action=create_temp_file_post&name=" + encodeURIComponent(filename), {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "data=" + encodeURIComponent(code), 
-            credentials: "include"
+            body: "data=" + encodeURIComponent(cleanCode)
         });
 
+        const createResult = await createRes.text();
+        
         const execRes = await requestBackend("api.php", {
             method: "GET",
             params: { action: "execute_temp_file", name: filename }
         });
 
-        if (outputEl) outputEl.textContent = execRes.data ?? "(sin salida)";
+        if (outputEl) {
+            outputEl.textContent = execRes.data ?? "(sin salida o error)";
+        }
 
     } catch (e) {
-        console.error(e);
-        alert("Error: " + e.message);
+        console.error("Error al ejecutar:", e);
+        if (outputEl) outputEl.textContent = "Error: " + e.message;
     }
 }
