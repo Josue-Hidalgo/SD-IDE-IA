@@ -710,7 +710,7 @@ async function runStudentCode(subIndex) {
     const sub = currentReviewSubmissions[subIndex];
     console.log(currentReviewSubmissions);
     console.log(sub);
-    const code = sub.content || sub.project_data; 
+    const code = sub.project_blob; 
 
     if (!code) {
         alert("No se encontró código en esta entrega.");
@@ -723,7 +723,7 @@ async function runStudentCode(subIndex) {
     try {
         const cleanCode = code.replace(/\\"/g, '"').replace(/\\'/g, "'");
 
-        const filename = "stud_" + (sub.id ?? Date.now()) + ".py";
+        const filename = "stud_" + (Date.now()) + ".py";
 
         const createRes = await fetch("api.php?action=create_temp_file_post&name=" + encodeURIComponent(filename), {
             method: "POST",
