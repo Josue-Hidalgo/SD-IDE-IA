@@ -733,7 +733,7 @@ async function runStudentCode(subIndex) {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: "data=" + encodeURIComponent(cleanCode)
         });
-        fileContent.textContent = code;
+        fileContent.textContent = cleanCode;
         const createResult = await createRes.text();
         
         const execRes = await requestBackend("api.php", {
