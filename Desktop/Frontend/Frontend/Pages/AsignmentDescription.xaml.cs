@@ -57,7 +57,7 @@ namespace Frontend.Pages
             string url = "http://138.2.239.69/api.php?" + "action=get_grade&id_stud=" + user.id+"&id_assign="+assignmentID;
             string response = await client.GetStringAsync(url);
             response = response.Trim();
-
+            Console.WriteLine(response);
             Grade.Text = "-/100";
 
             if (response != "0")
@@ -65,6 +65,7 @@ namespace Frontend.Pages
                 dynamic json = JsonConvert.DeserializeObject(response);
                 if (json["grade"] != null) Grade.Text = json["grade"] + "/100";
                 Submission.Text = "Submission:\n" + json["name"];
+                Feedback.Text = "Feedback: " + json["feedback"];
             }
         }
 
