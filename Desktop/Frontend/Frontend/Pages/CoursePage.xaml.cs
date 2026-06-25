@@ -88,7 +88,6 @@ namespace Frontend.Pages
                 courses = JsonConvert.DeserializeObject(response);
                 foreach (var course in courses)
                 {
-                    Console.Write(course);
                     string data = course["code_course"] + "&" + course["name_course"];
                     CourseList.Items.Add(data);
                     courseData[data] = course;
